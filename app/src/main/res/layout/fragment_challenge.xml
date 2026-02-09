@@ -15,4 +15,23 @@
         android:layout_marginHorizontal="@dimen/_20dp"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
+    <Button
+        android:id="@+id/play_a_random_dude_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/play_a_random_dude"
+        android:layout_marginTop="@dimen/_20dp"
+        android:layout_marginHorizontal="@dimen/_20dp"
+        app:layout_constraintTop_toBottomOf="@id/play_on_phone_button"/>
+
+    <Button
+        android:id="@+id/search_player_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_player"
+        android:layout_marginTop="@dimen/_20dp"
+        android:layout_marginHorizontal="@dimen/_20dp"
+        app:layout_constraintTop_toBottomOf="@id/play_a_random_dude_button"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
