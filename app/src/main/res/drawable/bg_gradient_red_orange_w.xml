@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Bakgrund: gradient -->
+    <item>
+        <shape>
+            <gradient
+                android:angle="135"
+                android:startColor="@color/orange"
+                android:endColor="@color/red"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Overlay: PNG stretchad -->
+    <item>
+        <bitmap
+            android:src="@drawable/explosion_bg"
+            android:gravity="fill"
+            android:tint="@color/yellow"/>
+    </item>
+
+</layer-list>
