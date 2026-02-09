@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicitiTacitiToe">
         <activity
+            android:name=".game.ui.GameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.ui.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.ui.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.ui.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
