@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicitiTacitiToe">
         <activity
+            android:name=".auth.ui.DashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".game.ui.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.ui.SplashActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".auth.ui.RegisterActivity"
@@ -24,7 +27,7 @@
             android:name=".auth.ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".auth.ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
