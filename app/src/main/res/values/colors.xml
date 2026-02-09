@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
+    <color name="yellow">#FFD700</color>
+    <color name="green">#237841</color>
+    <color name="orange">#FFA500</color>
+
+    <!-- Secondary Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="bright_yellow">#FFFF00</color>
+    <color name="light_orange">#FFB84D</color>
+    <color name="light_yellow">#FFFEF5</color>
+
+
+    <!-- Cell Colors -->
+    <color name="cell_default_start">#FFD700</color>
+    <color name="cell_default_end">#FFA500</color>
+
+    <color name="player_x_bg">#FF4757</color>
+    <color name="player_o_bg">#1E90FF</color>
+
+    <!-- Board Colors -->
+    <color name="board_bg">#FFFFFF</color>
+    <color name="card_bg">#FFFFFF</color>
+
+    <!-- Background Gradient -->
+    <color name="gradient_start">#FFD700</color>
+    <color name="gradient_end">#FFA500</color>
+
+    <!-- Shadow and Border -->
+    <color name="border_black">#000000</color>
+    <color name="shadow_black">#000000</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#000000</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_red">#FF0000</color>
+
+    <!-- Transparent for overlays -->
+    <color name="transparent">#00000000</color>
+    <color name="black_overlay">#80000000</color>
+
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="hint">#888888</color>
 </resources>

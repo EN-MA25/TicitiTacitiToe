@@ -5,65 +5,228 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.ui.LoginActivity">
+    android:background="@drawable/bg_gradient_yellow_orange_w_red_lines"
+    tools:context=".auth.ui.LoginActivity"
+    android:padding="@dimen/_20dp">
 
-    <ImageView
-        android:id="@+id/logo_image_view"
+    <!-- App Title -->
+    <TextView
+        android:id="@+id/app_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/app_logo"
-        android:src="@drawable/ic_launcher_background"
-        android:layout_marginTop="@dimen/_150dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/bg_button_blue"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:paddingBottom="4dp"
+        android:rotation="-3"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="4"
+        android:text="@string/app_brand_name"
+        android:textColor="@color/red"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toTopOf="@+id/register_form_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/logo_image_view"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:contentDescription="@string/app_logo"-->
+    <!--        android:src="@drawable/ic_launcher_background"-->
+    <!--        android:layout_marginTop="@dimen/_150dp"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"/>-->
+
+    <!-- Login Form Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/register_form_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_off_center_rectangle"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Email Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bangers"
+                android:letterSpacing="0.08"
+                android:text="@string/email"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
+
+            <!-- Email Input -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <EditText
+                    android:id="@+id/email_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_field"
+                    android:fontFamily="@font/permanent_marker"
+                    android:hint="@string/write_email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/hint"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Password Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/bangers"
+                android:letterSpacing="0.08"
+                android:text="@string/password"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
+
+            <!-- Password Input -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <EditText
+                    android:id="@+id/password_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_field"
+                    android:fontFamily="@font/permanent_marker"
+                    android:hint="@string/write_password"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/hint"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/reset_password_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/permanent_marker"
+                android:text="@string/forgot_password"
+                android:textColor="@color/blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Login Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:textSize="22sp"
+        android:fontFamily="@font/bangers"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_button_blue"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:paddingHorizontal="@dimen/_40dp"
+        android:letterSpacing="0.1"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/register_form_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 
-    <EditText
-        android:id="@+id/email_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email"
-        android:layout_marginHorizontal="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_40dp"
-        app:layout_constraintTop_toBottomOf="@id/logo_image_view"/>
-
-    <EditText
-        android:id="@+id/password_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_marginHorizontal="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_20dp"
-        app:layout_constraintTop_toBottomOf="@id/email_edit_text"/>
-
-    <TextView
-        android:id="@+id/reset_password_text_view"
+    <!-- Sign Up Link -->
+    <LinearLayout
+        android:id="@+id/sign_up_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reset_password"
-        app:layout_constraintStart_toStartOf="@id/email_edit_text"
-        app:layout_constraintTop_toBottomOf="@id/password_edit_text"/>
-
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:layout_marginTop="@dimen/_20dp"
-        android:layout_marginHorizontal="@dimen/_20dp"
-        app:layout_constraintTop_toBottomOf="@id/reset_password_text_view"/>
-
-    <TextView
-        android:id="@+id/new_player_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/new_player"
-        android:layout_marginTop="@dimen/_20dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:background="@drawable/bg_button_green"
+        android:padding="18dp"
+        app:layout_constraintTop_toBottomOf="@id/login_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_button"/>
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_account"
+            android:textSize="16sp"
+
+            android:textColor="@color/black"
+            android:fontFamily="@font/permanent_marker"/>
+
+        <TextView
+            android:id="@+id/new_player_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_here"
+            android:textSize="16sp"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:textColor="@color/red"
+            android:fontFamily="@font/bangers"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginStart="4dp"
+            android:letterSpacing="0.08"/>
+        <TextView
+            android:id="@+id/try_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/try_it"
+            android:textSize="16sp"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:textColor="@color/orange"
+            android:fontFamily="@font/bangers"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginStart="4dp"
+            android:letterSpacing="0.08"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
