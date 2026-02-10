@@ -5,46 +5,85 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@drawable/bg_gradient_red_orange_w">
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/highscore_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/highscore"
-        android:layout_marginTop="@dimen/_20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginHorizontal="@dimen/_20dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/trophy_smal"
+        android:fontFamily="@font/bangers"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:text="@string/highscore"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_width="0dp"
+        android:id="@+id/main_app_name_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
-        android:textAlignment="center"
-        android:textSize="@dimen/_24sp"
+        android:background="@drawable/bg_button_blue"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:rotation="-3"
+        android:shadowColor="@color/black"
+        android:shadowDx="10"
+        android:shadowDy="10"
+        android:shadowRadius="4"
+        android:text="@string/app_brand_name"
+        android:textColor="@color/red"
+        android:textSize="28sp"
+        android:paddingBottom="8dp"
         app:layout_constraintTop_toTopOf="@id/highscore_button"
         app:layout_constraintBottom_toBottomOf="@id/highscore_button"
         app:layout_constraintStart_toEndOf="@id/highscore_button"
         app:layout_constraintEnd_toStartOf="@id/profile_button"/>
 
-    <Button
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/profile"
-        android:layout_marginTop="@dimen/_20dp"
         android:layout_marginHorizontal="@dimen/_20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_button_red"
+        android:fontFamily="@font/bangers"
+        android:paddingBottom="4dp"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:text="@string/profile"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/highscore_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/highscore_button" />
 
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/new_game_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/new_game"
+        android:textColor="@color/white"
+        android:paddingBottom="4dp"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:fontFamily="@font/bangers"
+        android:textSize="22sp"
+        android:background="@drawable/bg_button_green"
         android:layout_marginTop="@dimen/_20dp"
         android:layout_marginHorizontal="@dimen/_20dp"
         app:layout_constraintTop_toBottomOf="@id/profile_button"/>
@@ -56,6 +95,7 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/_20dp"
         app:layout_constraintTop_toBottomOf="@id/new_game_button"
+        android:background="@drawable/bg_off_center_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
