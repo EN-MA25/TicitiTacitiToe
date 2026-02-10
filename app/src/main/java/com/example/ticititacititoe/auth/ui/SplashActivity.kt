@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivitySplashBinding
@@ -30,14 +31,14 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (authViewModel.isLoggedIn()){
-                startActivity(Intent(this, DashboardActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }else{
                 startActivity(Intent(this, LoginActivity::class.java))
             }
             finish()
 
 
-        },  2500)
+        },  2500) // 2/5 sec
 
 
 
