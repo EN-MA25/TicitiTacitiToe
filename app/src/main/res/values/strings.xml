@@ -47,6 +47,8 @@
     <string name="username_rating">Username  #%1$d</string>
     <string name="max_streak">Max streak: %1$d</string>
     <string name="current_streak">Current streak: %1$d</string>
+    <string name="friends_">Friends:</string>
+    <string name="play_with_a_friend">Play with a friend</string>
 
 
 </resources>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ticititacititoe.databinding.ActivityMainBinding
+import com.example.ticititacititoe.game.ui.ChallengeFragment
 import com.example.ticititacititoe.game.ui.GameActivity
 import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
 import com.example.ticititacititoe.profile.ui.MyProfileActivity
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.newGameButton.setOnClickListener {
-            newGame()
+           val dialog = ChallengeFragment()
+            dialog.show(supportFragmentManager, "challenge_fragment_dialog")
         }
 
     }

@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.profile.ui
+package com.example.ticititacititoe.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,11 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-
-
-
-class SearchUserFragment : BottomSheetDialogFragment() {
-
+class FriendFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +22,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_user, container, false)
+        return inflater.inflate(R.layout.fragment_friend, container, false)
     }
 
     override fun onStart() {
