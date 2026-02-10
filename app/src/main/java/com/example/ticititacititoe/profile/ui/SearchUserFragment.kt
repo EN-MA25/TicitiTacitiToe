@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.user
+package com.example.ticititacititoe.profile.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

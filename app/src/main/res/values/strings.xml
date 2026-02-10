@@ -41,4 +41,5 @@
     <string name="lost_games">Lost Games:</string>
     <string name="total_games">Total Games:</string>
     <string name="won_games">Won Games:</string>
+    <string name="log_out">Log Out</string>
 </resources>

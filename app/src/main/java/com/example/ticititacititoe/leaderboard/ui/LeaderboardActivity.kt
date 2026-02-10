@@ -44,5 +44,9 @@ class LeaderboardActivity : AppCompatActivity() {
                 else -> ""
             }
         }.attach()
+
+        binding.backButton.setOnClickListener {
+            finish()
+        }
     }
 }
