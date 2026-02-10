@@ -42,4 +42,11 @@
     <string name="total_games">Total Games:</string>
     <string name="won_games">Won Games:</string>
     <string name="log_out">Log Out</string>
+
+
+    <string name="username_rating">Username  #%1$d</string>
+    <string name="max_streak">Max streak: %1$d</string>
+    <string name="current_streak">Current streak: %1$d</string>
+
+
 </resources>
