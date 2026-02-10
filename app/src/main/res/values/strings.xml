@@ -2,11 +2,15 @@
     <string name="app_name">TicitiTacitiToe</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string name="write_email">write your email</string>
+    <string name="password">password</string>
+    <string name="write_password">write your password</string>
     <string name="login">Login</string>
+    <string name="login_here">Login here</string>
     <string name="new_player">New Player</string>
     <string name="reset_password">Reset Password</string>
     <string name="app_logo">app_logo</string>
+    <string name="app_brand_name">TicitiTacitiToe!</string>
     <string name="username">Username</string>
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
@@ -16,9 +20,15 @@
     <string name="play_on_this_phone">Play on this phone</string>
     <string name="play_a_random_dude">Play a random dude</string>
     <string name="search_player">Search player</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_by_username">Search by username</string>
     <string name="users">Users:</string>
     <string name="search">Search</string>
+    <string name="winner">Winner: %1$s</string>
+    <string name="turn">Turn: %1$s</string>
+    <string name="draw">Draw</string>
+    <string name="forgot_password">forgot password?</string>
+    <string name="no_account">no account?</string>
+    <string name="register_here">register here!</string>
+    <string name="try_it">or try it out</string>
+    <string name="write_username">write a username</string>
 </resources>
