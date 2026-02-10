@@ -1,10 +1,6 @@
 package com.example.ticititacititoe.auth
-
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
+import kotlin.Result
 import com.google.firebase.Firebase
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -14,35 +10,69 @@ class AuthRepository {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    fun register(
+    fun registerUser(
         username: String,
         email: String,
         password: String,
-        onResult: (Task<AuthResult>) -> Unit
+        onResult: (Result<Unit>) -> Unit
     ){
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-
-                if (!task.isSuccessful) {
-                    onResult(task)
-                    return@addOnCompleteListener
+        // =========== Check if username already exists ============
+        firestore.collection("users")
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.documents.isNotEmpty()) {
+                    onResult(Result.failure(Exception("Username already taken")))
+                    return@addOnSuccessListener
                 }
 
-                val uid = task.result.user?.uid ?: return@addOnCompleteListener
+                // =========== Create user in Firebase Auth ============
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
 
-                val user = hashMapOf(
-                    "uid" to uid,
-                    "username" to username,
-                    "email" to email
-                )
+                        if (!task.isSuccessful) {
+                            onResult(
+                                Result.failure(
+                                    task.exception ?: Exception("Registration was failed")
+                                )
+                            )
+                            return@addOnCompleteListener
+                        }
 
-                Firebase.firestore
-                    .collection("users")
-                    .document(uid)
-                    .set(user)
-                    .addOnCompleteListener {
-                        onResult(task)
+                        val uid = task.result.user?.uid
+                        if (uid == null) {
+                            onResult(Result.failure(Exception("Incorrect")))
+                            return@addOnCompleteListener
+                        }
+
+                        // =========== Create user object for Firestore ============
+                        val user = hashMapOf(
+                            "uid" to uid,
+                            "username" to username,
+                            "email" to email
+                        )
+
+                        // =========== Save user in Firestore ============
+                        Firebase.firestore
+                            .collection("users")
+                            .document(uid)
+                            .set(user)
+                            .addOnCompleteListener { setTask ->
+                                if (setTask.isSuccessful) {
+                                    onResult(Result.success(Unit))
+                                } else {
+                                    onResult(
+                                        Result.failure(
+                                            setTask.exception
+                                                ?: Exception("Failed to save user")
+                                        )
+                                    )
+                                }
+                            }
                     }
+            }
+            .addOnFailureListener {
+                onResult(Result.failure(it))
             }
     }
 }
