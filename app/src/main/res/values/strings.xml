@@ -31,4 +31,14 @@
     <string name="register_here">register here!</string>
     <string name="try_it">or try it out</string>
     <string name="write_username">write a username</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="friends">Friends</string>
+    <string name="global">Global</string>
+    <string name="friends_leaderboard">Friends Leaderboard</string>
+    <string name="global_leaderboard">Global Leaderboard</string>
+    <string name="_1">#1</string>
+    <string name="lost_games">Lost Games:</string>
+    <string name="total_games">Total Games:</string>
+    <string name="won_games">Won Games:</string>
 </resources>
