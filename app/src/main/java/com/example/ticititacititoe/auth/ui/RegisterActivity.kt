@@ -32,33 +32,6 @@ class RegisterActivity : AppCompatActivity() {
         // =========== Initilize ViewModel ============
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
-        // =========== Register user via ViewModel ============
-        viewModel.registerResult.observe(this) { result ->
-
-            // =========== Successful registration ============
-            result.onSuccess {
-                clearFields()
-                Toast.makeText(
-                    this,
-                    "Registration was successful",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                // =========== Navigate to LoginActivity ============
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-
-            // =========== Registration failed ============
-            result.onFailure {
-                Toast.makeText(
-                    this,
-                    it.message ?: "Registration failed",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
 
         // =========== Register buttonclick ============
         binding.registerButton.setOnClickListener {
@@ -71,7 +44,31 @@ class RegisterActivity : AppCompatActivity() {
                 val email = binding.emailEditText.text.toString()
                 val password = binding.passwordEditText.text.toString()
 
-                viewModel.registerUser(username, email, password)
+                viewModel.registerUser(username, email, password) { result ->
+                    result.onSuccess {
+                        clearFields()
+                        Toast.makeText(
+                            this,
+                            "Registration was successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // =========== Navigate to LoginActivity ============
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                    // =========== Registration failed ============
+                    result.onFailure {
+                        Toast.makeText(
+                            this,
+                            it.message ?: "Registration failed",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                }
             }
         }
     }

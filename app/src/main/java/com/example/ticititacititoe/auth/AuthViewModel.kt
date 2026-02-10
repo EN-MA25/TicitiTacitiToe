@@ -6,14 +6,10 @@ import androidx.lifecycle.ViewModel
 
 class AuthViewModel: ViewModel() {
     private val repository = AuthRepository()
-
-    // =========== LiveData for registration result ============
-    private val _registerResult = MutableLiveData<Result<Unit>>()
-    val registerResult: LiveData<Result<Unit>> = _registerResult
-
-    fun registerUser(username: String, email: String, password: String,) {
+    
+    fun registerUser(username: String, email: String, password: String, onResult: (Result<Unit>) -> Unit) {
         repository.registerUser(username, email, password) { result ->
-            _registerResult.postValue(result)
+            onResult(result)
         }
     }
 }
