@@ -4,6 +4,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 class AuthRepository {
     private val auth = FirebaseAuth.getInstance()
+
+    fun isLoggedIn(): Boolean = auth.currentUser != null
     fun login(
         email: String,
         password: String,

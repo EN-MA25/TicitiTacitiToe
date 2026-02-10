@@ -9,7 +9,7 @@ class AuthViewModel: ViewModel() {
 
     private val auth = Firebase.auth
     private val repository = AuthRepository()
-    fun isLoggedIn(): Boolean = auth.currentUser != null
+    fun isLoggedIn(): Boolean = repository.isLoggedIn()
 
     fun login(email: String, password: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         repository.login(email, password, onSuccess, onFailure)

@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
 
      binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
 

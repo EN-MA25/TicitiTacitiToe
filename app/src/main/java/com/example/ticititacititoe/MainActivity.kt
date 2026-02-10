@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
      binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
