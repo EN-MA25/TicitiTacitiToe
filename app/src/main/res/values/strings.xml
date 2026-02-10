@@ -14,4 +14,7 @@
     <string name="profile">Profile</string>
     <string name="new_game">New Game</string>
     <string name="play_on_this_phone">Play on this phone</string>
+    <string name="winner">Winner: %1$s</string>
+    <string name="turn">Turn: %1$s</string>
+    <string name="draw">Draw</string>
 </resources>
