@@ -57,16 +57,26 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            multiplayerGameViewModel.incomingInvites.collect { invites ->
-                if (invites.isNotEmpty()) {
-                    val invite = invites.first()
+                multiplayerGameViewModel.incomingInvites.collect { invites ->
+                    val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
 
-                    MultiplayerGameInvitationFragment
-                       .newInstance(invite)
-                        .show(supportFragmentManager, "invite_dialog")
-                }
+                    if (invites.isNotEmpty()) {
+                        val invite = invites.first()
+
+                        MultiplayerGameInvitationFragment
+                            .newInstance(invite)
+                            .show(supportFragmentManager, "invite_dialog")
+                    } else {
+                        if (existing is MultiplayerGameInvitationFragment) {
+                            existing.dismissAllowingStateLoss()
+                        }
+                    }
+            }
+
+
             }
 
 
