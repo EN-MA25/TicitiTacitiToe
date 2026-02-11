@@ -12,18 +12,24 @@ import com.example.ticititacititoe.game.ui.GameActivity
 import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
 import com.example.ticititacititoe.profile.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.ticititacititoe.auth.AuthViewModel
-import com.example.ticititacititoe.auth.ui.LoginActivity
+import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.profile.UserViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
 
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var userViewModel: UserViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -35,7 +41,27 @@ class MainActivity : AppCompatActivity() {
         }
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
+
+        multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+
+        val currentUserId = userViewModel.getCurrentUserId()
+
+        if (currentUserId != null) {
+            multiplayerGameViewModel.startListeningForInvites(currentUserId)
+        }
+        lifecycleScope.launchWhenStarted {
+            multiplayerGameViewModel.incomingInvites.collect { invites ->
+                if (invites.isNotEmpty()) {
+                    val invite = invites.first()
+
+                    MultiplayerGameInvitationFragment
+                       .newInstance(invite)
+                        .show(supportFragmentManager, "invite_dialog")
+                }
+            }
+        }
 
         binding.profileButton.setOnClickListener {
             val intent = Intent(this, MyProfileActivity::class.java)

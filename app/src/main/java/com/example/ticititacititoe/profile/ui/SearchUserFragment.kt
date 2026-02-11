@@ -1,7 +1,6 @@
 package com.example.ticititacititoe.profile.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ticititacititoe.R
-import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
+import com.example.ticititacititoe.game.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,15 +23,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class SearchUserFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentSearchUserBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var searchInput: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchUserRecyclerAdapter
+
+    private lateinit var currentUsername: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
 
     }
 
@@ -62,8 +64,13 @@ class SearchUserFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val currentUserId = userViewModel.getCurrentUserId()
+        userViewModel.getUserDetailsById(currentUserId) {user ->
+            currentUsername = user?.username ?: "null"
+        }
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
-            //Start game with user
+            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username )
         })
 
         recyclerView = binding.searchedUsersRecyclerView
