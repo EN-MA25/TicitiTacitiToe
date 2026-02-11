@@ -54,6 +54,12 @@ class GameActivity : AppCompatActivity() {
 
     fun playAgainPressed(view: View) {
         gameViewModel.resetGame()
+
+        val params = binding.statusTextView.layoutParams
+        params.height = resources.getDimensionPixelSize(R.dimen.turn_pic_ordinary_size)
+        params.width = resources.getDimensionPixelSize(R.dimen.turn_pic_ordinary_size)
+        binding.statusTextView.layoutParams = params
+
         view.visibility = View.INVISIBLE
     }
 
@@ -91,10 +97,25 @@ class GameActivity : AppCompatActivity() {
         when (state.gameResult) {
             is GameResult.Ongoing -> {
                 binding.statusTextView.text = getString(R.string.turn, state.currentPlayer)
+
+                when (state.currentPlayer) {
+                    Player.X -> {
+                        binding.statusTextView.setBackgroundResource(R.drawable.speech_bubble_red_border_red_center)
+                    }
+                    Player.O -> {
+                        binding.statusTextView.setBackgroundResource(R.drawable.speech_bubble_red_border_blue_center)
+                    }
+                }
             }
             is GameResult.Win -> {
                 binding.statusTextView.text = getString(R.string.winner, state.gameResult.winner)
+                val params = binding.statusTextView.layoutParams
+                params.height = resources.getDimensionPixelSize(R.dimen.turn_pic_big_size)
+                params.width = resources.getDimensionPixelSize(R.dimen.turn_pic_big_size)
+                binding.statusTextView.layoutParams = params
+
                 binding.newGameButton.visibility = View.VISIBLE
+
             }
             is GameResult.Draw -> {
                 binding.statusTextView.text = getString(R.string.draw)

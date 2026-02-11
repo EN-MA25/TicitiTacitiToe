@@ -33,7 +33,7 @@
 
     <!-- game-->
     <string name="winner">Winner: %1$s</string>
-    <string name="turn">Turn: %1$s</string>
+    <string name="turn">%1$s</string>
     <string name="draw">Draw</string>
     <string name="play_again">Play again!!!</string>
     <string name="game_cell">Game cell</string>
