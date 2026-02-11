@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bg_login_form.xml -->
+<!-- Login form container background -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Black border shadow -->
+    <item
+        android:left="0dp"
+        android:top="0dp"
+        android:right="8dp"
+        android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/black"/>
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+
+    <!-- White background -->
+    <item
+        android:left="0dp"
+        android:top="0dp"
+        android:right="8dp"
+        android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white"/>
+            <stroke
+                android:width="6dp"
+                android:color="@color/black"/>
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+</layer-list>

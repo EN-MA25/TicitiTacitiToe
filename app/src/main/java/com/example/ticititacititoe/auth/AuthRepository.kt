@@ -75,4 +75,20 @@ class AuthRepository {
                 onResult(Result.failure(it))
             }
     }
+
+    fun isLoggedIn(): Boolean = auth.currentUser != null
+    fun login(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { onSuccess()}
+            .addOnFailureListener { onFailure(it)}
+    }
+
+    fun logout(){
+        auth.signOut()
+    }
 }
