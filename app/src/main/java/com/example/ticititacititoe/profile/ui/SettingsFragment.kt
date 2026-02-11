@@ -1,11 +1,15 @@
 package com.example.ticititacititoe.profile.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.FragmentSettingsBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -13,11 +17,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class SettingsFragment : BottomSheetDialogFragment() {
-
+    private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        authViewModel = ViewModelProvider(requireActivity())[AuthViewModel::class.java]
 
     }
 
@@ -36,7 +41,7 @@ class SettingsFragment : BottomSheetDialogFragment() {
         val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) ?: return
 
         val displayMetrics = resources.displayMetrics
-        bottomSheet.layoutParams.height = (displayMetrics.heightPixels * 0.95).toInt()
+        bottomSheet.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         val behavior = BottomSheetBehavior.from(bottomSheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -48,7 +53,12 @@ class SettingsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.logoutButton.setOnClickListener {
-            // Logout through authViewModel
+            authViewModel.logout()
+            // Temporary solution, check log in state in Main Activity, not go back Profile Activity as it is now
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            dismiss()
         }
 
     }

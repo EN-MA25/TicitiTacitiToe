@@ -99,5 +99,4 @@
         android:background="@drawable/bg_off_center_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
