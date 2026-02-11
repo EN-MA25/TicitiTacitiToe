@@ -72,6 +72,10 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.loginHereButton.setOnClickListener {
+            finish()
+        }
     }
 
     // =========== Input validation ============
