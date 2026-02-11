@@ -16,11 +16,11 @@
 
 
     <!-- Cell Colors -->
-    <color name="cell_default_start">#FFD700</color>
-    <color name="cell_default_end">#FFA500</color>
 
-    <color name="player_x_bg">#FF4757</color>
-    <color name="player_o_bg">#1E90FF</color>
+    <color name="player_x_bg">#99FF4757</color>
+    <color name="player_o_bg">#991E90FF</color>
+    <color name="player_x">#FF4757</color>
+    <color name="player_o">#1E90FF</color>
 
     <!-- Board Colors -->
     <color name="board_bg">#FFFFFF</color>

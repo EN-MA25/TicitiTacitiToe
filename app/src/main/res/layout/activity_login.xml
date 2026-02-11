@@ -58,7 +58,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_off_center_rectangle"
+            android:background="@drawable/bg_white_rectangle"
             android:orientation="vertical"
             android:padding="24dp">
 
