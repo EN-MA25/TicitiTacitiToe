@@ -21,6 +21,12 @@
     <string name="register_here">register here!</string>
     <string name="try_it">or try it out</string>
     <string name="write_username">write a username</string>
+    <string name="play_a_random_dude">Play a random dude</string>
+    <string name="search_player">Search player</string>
+    <string name="search_by_username">Search by username</string>
+    <string name="users">Users:</string>
+    <string name="search">Search</string>
+
 
 
     <!-- main-->
@@ -37,4 +43,25 @@
     <string name="play_again">Play again!!!</string>
     <string name="game_cell">Game cell</string>
 
+
+    <!-- highscore-->
+    <string name="friends">Friends</string>
+    <string name="global">Global</string>
+    <string name="friends_leaderboard">Friends Leaderboard</string>
+    <string name="global_leaderboard">Global Leaderboard</string>
+    <string name="_1">#1</string>
+    <string name="lost_games">Lost Games:</string>
+    <string name="total_games">Total Games:</string>
+    <string name="won_games">Won Games:</string>
+    <string name="log_out">Log Out</string>
+
+
+    <!-- profile / settings-->
+    <string name="username_rating">Username  #%1$d</string>
+    <string name="max_streak">Max streak: %1$d</string>
+    <string name="current_streak">Current streak: %1$d</string>
+    <string name="friends_">Friends:</string>
+    <string name="play_with_a_friend">Play with a friend</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="play">Play</string>
 </resources>
