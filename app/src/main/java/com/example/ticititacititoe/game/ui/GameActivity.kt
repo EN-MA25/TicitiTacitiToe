@@ -76,8 +76,8 @@ class GameActivity : AppCompatActivity() {
                 val imageButton = getButton(r, c)
 
                 when (player) {
-                    Player.X -> imageButton.setImageResource(R.drawable.x)
-                    Player.O -> imageButton.setImageResource(R.drawable.o)
+                    Player.X -> imageButton.setImageResource(R.drawable.cell_x)
+                    Player.O -> imageButton.setImageResource(R.drawable.cell_o)
                     null -> imageButton.setImageDrawable(null)
                 }
 

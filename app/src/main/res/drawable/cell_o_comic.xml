@@ -1,0 +1,31 @@
+<!-- AI made -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- main circle -->
+    <path
+        android:pathData="M50,12
+                          C72,14 86,32 84,52
+                          C82,74 64,88 44,84
+                          C24,80 12,62 14,42
+                          C16,22 32,10 50,12"
+        android:strokeColor="@color/blue"
+        android:strokeWidth="14"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round" />
+
+    <!-- sketch-line -->
+    <path
+        android:pathData="M52,16
+                          C70,18 82,34 80,52
+                          C78,70 62,82 46,80
+                          C28,76 18,60 20,44
+                          C22,26 36,14 52,16"
+        android:strokeColor="@color/player_o"
+        android:strokeWidth="6"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round" />
+</vector>
