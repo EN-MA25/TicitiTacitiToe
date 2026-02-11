@@ -44,6 +44,7 @@ class RegisterActivity : AppCompatActivity() {
                 val email = binding.emailEditText.text.toString()
                 val password = binding.passwordEditText.text.toString()
 
+                // =========== Call ViewModel and check registration success ============
                 viewModel.registerUser(username, email, password) { result ->
                     result.onSuccess {
                         clearFields()
