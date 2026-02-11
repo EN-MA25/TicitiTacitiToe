@@ -1,5 +1,23 @@
 package com.example.ticititacititoe.auth
 
+import com.google.firebase.auth.FirebaseAuth
+
 class AuthRepository {
-    // Speaking to firebase to get auth info
+    private val auth = FirebaseAuth.getInstance()
+
+    fun isLoggedIn(): Boolean = auth.currentUser != null
+    fun login(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { onSuccess()}
+            .addOnFailureListener { onFailure(it)}
+    }
+
+    fun logout(){
+        auth.signOut()
+    }
 }
