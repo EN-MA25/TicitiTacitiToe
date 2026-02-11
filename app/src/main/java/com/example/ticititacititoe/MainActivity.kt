@@ -8,12 +8,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ticititacititoe.databinding.ActivityMainBinding
 import com.example.ticititacititoe.game.ui.GameActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.auth.ui.LoginActivity
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,6 +30,14 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        binding.logoutButton.setOnClickListener {
+            authViewModel.logout()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         binding.newGameButton.setOnClickListener {
             newGame()
@@ -36,6 +48,5 @@ class MainActivity : AppCompatActivity() {
     fun newGame() {
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
-
     }
 }
