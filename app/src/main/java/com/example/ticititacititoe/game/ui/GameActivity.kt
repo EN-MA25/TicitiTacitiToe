@@ -39,10 +39,16 @@ class GameActivity : AppCompatActivity() {
             insets
         }
 
+
+
         gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
         binding.newGameButton.visibility = View.INVISIBLE
         setupObservers()
+
+        binding.backButton?.setOnClickListener {
+            finish()
+        }
 
     }
 
