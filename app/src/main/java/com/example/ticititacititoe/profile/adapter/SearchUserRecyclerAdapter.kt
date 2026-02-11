@@ -1,0 +1,50 @@
+package com.example.ticititacititoe.profile.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.ticititacititoe.databinding.UserListItemBinding
+import com.example.ticititacititoe.profile.User
+
+class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
+    private var users = emptyList<User>()
+    fun submitList(userList: List<User>) {
+        users = userList
+        notifyDataSetChanged()
+    }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): UserViewHolder {
+        val binding = UserListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
+        return UserViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(
+        holder: UserViewHolder,
+        position: Int
+    ) {
+        holder.bind(users[position])
+    }
+
+
+    override fun getItemCount(): Int = users.size
+
+    inner class UserViewHolder(private val binding: UserListItemBinding): RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(user: User) {
+            binding.usernameTextView.text = user.username
+            binding.initialsTextView.text = user.username.take(2)
+
+            binding.root.setOnClickListener { onUserClick(user)}
+
+
+        }
+
+    }
+}
