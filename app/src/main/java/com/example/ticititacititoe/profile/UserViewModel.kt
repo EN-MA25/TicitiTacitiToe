@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.user
+package com.example.ticititacititoe.profile
 
 import androidx.lifecycle.ViewModel
 

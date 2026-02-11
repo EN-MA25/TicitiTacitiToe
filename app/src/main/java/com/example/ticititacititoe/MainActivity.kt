@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ticititacititoe.databinding.ActivityMainBinding
+import com.example.ticititacititoe.game.ui.ChallengeFragment
 import com.example.ticititacititoe.game.ui.GameActivity
+import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
+import com.example.ticititacititoe.profile.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
@@ -32,15 +35,22 @@ class MainActivity : AppCompatActivity() {
         }
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
-        binding.logoutButton.setOnClickListener {
-            authViewModel.logout()
-            val intent = Intent(this, LoginActivity::class.java)
+
+
+        binding.profileButton.setOnClickListener {
+            val intent = Intent(this, MyProfileActivity::class.java)
             startActivity(intent)
-            finish()
+        }
+
+
+        binding.highscoreButton.setOnClickListener {
+            val intent = Intent(this, LeaderboardActivity::class.java)
+            startActivity(intent)
         }
 
         binding.newGameButton.setOnClickListener {
-            newGame()
+           val dialog = ChallengeFragment()
+            dialog.show(supportFragmentManager, "challenge_fragment_dialog")
         }
 
     }
@@ -48,5 +58,6 @@ class MainActivity : AppCompatActivity() {
     fun newGame() {
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
+
     }
 }

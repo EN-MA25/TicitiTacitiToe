@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicitiTacitiToe">
         <activity
-            android:name=".auth.ui.DashboardActivity"
+            android:name=".profile.ui.MyProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".leaderboard.ui.LeaderboardActivity"
             android:exported="false" />
         <activity
             android:name=".game.ui.GameActivity"

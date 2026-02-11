@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-
+import com.example.ticititacititoe.game.ui.GameActivity
 
 
 class LoginActivity : AppCompatActivity() {
@@ -32,6 +30,16 @@ class LoginActivity : AppCompatActivity() {
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
 
+
+        binding.newPlayerTextView.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.tryButton.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+        }
 
 
         binding.loginButton.setOnClickListener {
