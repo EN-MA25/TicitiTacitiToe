@@ -6,24 +6,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val repository: UserRepository): ViewModel() {
-    // Speaking to UserRepository
+class UserViewModel(): ViewModel() {
+    private val repository =  UserRepository()
 
-    private val _searchResults = MutableLiveData<List<User>>()
-    val searchResults: LiveData<List<User>> = _searchResults
 
+    private val _users = MutableLiveData<List<User>>()
+    val users: LiveData<List<User>> = _users
     fun searchUsers(searchTerm: String) {
         if(searchTerm.isBlank()) {
-            _searchResults.value = emptyList()
+            _users.value = emptyList()
             return
         }
 
         viewModelScope.launch {
             try {
                 val users = repository.searchUsers(searchTerm)
-                _searchResults.value = users
+                _users.value = users
             } catch (exception: Exception) {
-                _searchResults.value = emptyList()
+                _users.value = emptyList()
+            }
+        }
+    }
+
+    fun fetchAllUsers() {
+        viewModelScope.launch {
+            try {
+                val users = repository.getAllUsers()
+                _users.value = users
+            } catch (exception: Exception) {
+                _users.value = emptyList()
             }
         }
     }
