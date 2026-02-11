@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -15,9 +18,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class SearchUserFragment : BottomSheetDialogFragment() {
 
+    private lateinit var userViewModel: UserViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
     }
 
@@ -42,5 +49,13 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         behavior.isDraggable = true
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        userViewModel.searchResults.observe(viewLifecycleOwner) {searchList ->
+
+        }
     }
 }
