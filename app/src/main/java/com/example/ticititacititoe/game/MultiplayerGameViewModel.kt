@@ -13,6 +13,9 @@ class MultiplayerGameViewModel: ViewModel() {
     private val _incomingInvites = MutableStateFlow<List<GameInvitation>>(emptyList())
     val incomingInvites = _incomingInvites.asStateFlow()
 
+    private val _outgoingInvites = MutableStateFlow<List<GameInvitation>>(emptyList())
+    val outgoingInvites = _outgoingInvites.asStateFlow()
+
     private val shownInvites = mutableSetOf<String>()
 
     fun startListeningForInvites(userId: String) {
@@ -20,6 +23,15 @@ class MultiplayerGameViewModel: ViewModel() {
             repository.loadIncomingGameInvitations(userId)
                 .collect { invites ->
                     _incomingInvites.value = invites
+                }
+        }
+    }
+
+    fun startListeningForOutgoingInvites(currentUserId: String) {
+        viewModelScope.launch {
+            repository.loadOutgoingGameInvitations(currentUserId)
+                .collect { invites ->
+                    _outgoingInvites.value = invites
                 }
         }
     }

@@ -42,6 +42,7 @@ class GameRepository {
 
         val outgoingData = mapOf(
             "toUserId" to toUserId,
+            "fromUserId" to fromUserId,
             "toUsername" to toUsername,
             "status" to "pending"
         )
@@ -50,6 +51,28 @@ class GameRepository {
 
         batch.commit().await()
     }
+
+
+    suspend fun loadOutgoingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
+        callbackFlow {
+
+            val listener = db.collection("users")
+                .document(currentUserId)
+                .collection("outgoingGameInvitation")
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null || snapshot == null) {
+                        trySend(emptyList())
+                        return@addSnapshotListener
+                    }
+                    val invites = snapshot.documents.mapNotNull {
+                        it.toObject(GameInvitation::class.java)?.copy(id = it.id)
+                    }
+
+                    trySend(invites)
+                }
+            awaitClose { listener.remove() }
+
+        }
 
     suspend fun loadIncomingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
         callbackFlow {

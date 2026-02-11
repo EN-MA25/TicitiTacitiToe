@@ -70,5 +70,7 @@
 
 
     <string name="invitation_text">You have been invited by: %1$d, to play a Blitz Game</string>
+    <string name="pending_invite_to">Pending invite to: %1$s</string>
+    <string name="has_challenged_you_in_a_blitz_game">%1$s has challenged you in a Blitz game!</string>
 
 </resources>

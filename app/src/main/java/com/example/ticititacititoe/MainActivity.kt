@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import com.example.ticititacititoe.databinding.ActivityMainBinding
 import com.example.ticititacititoe.game.ui.ChallengeFragment
 import com.example.ticititacititoe.game.ui.GameActivity
@@ -13,10 +14,13 @@ import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
 import com.example.ticititacititoe.profile.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
 import com.example.ticititacititoe.profile.UserViewModel
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -50,8 +54,11 @@ class MainActivity : AppCompatActivity() {
 
         if (currentUserId != null) {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
+            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
         lifecycleScope.launchWhenStarted {
+
             multiplayerGameViewModel.incomingInvites.collect { invites ->
                 if (invites.isNotEmpty()) {
                     val invite = invites.first()
@@ -61,6 +68,31 @@ class MainActivity : AppCompatActivity() {
                         .show(supportFragmentManager, "invite_dialog")
                 }
             }
+
+
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                multiplayerGameViewModel.outgoingInvites.collect { invites ->
+                    val existing =
+                        supportFragmentManager.findFragmentByTag("pending_invite_dialog")
+
+                    if(invites.isNotEmpty()) {
+                        val invite = invites.first()
+
+                        OutgoingInviteFragment
+                            .newInstance(invite)
+                            .show(supportFragmentManager, "pending_invite_dialog")
+
+                    }else {
+                        if (existing is OutgoingInviteFragment) {
+                            existing.dismissAllowingStateLoss()
+                        }
+                    }
+                }
+            }
+
         }
 
         binding.profileButton.setOnClickListener {
