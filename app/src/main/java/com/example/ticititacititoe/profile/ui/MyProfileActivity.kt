@@ -7,6 +7,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
+import androidx.lifecycle.ViewModelProvider
+import com.example.ticititacititoe.profile.UserViewModel
 
 class MyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyProfileBinding
@@ -30,5 +32,16 @@ class MyProfileActivity : AppCompatActivity() {
             val dialog = SettingsFragment()
             dialog.show(supportFragmentManager, "settings_fragment_dialog")
         }
+
+        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        userViewModel.fetchCurrentUser()
+
+        userViewModel.currentUser.observe(this) { user ->
+            if (user != null) {
+                binding.usernameTextView.text = user.username
+                binding.initialsTextView.text = user.username.first().toString()
+            }
+        }
+
     }
 }

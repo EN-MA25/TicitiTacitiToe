@@ -3,6 +3,7 @@ package com.example.ticititacititoe.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
@@ -10,7 +11,7 @@ import kotlinx.coroutines.tasks.await
 class UserRepository {
 
     private val db = Firebase.firestore
-
+    private val auth = Firebase.auth
 
 
     suspend fun searchUsers(searchTerm: String): List<User>{
@@ -36,6 +37,12 @@ class UserRepository {
             doc.toObject(User::class.java)?.copy(id = doc.id)
         }
 
+    }
+
+    suspend fun getCurrentUser(): User?{
+        val uid = auth.currentUser?.uid ?: return null
+        val doc = db.collection("users").document(uid).get().await()
+        return doc.toObject(User::class.java)?.copy(id = doc.id)
     }
 
 
