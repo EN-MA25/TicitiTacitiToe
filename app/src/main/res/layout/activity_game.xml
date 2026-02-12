@@ -8,6 +8,18 @@
     tools:context=".game.ui.GameActivity"
     android:background="@drawable/comic_style_bg_red_blue">
 
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/_20dp"
+        app:tint="@color/white" />
+
     <GridLayout
         android:id="@+id/boardGrid"
         android:layout_width="wrap_content"

@@ -5,7 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
+import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -14,10 +23,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class SearchUserFragment : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentSearchUserBinding
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var searchInput: EditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SearchUserRecyclerAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
     }
 
@@ -25,8 +41,8 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_user, container, false)
+        binding = FragmentSearchUserBinding.inflate(inflater, container,false)
+        return binding.root
     }
 
     override fun onStart() {
@@ -42,5 +58,40 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         behavior.isDraggable = true
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
+            //Start game with user
+        })
+
+        recyclerView = binding.searchedUsersRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.adapter = adapter
+
+        searchInput = binding.searchUserEditText
+        userViewModel.fetchAllUsers()
+        binding.searchButton.setOnClickListener {
+            val searchTerm = searchInput.text.toString()
+            if(searchTerm.isNotEmpty()) {
+                userViewModel.searchUsers(searchTerm)
+            }
+        }
+
+        searchInput.addTextChangedListener{text ->
+            val query = text.toString().trim()
+
+            if (query.isNotEmpty()) {
+                userViewModel.searchUsers(query)
+            } else {
+                userViewModel.fetchAllUsers()
+            }
+        }
+        userViewModel.users.observe(viewLifecycleOwner) {list ->
+            adapter.submitList(list)
+        }
+
+
     }
 }
