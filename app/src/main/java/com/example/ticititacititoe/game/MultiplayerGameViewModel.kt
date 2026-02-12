@@ -3,8 +3,11 @@ package com.example.ticititacititoe.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ticititacititoe.game.ui.QueueUiState
+import com.example.ticititacititoe.profile.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MultiplayerGameViewModel: ViewModel() {
@@ -16,7 +19,9 @@ class MultiplayerGameViewModel: ViewModel() {
     private val _outgoingInvites = MutableStateFlow<List<GameInvitation>>(emptyList())
     val outgoingInvites = _outgoingInvites.asStateFlow()
 
-    private val shownInvites = mutableSetOf<String>()
+    private val _queue = MutableStateFlow(QueueUiState())
+    val queue = _queue.asStateFlow()
+
 
     fun startListeningForInvites(userId: String) {
         viewModelScope.launch {
@@ -62,6 +67,35 @@ class MultiplayerGameViewModel: ViewModel() {
             } catch (exception: Exception) {
                 Log.e("Invite", "Failed to delete invite", exception)
 
+            }
+        }
+    }
+
+    fun enterQueue(userId: String, username: String) {
+        viewModelScope.launch {
+            _queue.update { it.copy(isLoading = true, error = null) }
+            try {
+                repository.addToQueue(userId, username)
+                _queue.update { it.copy(isInQueue = true, isLoading = false, error = null) }
+
+            }catch (exception: Exception) {
+                _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
+
+            }
+        }
+    }
+
+    fun leaveQueue(userId: String) {
+        viewModelScope.launch {
+            _queue.update { it.copy(isLoading = true, error = null) }
+
+            try {
+                repository.deleteFromQueue(userId)
+                _queue.update { it.copy(isInQueue = false, isLoading = false, error = null) }
+
+
+            } catch (exception: Exception) {
+                _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
             }
         }
     }

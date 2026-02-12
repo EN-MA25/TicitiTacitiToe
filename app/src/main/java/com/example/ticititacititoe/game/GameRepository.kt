@@ -1,5 +1,7 @@
 package com.example.ticititacititoe.game
 
+import com.example.ticititacititoe.game.ui.QueueUiState
+import com.example.ticititacititoe.profile.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
@@ -15,6 +17,25 @@ class GameRepository {
 
     // Speaking to Firebase to fetch game info
 
+    suspend fun addToQueue(userId: String, username: String) {
+
+        val data = mapOf(
+            "userId" to userId,
+            "status" to "pending",
+            "username" to username
+        )
+        db.collection("gameQueue")
+            .document(userId)
+            .set(data)
+            .await()
+    }
+
+    suspend fun deleteFromQueue(userId: String) {
+        db.collection("gameQueue")
+            .document(userId)
+            .delete()
+            .await()
+    }
     suspend fun sendGameInvite(fromUserId: String,
                        fromUsername: String,
                        toUserId: String,
@@ -51,6 +72,8 @@ class GameRepository {
 
         batch.commit().await()
     }
+
+
 
 
     suspend fun loadOutgoingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
@@ -115,5 +138,7 @@ class GameRepository {
 
         batch.commit().await()
     }
+
+
 
 }
