@@ -6,7 +6,8 @@ import java.sql.Timestamp
 data class OnlineMove (
     val row: Int,
     val col: Int,
-    val playerUid: String,
+    val player: String,
+    val gameId: String,
     val moveIndex: Long,
     val timestamp: Long = System.currentTimeMillis()
 )
