@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class OnlineGameRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val gameCollection = firestore.collection("game")
 
     fun createGame(
         playerX : String,
