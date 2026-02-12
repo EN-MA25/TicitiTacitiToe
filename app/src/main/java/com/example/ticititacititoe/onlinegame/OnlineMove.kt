@@ -1,0 +1,12 @@
+package com.example.ticititacititoe.onlinegame
+
+import com.example.ticititacititoe.game.Player
+import java.sql.Timestamp
+
+data class OnlineMove (
+    val row: Int,
+    val col: Int,
+    val player: Player,
+    val moveIndex: Long,
+    val timestamp: Long = System.currentTimeMillis()
+)

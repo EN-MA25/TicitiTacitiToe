@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".game.ui.GameActivity"
+    android:background="@drawable/comic_style_bg_red_blue">
+
+    <GridLayout
+        android:id="@+id/onlineboardGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:padding="8dp"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/onlinecell00"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="0,0"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell01"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="0,1"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell02"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="0,2"
+            android:contentDescription="@string/game_cell"/>
+
+
+        <ImageButton
+            android:id="@+id/onlinecell10"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="1,0"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell11"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="1,1"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell12"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="1,2"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell20"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="2,0"
+            android:contentDescription="@string/game_cell"/>
+
+        <ImageButton
+            android:id="@+id/onlinecell21"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="101dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/cell_empty"
+            android:contentDescription="@string/game_cell"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="2,1" />
+
+        <ImageButton
+            android:id="@+id/onlinecell22"
+            android:layout_width="@dimen/cell_size"
+            android:layout_height="@dimen/cell_size"
+            android:background="@drawable/cell_empty"
+            android:layout_margin="4dp"
+            android:onClick="squarePressed"
+            android:scaleType="fitCenter"
+            android:tag="2,2"
+            android:contentDescription="@string/game_cell"/>
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/online_status_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/speech_bubble_red_border_stars_200"
+        android:text="vems tur???"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:fontFamily="@font/permanent_marker"
+        app:layout_constraintBottom_toTopOf="@+id/boardGrid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/online_new_game_button"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/comic_text_bubble_400_350"
+        android:paddingEnd="@dimen/_40dp"
+        android:fontFamily="@font/permanent_marker"
+        android:onClick="playAgainPressed"
+        android:text="@string/play_again"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="invisible"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
