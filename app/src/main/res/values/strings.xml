@@ -38,7 +38,7 @@
     <string name="game_cell">Game cell</string>
 
     <string name="play_on_this_phone">Play on \nthis phone</string>
-    <string name="play_a_random_dude">Play a random dude</string>
+    <string name="play_a_random_dude">Play a \nrandom dude</string>
     <string name="search_player">Search player</string>
     <string name="search_by_username">Search by username</string>
     <string name="users">Users:</string>
