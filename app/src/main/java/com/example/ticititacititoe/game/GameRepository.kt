@@ -17,6 +17,21 @@ class GameRepository {
 
     // Speaking to Firebase to fetch game info
 
+    fun observeQueueSize(): Flow<Int> = callbackFlow {
+
+        val listener = db.collection("gameQueue")
+            .addSnapshotListener { snapshot, error ->
+
+                if (error != null || snapshot == null) {
+                    trySend(0)
+                    return@addSnapshotListener
+                }
+
+                trySend(snapshot.size())
+            }
+
+        awaitClose { listener.remove() }
+    }
     suspend fun addToQueue(userId: String, username: String) {
 
         val data = mapOf(

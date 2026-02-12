@@ -21,6 +21,8 @@ class MultiplayerGameViewModel: ViewModel() {
 
     private val _queue = MutableStateFlow(QueueUiState())
     val queue = _queue.asStateFlow()
+    private var queueListenerStarted = false
+
 
 
     fun startListeningForInvites(userId: String) {
@@ -76,8 +78,12 @@ class MultiplayerGameViewModel: ViewModel() {
             _queue.update { it.copy(isLoading = true, error = null) }
             try {
                 repository.addToQueue(userId, username)
-                _queue.update { it.copy(isInQueue = true, isLoading = false, error = null) }
+                _queue.update {current -> current.copy(isInQueue = true, isLoading = false, error = null) }
 
+                if (!queueListenerStarted) {
+                    startObservingQueue()
+                    queueListenerStarted = true
+                }
             }catch (exception: Exception) {
                 _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
 
@@ -85,13 +91,26 @@ class MultiplayerGameViewModel: ViewModel() {
         }
     }
 
-    fun leaveQueue(userId: String) {
+    private fun startObservingQueue() {
+        viewModelScope.launch {
+
+            repository.observeQueueSize().collect { size ->
+
+                _queue.update { it.copy(queueSize = size) }
+            }
+        }
+    }
+
+
+
+
+        fun leaveQueue(userId: String) {
         viewModelScope.launch {
             _queue.update { it.copy(isLoading = true, error = null) }
 
             try {
                 repository.deleteFromQueue(userId)
-                _queue.update { it.copy(isInQueue = false, isLoading = false, error = null) }
+                _queue.update {current -> current.copy(isInQueue = false, isLoading = false, error = null) }
 
 
             } catch (exception: Exception) {

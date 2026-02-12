@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var authViewModel: AuthViewModel
     private lateinit var userViewModel: UserViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,6 +60,10 @@ class MainActivity : AppCompatActivity() {
         if (currentUserId != null) {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
+        }
+
+        lifecycleScope.launch {
+
         }
 
         lifecycleScope.launch {

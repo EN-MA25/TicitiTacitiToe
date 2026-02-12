@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentQueueBinding
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
@@ -14,6 +17,7 @@ import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,6 +86,15 @@ class QueueFragment : BottomSheetDialogFragment() {
 
         currentUserId = userViewModel.getCurrentUserId() ?: return
         binding.queueTextView.text = getString(R.string.waiting_for_player)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                multiplayerGameViewModel.queue.collect { state ->
+                    val queueSize = state.queueSize
+                    binding.inQueueTextView.text = "$queueSize: in queue"
+                }
+            }
+        }
     }
 
     override fun onStart() {

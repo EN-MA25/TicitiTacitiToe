@@ -7,12 +7,22 @@
     tools:context=".game.ui.QueueFragment">
 
     <TextView
+        android:id="@+id/in_queue_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:text="@string/invitation_text"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="@dimen/_20dp"/>
+
+    <TextView
         android:id="@+id/queue_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="@string/invitation_text"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/in_queue_text_view"
         android:layout_margin="@dimen/_20dp"/>
 
     <ProgressBar
