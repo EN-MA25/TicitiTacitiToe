@@ -24,6 +24,7 @@ import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -152,6 +153,11 @@ class MainActivity : AppCompatActivity() {
         binding.newGameButton.setOnClickListener {
            val dialog = ChallengeFragment()
             dialog.show(supportFragmentManager, "challenge_fragment_dialog")
+        }
+
+        binding.onlineGameButton.setOnClickListener {
+            val intent = Intent(this, OnlineGameActivity::class.java)
+            startActivity(intent)
         }
 
     }

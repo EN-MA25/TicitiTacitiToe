@@ -27,7 +27,7 @@ class OnlineGameViewModel : ViewModel() {
         val move = mapOf(
             "row" to row,
             "col" to col,
-            "playerUid" to myUid,
+            "playerUid" to playerUid,
             "timestamp" to System.currentTimeMillis()
         )
         repository.playerMakeMove(
