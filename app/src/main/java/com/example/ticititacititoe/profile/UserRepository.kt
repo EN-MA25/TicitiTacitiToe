@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
@@ -43,6 +44,23 @@ class UserRepository {
         val uid = auth.currentUser?.uid ?: return null
         val doc = db.collection("users").document(uid).get().await()
         return doc.toObject(User::class.java)?.copy(id = doc.id)
+    fun getCurrentUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
+
+    fun getUserDetailsById(userId: String, callback: (User?) -> Unit) {
+        db.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val user = document.toObject(User::class.java)
+                    callback(user?.copy(id = document.id))
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback(null)
+            }
     }
 
 

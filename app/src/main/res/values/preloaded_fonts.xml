@@ -2,6 +2,9 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/bangers</item>
+        <item>@font/bubblegum_sans</item>
+        <item>@font/chewy</item>
+        <item>@font/comic_neue_bold_italic</item>
         <item>@font/permanent_marker</item>
     </array>
 </resources>

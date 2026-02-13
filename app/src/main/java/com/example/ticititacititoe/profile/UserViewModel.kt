@@ -53,4 +53,16 @@ class UserViewModel(): ViewModel() {
         }
     }
 
+    fun getCurrentUserId(): String? {
+        return repository.getCurrentUserId()
+    }
+
+    fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
+        if (userId != null) {
+            repository.getUserDetailsById(userId, callback)
+        }
+    }
+
+
+
 }
