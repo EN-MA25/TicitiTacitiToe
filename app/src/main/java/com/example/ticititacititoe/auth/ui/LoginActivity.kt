@@ -30,6 +30,11 @@ class LoginActivity : AppCompatActivity() {
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
 
+        val emailFromRegister = intent.getStringExtra("email")
+        val passwordFromRegister = intent.getStringExtra("password")
+        if (emailFromRegister != null) binding.emailEditText.setText(emailFromRegister)
+        if(passwordFromRegister != null) binding.passwordEditText.setText(passwordFromRegister)
+
 
         binding.newPlayerTextView.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
