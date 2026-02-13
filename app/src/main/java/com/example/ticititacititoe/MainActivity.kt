@@ -62,9 +62,7 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
-        lifecycleScope.launch {
 
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
