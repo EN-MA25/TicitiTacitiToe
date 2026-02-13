@@ -9,15 +9,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
 import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
-import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
-import com.example.ticititacititoe.game.ui.QueueFragment
 import com.example.ticititacititoe.profile.UserViewModel
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MyProfileActivity : AppCompatActivity() {
@@ -82,7 +77,16 @@ class MyProfileActivity : AppCompatActivity() {
             val dialog = SettingsFragment()
             dialog.show(supportFragmentManager, "settings_fragment_dialog")
         }
+
+        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        userViewModel.fetchCurrentUser()
+
+        userViewModel.currentUser.observe(this) { user ->
+            if (user != null) {
+                binding.usernameTextView.text = user.username
+                binding.initialsTextView.text = user.username.first().toString()
+            }
+        }
+
     }
-
-
 }

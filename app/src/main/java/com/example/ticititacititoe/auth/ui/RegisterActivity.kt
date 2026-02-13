@@ -56,6 +56,8 @@ class RegisterActivity : AppCompatActivity() {
 
                         // =========== Navigate to LoginActivity ============
                         val intent = Intent(this, LoginActivity::class.java)
+                        intent.putExtra("email", email)
+                        intent.putExtra("password", password)
                         startActivity(intent)
                         finish()
                     }

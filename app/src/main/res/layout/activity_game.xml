@@ -137,13 +137,14 @@
 
     <TextView
         android:id="@+id/status_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/turn_pic_ordinary_size"
+        android:layout_height="@dimen/turn_pic_ordinary_size"
         android:background="@drawable/speech_bubble_red_border_stars_200"
-        android:text="vems tur???"
+        android:text=""
         android:textAlignment="center"
         android:gravity="center"
-        android:fontFamily="@font/permanent_marker"
+        android:textSize="48sp"
+        android:fontFamily="@font/bangers"
         app:layout_constraintBottom_toTopOf="@+id/boardGrid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
