@@ -40,11 +40,14 @@ class UserRepository {
 
     }
 
-    suspend fun getCurrentUser(): User?{
+    suspend fun getCurrentUser(): User? {
         val uid = auth.currentUser?.uid ?: return null
         val doc = db.collection("users").document(uid).get().await()
         return doc.toObject(User::class.java)?.copy(id = doc.id)
-    fun getCurrentUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
+
+    }
+        fun getCurrentUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
+
 
     fun getUserDetailsById(userId: String, callback: (User?) -> Unit) {
         db.collection("users")
