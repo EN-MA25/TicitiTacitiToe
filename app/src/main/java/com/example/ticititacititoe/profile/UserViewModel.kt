@@ -8,8 +8,6 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(): ViewModel() {
     private val repository =  UserRepository()
-
-
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
     fun searchUsers(searchTerm: String) {
@@ -38,5 +36,17 @@ class UserViewModel(): ViewModel() {
             }
         }
     }
+
+    fun getCurrentUserId(): String? {
+        return repository.getCurrentUserId()
+    }
+
+    fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
+        if (userId != null) {
+            repository.getUserDetailsById(userId, callback)
+        }
+    }
+
+
 
 }

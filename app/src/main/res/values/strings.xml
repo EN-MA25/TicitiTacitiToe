@@ -23,7 +23,6 @@
     <string name="write_username">Write a username</string>
 
 
-
     <!-- main-->
     <string name="highscore">Highscore</string>
     <string name="profile">Profile</string>
@@ -65,4 +64,15 @@
     <string name="play_with_a_friend">Play with a friend</string>
     <string name="add_friend">Add Friend</string>
     <string name="play">Play</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="decline">Decline</string>
+    <string name="start_game">Start Game</string>
+
+
+    <string name="invitation_text">You have been invited by: %1$d, to play a Blitz Game</string>
+    <string name="pending_invite_to">Pending invite to: %1$s</string>
+    <string name="has_challenged_you_in_a_blitz_game">%1$s has challenged you in a Blitz game!</string>
+    <string name="waiting_for_player">Waiting for player</string>
+
 </resources>

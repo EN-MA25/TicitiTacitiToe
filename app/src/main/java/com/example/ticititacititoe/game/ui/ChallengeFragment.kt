@@ -7,9 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentChallengeBinding
+import com.example.ticititacititoe.game.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.FriendFragment
+import com.example.ticititacititoe.profile.UserViewModel
 import com.example.ticititacititoe.profile.ui.SearchUserFragment
 import com.example.ticititacititoe.profile.ui.SettingsFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -19,7 +22,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ChallengeFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentChallengeBinding
-
+    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var currentUsername: String
+    private lateinit var currentUserId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,15 @@ class ChallengeFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+
+        currentUserId = userViewModel.getCurrentUserId() ?: return
+
+        userViewModel.getUserDetailsById(currentUserId) {user ->
+            currentUsername = user?.username ?: ""
+
+        }
 
         binding.searchPlayerButton.setOnClickListener {
             val dialog = SearchUserFragment()
@@ -53,7 +68,7 @@ class ChallengeFragment : BottomSheetDialogFragment() {
         }
 
         binding.playARandomDudeButton.setOnClickListener {
-
+            multiplayerGameViewModel.enterQueue(currentUserId, currentUsername)
         }
 
         binding.backButton.setOnClickListener {

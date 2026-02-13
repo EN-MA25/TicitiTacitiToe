@@ -8,6 +8,8 @@
     android:background="@drawable/bg_gradient_red_orange_w_yellow_lines">
 
 
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/highscore_button"
         android:layout_width="80dp"
