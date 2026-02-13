@@ -85,6 +85,8 @@ class MultiplayerGameViewModel: ViewModel() {
                     queueListenerStarted = true
                 }
             }catch (exception: Exception) {
+                Log.e("QUEUE_ERROR", "FAILED TO ADD", exception)
+
                 _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
 
             }

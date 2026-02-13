@@ -163,4 +163,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
 
     }
+
+    override fun onStop() {
+        super.onStop()
+        val userId = userViewModel.getCurrentUserId()
+        if (userId != null) {
+            multiplayerGameViewModel.leaveQueue(userId)
+        }
+    }
 }
