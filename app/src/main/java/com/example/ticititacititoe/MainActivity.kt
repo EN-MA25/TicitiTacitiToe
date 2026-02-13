@@ -62,9 +62,7 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
-        lifecycleScope.launch {
 
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -162,5 +160,13 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val userId = userViewModel.getCurrentUserId()
+        if (userId != null) {
+            multiplayerGameViewModel.leaveQueue(userId)
+        }
     }
 }

@@ -29,6 +29,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
     private lateinit var adapter: SearchUserRecyclerAdapter
 
     private lateinit var currentUsername: String
+    private  var currentUserId: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +66,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentUserId = userViewModel.getCurrentUserId()
+        currentUserId = userViewModel.getCurrentUserId()
         userViewModel.getUserDetailsById(currentUserId) {user ->
             currentUsername = user?.username ?: "null"
         }
@@ -82,15 +83,14 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         binding.searchButton.setOnClickListener {
             val searchTerm = searchInput.text.toString()
             if(searchTerm.isNotEmpty()) {
-                userViewModel.searchUsers(searchTerm)
+                    userViewModel.searchUsers(searchTerm, currentUserId!!)
             }
         }
 
         searchInput.addTextChangedListener{text ->
             val query = text.toString().trim()
-
             if (query.isNotEmpty()) {
-                userViewModel.searchUsers(query)
+                userViewModel.searchUsers(query, currentUserId!!)
             } else {
                 userViewModel.fetchAllUsers()
             }

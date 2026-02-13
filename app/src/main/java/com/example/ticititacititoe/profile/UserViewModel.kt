@@ -16,7 +16,7 @@ class UserViewModel(): ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
 
-    fun searchUsers(searchTerm: String) {
+    fun searchUsers(searchTerm: String, currentUserId: String) {
         if(searchTerm.isBlank()) {
             _users.value = emptyList()
             return
@@ -24,7 +24,7 @@ class UserViewModel(): ViewModel() {
 
         viewModelScope.launch {
             try {
-                val users = repository.searchUsers(searchTerm)
+                val users = repository.searchUsers(searchTerm, currentUserId)
                 _users.value = users
             } catch (exception: Exception) {
                 _users.value = emptyList()
