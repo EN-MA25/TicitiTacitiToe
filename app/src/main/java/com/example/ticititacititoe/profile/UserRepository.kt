@@ -15,7 +15,7 @@ class UserRepository {
     private val auth = Firebase.auth
 
 
-    suspend fun searchUsers(searchTerm: String): List<User>{
+    suspend fun searchUsers(searchTerm: String, currentUserId: String): List<User>{
         val snapshot = db.collection("users")
             .orderBy("username")
             .startAt(searchTerm)
@@ -25,6 +25,8 @@ class UserRepository {
 
         return snapshot.documents.mapNotNull { doc ->
             doc.toObject(User::class.java)?.copy(id = doc.id)
+        }.filter { user ->
+            user.id != currentUserId
         }
 
     }
