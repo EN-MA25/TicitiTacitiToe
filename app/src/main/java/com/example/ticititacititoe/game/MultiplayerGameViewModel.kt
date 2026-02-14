@@ -66,7 +66,6 @@ class MultiplayerGameViewModel: ViewModel() {
         }
     }
 
-
     fun sendGameInvitation(
         fromUserId: String?,
         fromUserName: String,
@@ -129,9 +128,6 @@ class MultiplayerGameViewModel: ViewModel() {
             }
         }
     }
-
-
-
 
         fun leaveQueue(userId: String) {
         viewModelScope.launch {

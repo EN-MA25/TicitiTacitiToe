@@ -21,6 +21,18 @@ class OnlineGameRepository {
             var currentPlayer = doc.getString("currentPlayer")
             val playerX = doc.getString("playerX")
             val playerO = doc.getString("playerO")
+            val moves = doc.get("moves") as? ArrayList<HashMap<String, Any>> ?: emptyList()
+
+            for (madeMove in moves) {
+                if ((madeMove.get("row") as Long).toInt() == move.row && (madeMove.get("col") as Long).toInt() == move.col) {
+                    onResult(
+                        Result.failure(
+                            Exception("Already taken")
+                        )
+                    )
+                    return@addOnSuccessListener
+                }
+            }
 
             if (move.player != currentPlayer) {
                 onResult(
@@ -104,7 +116,7 @@ class OnlineGameRepository {
             "currentPlayer" to startingPlayer,
             "gameResult" to "",
             "timestamp" to System.currentTimeMillis(),
-            "moves" to emptyList<Map<String, Any>>()
+            "moves" to emptyList<ArrayList<OnlineMove>>()
         )
 
         firestore.collection("game")

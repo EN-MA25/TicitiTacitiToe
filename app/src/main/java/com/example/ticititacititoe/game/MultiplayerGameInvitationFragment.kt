@@ -66,9 +66,6 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
             fragment.arguments = args
             return fragment
         }
-
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

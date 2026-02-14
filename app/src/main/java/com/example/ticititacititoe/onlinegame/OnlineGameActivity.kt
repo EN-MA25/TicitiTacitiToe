@@ -80,6 +80,41 @@ class OnlineGameActivity : AppCompatActivity() {
             val (row, col) = binding.onlinecell01.tag.toString().split(",").map { it.toInt() }
             playerMakeMove(gameId, row, col)
         }
+
+        binding.onlinecell02.setOnClickListener {
+            val (row, col) = binding.onlinecell02.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell10.setOnClickListener {
+            val (row, col) = binding.onlinecell10.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell11.setOnClickListener {
+            val (row, col) = binding.onlinecell11.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell12.setOnClickListener {
+            val (row, col) = binding.onlinecell12.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell20.setOnClickListener {
+            val (row, col) = binding.onlinecell20.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell21.setOnClickListener {
+            val (row, col) = binding.onlinecell21.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
+
+        binding.onlinecell22.setOnClickListener {
+            val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toInt() }
+            playerMakeMove(gameId, row, col)
+        }
     }
 
     fun playerMakeMove(gameId: String?, row: Int, col: Int) {
@@ -90,7 +125,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 renderBoard(onlineGameViewModel.uiState.value)
             }
             else {
-                Toast.makeText(this, result.getOrDefault(""), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, result.exceptionOrNull()?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -117,9 +152,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     Player.O -> imageButton.setImageResource(R.drawable.cell_o)
                     null -> imageButton.setImageDrawable(null)
                 }
-
 //                imageButton.alpha = if (state.oldestMove == (r to c)) 0.5f else 1.0f
-
             }
         }
     }
