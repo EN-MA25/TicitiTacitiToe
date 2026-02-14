@@ -12,9 +12,10 @@ class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
 
-    private val _uiState = MutableStateFlow(OnlineGameState())
-    val uiState: StateFlow<OnlineGameState> = _uiState
-    private var myUid: String? = null
+    val onlineState: StateFlow<OnlineGameState> = repository.onlineState
+    fun startListenToMove(gameId: String) {
+        repository.startListenToMove(gameId)
+    }
 
     fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
         repository.getGameIfExist(currentUserId, otherUserId){ result ->
@@ -33,39 +34,13 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-    fun playerMakeMove(gameId: String?, row: Int, col: Int, playerUid: String, onResult: (Result<String>) -> Unit) {
+    fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String, onResult: (Result<String>) -> Unit) {
         val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
         repository.playerMakeMove(
             gameId = gameId,
             move = onlineMove,
         ) { result ->
             if (result.isSuccess) {
-                _uiState.update { state ->
-                    if (state.board[row][col] != null) return@update state
-
-                    val newBoard = copyBoard(state.board)
-                    val newMoves = state.moves.toMutableList()
-
-                    val currentPlayer = result.getOrNull()
-
-                    if (currentPlayer == "playerX") {
-                        state.currentPlayer = Player.X
-                    } else {
-                        state.currentPlayer = Player.O
-                    }
-
-                    val current = state.currentPlayer
-
-                    // Add new move
-                    newMoves += onlineMove
-                    newBoard[row][col] = current
-
-                    state.copy(
-                        board = newBoard,
-                        moves = newMoves,
-                    )
-                }
-
                 onResult(result)
             }
         }
@@ -77,5 +52,10 @@ class OnlineGameViewModel : ViewModel() {
         return Array(3) { r ->
             Array(3) { c -> board[r][c] }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.removeListener()
     }
 }

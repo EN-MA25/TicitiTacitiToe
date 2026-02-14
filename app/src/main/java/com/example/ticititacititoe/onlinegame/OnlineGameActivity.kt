@@ -32,7 +32,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,8 +45,6 @@ class OnlineGameActivity : AppCompatActivity() {
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
 
-        setupObservers()
-
         //delete invitation
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
 
@@ -56,6 +53,7 @@ class OnlineGameActivity : AppCompatActivity() {
             result ->
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
+                startListeningToMoves()
             }
             else {
             //Create game state
@@ -63,6 +61,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 result ->
                 if (result.isSuccess) {
                     gameId = result.getOrNull()!!
+                    startListeningToMoves()
                 }
                 else {
                     //handle error
@@ -72,87 +71,83 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
         binding.onlinecell00.setOnClickListener {
-            val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell01.setOnClickListener {
-            val (row, col) = binding.onlinecell01.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell01.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell02.setOnClickListener {
-            val (row, col) = binding.onlinecell02.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell02.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell10.setOnClickListener {
-            val (row, col) = binding.onlinecell10.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell10.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell11.setOnClickListener {
-            val (row, col) = binding.onlinecell11.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell11.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell12.setOnClickListener {
-            val (row, col) = binding.onlinecell12.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell12.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell20.setOnClickListener {
-            val (row, col) = binding.onlinecell20.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell20.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell21.setOnClickListener {
-            val (row, col) = binding.onlinecell21.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell21.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
 
         binding.onlinecell22.setOnClickListener {
-            val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toInt() }
+            val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
     }
 
-    fun playerMakeMove(gameId: String?, row: Int, col: Int) {
-        Log.d("!!!", "Pressed")
-        onlineGameViewModel.playerMakeMove(gameId, row, col, auth.currentUser!!.uid) { result ->
-            if (result.isSuccess) {
-                //render move
-                renderBoard(onlineGameViewModel.uiState.value)
-            }
-            else {
-                Toast.makeText(this, result.exceptionOrNull()?.message, Toast.LENGTH_SHORT).show()
+    fun startListeningToMoves() {
+        onlineGameViewModel.startListenToMove(gameId)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                onlineGameViewModel.onlineState.collect { onlineState ->
+                    renderBoard(onlineState)
+                }
             }
         }
     }
 
-    private fun setupObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                onlineGameViewModel.uiState.collect { state ->
-                    renderBoard(state)
-//                   renderStatus(state)
-                }
+    fun playerMakeMove(gameId: String?, row: Long, col: Long) {
+        Log.d("!!!", "Pressed")
+        onlineGameViewModel.playerMakeMove(gameId, row, col, auth.currentUser!!.uid) { result ->
+            if (result.isSuccess) {
+            }
+            else {
+                Toast.makeText(this, result.exceptionOrNull()?.message ?: "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun renderBoard(state: OnlineGameState) {
-        for (r in 0..2) {
-            for (c in 0..2) {
-                val player = state.board[r][c]
-                val imageButton = getButton(r, c)
-
-                when (player) {
-                    Player.X -> imageButton.setImageResource(R.drawable.cell_x)
-                    Player.O -> imageButton.setImageResource(R.drawable.cell_o)
-                    null -> imageButton.setImageDrawable(null)
-                }
-//                imageButton.alpha = if (state.oldestMove == (r to c)) 0.5f else 1.0f
+        val playerX = state.playerX
+        for (move in state.moves) {
+            if (move.player == playerX) {
+                val imageButton = getButton(move.row.toInt(), move.col.toInt())
+                imageButton.setImageResource(R.drawable.cell_x)
+            } else {
+                val imageButton = getButton(move.row.toInt(), move.col.toInt())
+                imageButton.setImageResource(R.drawable.cell_o)
             }
         }
     }

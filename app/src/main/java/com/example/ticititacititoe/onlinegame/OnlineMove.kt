@@ -4,9 +4,9 @@ import com.example.ticititacititoe.game.Player
 import java.sql.Timestamp
 
 data class OnlineMove (
-    val row: Int,
-    val col: Int,
-    val player: String,
-    val gameId: String,
-    val timestamp: Long = System.currentTimeMillis()
+    var row: Long = 0L,
+    var col: Long = 0L,
+    var player: String = "",
+    var gameId: String = "",
+    var timestamp: Long = System.currentTimeMillis()
 )
