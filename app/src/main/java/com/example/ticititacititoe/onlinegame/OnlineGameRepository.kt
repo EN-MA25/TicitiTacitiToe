@@ -11,7 +11,7 @@ class OnlineGameRepository {
 
     fun playerMakeMove(
         gameId: String?,
-        move: Map<String, Any?>,
+        move: OnlineMove,
         onResult: (Result<String>) -> Unit
     ){
         if (gameId == null) {
@@ -22,7 +22,7 @@ class OnlineGameRepository {
             val playerX = doc.getString("playerX")
             val playerO = doc.getString("playerO")
 
-            if (move.get("playerUid") != currentPlayer) {
+            if (move.player != currentPlayer) {
                 onResult(
                     Result.failure(
                         Exception("You are not the current player!")
@@ -30,7 +30,15 @@ class OnlineGameRepository {
                 )
             }
             else {
-                currentPlayer = if (currentPlayer == playerX) playerO else playerX
+                var playerResult = ""
+                if (currentPlayer == playerX) {
+                    currentPlayer = playerO
+                    playerResult = "playerX"
+                } else
+                {
+                    currentPlayer = playerX
+                    playerResult = "playerO"
+                }
 
                 gameCollection.document(gameId!!)
                     .update(
@@ -39,6 +47,7 @@ class OnlineGameRepository {
                             "currentPlayer" to currentPlayer
                         )
                     )
+                onResult(Result.success(playerResult))
             }
         }
     }

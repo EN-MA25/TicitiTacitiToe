@@ -8,6 +8,5 @@ data class OnlineMove (
     val col: Int,
     val player: String,
     val gameId: String,
-    val moveIndex: Long,
     val timestamp: Long = System.currentTimeMillis()
 )
