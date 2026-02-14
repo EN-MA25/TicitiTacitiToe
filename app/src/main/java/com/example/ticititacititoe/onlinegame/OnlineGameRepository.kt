@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.onlinegame
 
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -28,16 +29,17 @@ class OnlineGameRepository {
                     )
                 )
             }
+            else {
+                currentPlayer = if (currentPlayer == playerX) playerO else playerX
 
-            currentPlayer = if (currentPlayer == playerX) playerO else playerX
-
-            gameCollection.document(gameId!!)
-                .update(
-                    mapOf(
-                        "moves" to FieldValue.arrayUnion(move),
-                        "currentPlayer" to currentPlayer
+                gameCollection.document(gameId!!)
+                    .update(
+                        mapOf(
+                            "moves" to FieldValue.arrayUnion(move),
+                            "currentPlayer" to currentPlayer
+                        )
                     )
-                )
+            }
         }
     }
 
@@ -49,21 +51,32 @@ class OnlineGameRepository {
             .limit(1)
             .get()
             .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    onResult(Result.success(document.getString("gameId")))
-                }
-            }
-            .addOnFailureListener { exception ->
-                firestore.collection("game")
-                    .whereEqualTo("playerX", otherUserId)
-                    .whereEqualTo("playerO", currentUserId)
-                    .limit(1)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        for (document in documents) {
-                            onResult(Result.success(document.getString("gameId")))
+                if (documents.isEmpty) {
+                    Log.d("FirestoreCheck", "Collection does not exist")
+                    firestore.collection("game")
+                        .whereEqualTo("playerX", otherUserId)
+                        .whereEqualTo("playerO", currentUserId)
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            if (documents.isEmpty) {
+                                Log.d("FirestoreCheck", "Collection does not exist")
+                                onResult(Result.failure(Exception("Collection does not exist")))
+                            }
+                            else {
+                                //collection exist!
+                                for (document in documents) {
+                                    onResult(Result.success(document.getString("gameId")))
+                                }
+                            }
                         }
+                } else {
+                    // Collection exists
+                    Log.d("FirestoreCheck", "Collection exists")
+                    for (document in documents) {
+                        onResult(Result.success(document.getString("gameId")))
                     }
+                }
             }
     }
 

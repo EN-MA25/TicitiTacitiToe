@@ -88,7 +88,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                 multiplayerGameViewModel.inviteState.collect { state ->
                     when (state) {
                         is InviteState.Accepted -> {
-                                delay(2000)
+                            delay(2000)
 
                             val intent = Intent(requireContext(), OnlineGameActivity::class.java)
                             intent.putExtra("currentUserId", toUserId)
@@ -97,6 +97,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                             dismiss()
                         }
                         is InviteState.Declined -> {
+                            multiplayerGameViewModel.deleteInvitations(toUserId!!, fromUserId!!)
                             dismiss()
                         }
                         else -> {
