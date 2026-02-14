@@ -3,14 +3,13 @@ package com.example.ticititacititoe.game
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentMultiplayerGameInvitationBinding
+import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -88,8 +87,14 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         binding.acceptInviteButton.setOnClickListener {
             // Start blitz game
-            fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
+            multiplayerGameViewModel.acceptInvite(currentUserId, fromUserId!!)
+            //fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
             dismiss()
+
+            val intent = Intent(requireContext(), OnlineGameActivity::class.java)
+            intent.putExtra("currentUserId", currentUserId)
+            intent.putExtra("fromUserId", fromUserId)
+            startActivity(intent)
         }
     }
 
@@ -109,7 +114,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
+//        fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
 
     }
 

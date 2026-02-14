@@ -155,11 +155,6 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "challenge_fragment_dialog")
         }
 
-        binding.onlineGameButton.setOnClickListener {
-            val intent = Intent(this, OnlineGameActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
     fun newGame() {

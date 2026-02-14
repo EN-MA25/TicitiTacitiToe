@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.game.ui.QueueUiState
 import com.example.ticititacititoe.profile.User
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,7 +25,28 @@ class MultiplayerGameViewModel: ViewModel() {
     val queue = _queue.asStateFlow()
     private var queueListenerStarted = false
 
+    private val _inviteState = MutableStateFlow<InviteState>(InviteState.Idle)
+    val inviteState: StateFlow<InviteState> = _inviteState.asStateFlow()
 
+    private var listenerRegistration: ListenerRegistration? = null
+
+    override fun onCleared() {
+        super.onCleared()
+        listenerRegistration?.remove()
+    }
+
+    fun startListeningToSentInvite(currentUserId: String, otherUserId: String) {
+        // Ask repository for the Flow + ListenerRegistration
+        val (flow, registration) = repository.listenToInvite(otherUserId, currentUserId)
+        listenerRegistration = registration
+
+        // Collect the Flow in the ViewModel's scope
+        viewModelScope.launch {
+            flow.collect { state ->
+                _inviteState.value = state
+            }
+        }
+    }
 
     fun startListeningForInvites(userId: String) {
         viewModelScope.launch {
@@ -59,6 +82,10 @@ class MultiplayerGameViewModel: ViewModel() {
                 }
             }
         }
+    }
+
+    fun acceptInvite(currentUserId: String, fromUserId: String) {
+        repository.acceptInvitation(currentUserId, fromUserId)
     }
 
     fun deleteInvitations(currentUserId: String,

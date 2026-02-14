@@ -12,17 +12,30 @@ class OnlineGameViewModel : ViewModel() {
     val uiState: StateFlow<OnlineGameState> = _uiState
     private var myUid: String? = null
 
-    fun setMyUid(uid: String){
-        myUid = uid
+    fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
+        repository.getGameIfExist(currentUserId, otherUserId){ result ->
+            onResult(result)
+        }
     }
 
-    fun playerMakeMove(row: Int, col: Int, playerUid: String) {
+    fun createOnlineGame(
+        playerX : String?,
+        playerO: String?,
+        startingPlayer: String?,
+        onResult: (Result<String>) -> Unit
+    ){
+        repository.createOnlineGame(playerX, playerO, startingPlayer) {
+            result -> onResult(result)
+        }
+    }
 
-        val state = _uiState.value
+    fun playerMakeMove(gameId: String?, row: Int, col: Int, playerUid: String, onResult: (Result<String>) -> Unit) {
 
-        if (state.gameResult != "Ongoing") return
-        if (state.currentPlayerUid != myUid) return
-        if (state.board[row][col] != null) return
+//        val state = _uiState.value
+//
+//        if (state.gameResult != "Ongoing") return
+//        if (state.currentPlayerUid != myUid) return
+//        if (state.board[row][col] != null) return
 
         val move = mapOf(
             "row" to row,
@@ -31,9 +44,10 @@ class OnlineGameViewModel : ViewModel() {
             "timestamp" to System.currentTimeMillis()
         )
         repository.playerMakeMove(
-            gameId = state.gameId,
+            gameId = gameId,
             move = move,
-            playerUid = playerUid
-        )
+        ) {
+            result -> onResult(result)
+        }
     }
 }
