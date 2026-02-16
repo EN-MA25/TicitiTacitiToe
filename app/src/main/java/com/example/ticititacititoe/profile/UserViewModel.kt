@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ticititacititoe.chat.Message
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(): ViewModel() {
@@ -11,10 +14,12 @@ class UserViewModel(): ViewModel() {
 
 
 
-    private val _currentUser = MutableLiveData<User?>()
-    val currentUser: LiveData<User?> = _currentUser
-    private val _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>> = _users
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser = _currentUser.asStateFlow()
+    private val _users = MutableStateFlow<List<User>>(emptyList())
+    val users = _users.asStateFlow()
+
+
 
     fun searchUsers(searchTerm: String, currentUserId: String) {
         if(searchTerm.isBlank()) {
