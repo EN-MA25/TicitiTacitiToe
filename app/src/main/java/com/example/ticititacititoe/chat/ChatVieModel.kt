@@ -9,7 +9,7 @@ class ChatVieModel: ViewModel() {
 
     fun createChatRoom(
         gameId: String,
-        userIds: List<String?>
+        userIds: List<String>
     ) {
         viewModelScope.launch {
             try {

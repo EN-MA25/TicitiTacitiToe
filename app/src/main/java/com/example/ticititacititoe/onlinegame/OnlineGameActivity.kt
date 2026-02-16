@@ -50,6 +50,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         //delete invitation
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
+        val userIds = listOf(currentUserId, fromUserId)
 
         //get game if exist
         onlineGameViewModel.getGameIfExist(currentUserId, fromUserId) {
@@ -57,6 +58,8 @@ class OnlineGameActivity : AppCompatActivity() {
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
                 startListeningToMoves()
+                chatViewModel.createChatRoom(gameId, userIds)
+
             }
             else {
             //Create game state
@@ -65,7 +68,6 @@ class OnlineGameActivity : AppCompatActivity() {
                 if (result.isSuccess) {
                     gameId = result.getOrNull()!!
                     startListeningToMoves()
-                    val userIds = listOf(currentUserId, fromUserId)
                     chatViewModel.createChatRoom(gameId, userIds)
 
                 }

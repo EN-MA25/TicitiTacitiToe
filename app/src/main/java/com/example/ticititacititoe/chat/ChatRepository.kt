@@ -14,7 +14,7 @@ class ChatRepository {
 
     suspend fun createChatRoom(
         gameId: String,
-        userIds: List<String?>,
+        userIds: List<String>,
                        ) {
 
        val chatRoomRef = db.collection("chatRooms")
@@ -29,15 +29,14 @@ class ChatRepository {
                 roomId = gameId,
                 userIds = userIds,
                 timestamp = Timestamp.now(),
-                )
+            )
 
             chatRoomRef.set(chatRoomData).await()
         }
-
-
-
-
-
-
     }
+
+    suspend fun sendMessage(roomId: String, message: String) {
+        
+    }
+
 }
