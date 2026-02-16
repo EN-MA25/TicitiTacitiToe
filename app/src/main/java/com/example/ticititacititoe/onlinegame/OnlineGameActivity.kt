@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.chat.ChatVieModel
 import com.example.ticititacititoe.databinding.ActivityGameBinding
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.GameResult
@@ -31,6 +32,7 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var onlineGameViewModel: OnlineGameViewModel
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var chatViewModel: ChatVieModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        chatViewModel = ViewModelProvider(this)[ChatVieModel::class.java]
 
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
@@ -62,6 +65,9 @@ class OnlineGameActivity : AppCompatActivity() {
                 if (result.isSuccess) {
                     gameId = result.getOrNull()!!
                     startListeningToMoves()
+                    val userIds = listOf(currentUserId, fromUserId)
+                    chatViewModel.createChatRoom(gameId, userIds)
+
                 }
                 else {
                     //handle error
