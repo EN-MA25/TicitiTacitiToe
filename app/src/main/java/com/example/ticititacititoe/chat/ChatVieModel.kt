@@ -20,4 +20,14 @@ class ChatVieModel: ViewModel() {
         }
 
     }
+
+    fun sendMessage(roomId: String, message: String, currentUserId: String) {
+        viewModelScope.launch {
+            try {
+                repository.sendMessage(roomId, message, currentUserId)
+            } catch (exception: Exception) {
+                // Unable to send message 
+            }
+        }
+    }
 }

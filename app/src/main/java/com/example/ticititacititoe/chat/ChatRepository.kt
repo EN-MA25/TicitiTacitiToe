@@ -35,8 +35,18 @@ class ChatRepository {
         }
     }
 
-    suspend fun sendMessage(roomId: String, message: String) {
-        
+    suspend fun sendMessage(roomId: String, message: String, currentUserId: String) {
+        val message = Message(
+            roomId = roomId,
+            message = message,
+            createdAt = Timestamp.now(),
+            senderId = currentUserId
+        )
+        db.collection("chatRooms")
+            .document(roomId)
+            .collection("messages")
+            .add(message)
+            .await()
     }
 
 }

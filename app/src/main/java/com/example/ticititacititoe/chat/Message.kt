@@ -8,5 +8,4 @@ data class Message(
     val message: String = "",
     val roomId: String = "",
     val createdAt: Timestamp = Timestamp.now(),
-    val senderName: String? = null,
 )
