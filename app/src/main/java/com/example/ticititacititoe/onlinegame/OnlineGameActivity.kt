@@ -19,6 +19,7 @@ import com.example.ticititacititoe.game.GameState
 import com.example.ticititacititoe.game.GameViewModel
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.Player
+import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -27,10 +28,11 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var binding: OnlineGameActivityBinding
     private lateinit var gameId: String
 
-    private val auth = FirebaseAuth.getInstance()
     private lateinit var onlineGameViewModel: OnlineGameViewModel
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
@@ -132,7 +135,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
     fun playerMakeMove(gameId: String?, row: Long, col: Long) {
         // ========== Call viewmodel and send gameid, row/col, uid ==========
-        onlineGameViewModel.playerMakeMove(gameId, row, col, auth.currentUser!!.uid) { result ->
+        onlineGameViewModel.playerMakeMove(gameId, row, col, userViewModel.getCurrentUserId()) { result ->
             if (result.isSuccess) {
             // Updates UI
             }

@@ -35,7 +35,7 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-    fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String, onResult: (Result<String>) -> Unit) {
+    fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?, onResult: (Result<String>) -> Unit) {
 
         // =========== Create onlinemove object===========
         val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
