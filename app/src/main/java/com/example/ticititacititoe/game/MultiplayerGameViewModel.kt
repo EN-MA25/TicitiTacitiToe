@@ -83,10 +83,14 @@ class MultiplayerGameViewModel: ViewModel() {
         }
     }
 
+    // ========= Accept invite ===========
     fun acceptInvite(currentUserId: String, fromUserId: String) {
         repository.acceptInvitation(currentUserId, fromUserId)
     }
 
+    fun declineInvite(currentUserId: String, fromUserId: String) {
+        repository.declineInvitation(currentUserId, fromUserId)
+    }
     fun deleteInvitations(currentUserId: String,
                           otherUserId: String, deleteBothInvitations : Boolean = false) {
         viewModelScope.launch {

@@ -78,7 +78,8 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
         invitationText.text = getString(R.string.has_challenged_you_in_a_blitz_game, fromUsername)
 
         binding.declineInviteButton.setOnClickListener {
-            fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
+            multiplayerGameViewModel.declineInvite(currentUserId, fromUserId!!)
+            multiplayerGameViewModel.deleteInvitations(currentUserId, fromUserId!!)
             dismiss()
         }
 

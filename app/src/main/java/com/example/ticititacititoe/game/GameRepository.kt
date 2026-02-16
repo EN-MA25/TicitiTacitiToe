@@ -160,10 +160,6 @@ class GameRepository {
     fun acceptInvitation(currentUserId: String,
                          otherUserId: String) {
 
-//        db.collection("gameInvitations")
-//            .document(inviteId)
-//            .update("status", "Accepted")
-
         db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
@@ -175,6 +171,22 @@ class GameRepository {
             .collection("outgoingGameInvitation")
             .document(currentUserId)
             .update("status", "accepted")
+    }
+
+    fun declineInvitation(currentUserId: String,
+                         otherUserId: String) {
+
+        db.collection("users")
+            .document(currentUserId)
+            .collection("gameInvitations")
+            .document(otherUserId)
+            .update("status", "declined")
+
+        db.collection("users")
+            .document(otherUserId)
+            .collection("outgoingGameInvitation")
+            .document(currentUserId)
+            .update("status", "declined")
     }
 
     suspend fun deleteInvitations(currentUserId: String,
