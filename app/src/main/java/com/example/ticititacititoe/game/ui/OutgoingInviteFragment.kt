@@ -83,9 +83,12 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
 
         multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
 
+        // ================== Observe invite state ==================
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 multiplayerGameViewModel.inviteState.collect { state ->
+
+                    // ================== Handling different conditions for invite ==================
                     when (state) {
                         is InviteState.Accepted -> {
                             delay(2000)
@@ -101,12 +104,11 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                             dismiss()
                         }
                         else -> {
-                            // Idle or Pending → optionally show waiting UI
+                            // Pending
                         }
                     }
                 }
             }
-
         }
 
     }
@@ -133,12 +135,13 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-//        if (fromUserId != null && toUserId != null) {
-//            multiplayerGameViewModel.deleteInvitations(
-//                toUserId!!,
-//                fromUserId!!
-//            )
-//        }
+        if (fromUserId != null && toUserId != null) {
+            multiplayerGameViewModel.deleteInvitations(
+                toUserId!!,
+                fromUserId!!,
+                true
+            )
+        }
     }
 
 }

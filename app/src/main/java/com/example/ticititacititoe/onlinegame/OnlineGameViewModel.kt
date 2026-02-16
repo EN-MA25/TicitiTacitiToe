@@ -12,6 +12,7 @@ class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
 
+    // =========== Online state ===========
     val onlineState: StateFlow<OnlineGameState> = repository.onlineState
     fun startListenToMove(gameId: String) {
         repository.startListenToMove(gameId)
@@ -35,7 +36,11 @@ class OnlineGameViewModel : ViewModel() {
     }
 
     fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String, onResult: (Result<String>) -> Unit) {
+
+        // =========== Create onlinemove object===========
         val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
+
+        // =========== Send move to repository ===========
         repository.playerMakeMove(
             gameId = gameId,
             move = onlineMove,
@@ -46,14 +51,7 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-    private fun copyBoard(
-        board: Array<Array<Player?>>
-    ): Array<Array<Player?>> {
-        return Array(3) { r ->
-            Array(3) { c -> board[r][c] }
-        }
-    }
-
+    // =========== Clear ===========
     override fun onCleared() {
         super.onCleared()
         repository.removeListener()

@@ -178,28 +178,41 @@ class GameRepository {
     }
 
     suspend fun deleteInvitations(currentUserId: String,
-                          otherUserId: String) {
+                          otherUserId: String, deleteBothInvitations: Boolean = false) {
         val batch = db.batch()
 
-        if (auth.currentUser?.uid == currentUserId)
-        {
+        // =========== delete invitations ==========
+        if (deleteBothInvitations) {
             batch.delete(
                 db.collection("users")
                     .document(currentUserId)
                     .collection("gameInvitations")
                     .document(otherUserId)
             )
-        }
-        else
-        {
             batch.delete(
                 db.collection("users")
                     .document(otherUserId)
                     .collection("outgoingGameInvitation")
                     .document(currentUserId)
             )
-        }
+        } else {
 
+            if (auth.currentUser?.uid == currentUserId) {
+                batch.delete(
+                    db.collection("users")
+                        .document(currentUserId)
+                        .collection("gameInvitations")
+                        .document(otherUserId)
+                )
+            } else {
+                batch.delete(
+                    db.collection("users")
+                        .document(otherUserId)
+                        .collection("outgoingGameInvitation")
+                        .document(currentUserId)
+                )
+            }
+        }
         batch.commit().await()
     }
 

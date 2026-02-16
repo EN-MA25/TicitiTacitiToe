@@ -45,10 +45,10 @@ class OnlineGameActivity : AppCompatActivity() {
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
 
-        //delete invitation
+        // ========== Delete invitaions ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
 
-        //get game if exist
+        // ========== Get game if exist ==========
         onlineGameViewModel.getGameIfExist(currentUserId, fromUserId) {
             result ->
             if (result.isSuccess) {
@@ -56,7 +56,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 startListeningToMoves()
             }
             else {
-            //Create game state
+                // ========== Create game state ==========
             onlineGameViewModel.createOnlineGame(currentUserId, fromUserId, currentUserId) {
                 result ->
                 if (result.isSuccess) {
@@ -64,12 +64,13 @@ class OnlineGameActivity : AppCompatActivity() {
                     startListeningToMoves()
                 }
                 else {
-                    //handle error
+                    //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+        // ========== Cell click listeners ==========
         binding.onlinecell00.setOnClickListener {
             val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
@@ -119,6 +120,7 @@ class OnlineGameActivity : AppCompatActivity() {
     fun startListeningToMoves() {
         onlineGameViewModel.startListenToMove(gameId)
 
+        // ========== Collect online state via stateflow and render board ==========
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
@@ -129,9 +131,10 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
     fun playerMakeMove(gameId: String?, row: Long, col: Long) {
-        Log.d("!!!", "Pressed")
+        // ========== Call viewmodel and send gameid, row/col, uid ==========
         onlineGameViewModel.playerMakeMove(gameId, row, col, auth.currentUser!!.uid) { result ->
             if (result.isSuccess) {
+            // Updates UI
             }
             else {
                 Toast.makeText(this, result.exceptionOrNull()?.message ?: "Something went wrong", Toast.LENGTH_SHORT).show()
@@ -139,9 +142,12 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+    // ========== Update board ==========
     private fun renderBoard(state: OnlineGameState) {
         val playerX = state.playerX
         for (move in state.moves) {
+
+            // ========== Control who made the move and show right imagebutton ==========
             if (move.player == playerX) {
                 val imageButton = getButton(move.row.toInt(), move.col.toInt())
                 imageButton.setImageResource(R.drawable.cell_x)
@@ -153,6 +159,7 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
     private fun getButton(row: Int, col: Int): ImageButton {
+        // ========== Return correct imagebutton based on row/col ==========
         return when (row to col) {
             0 to 0 -> binding.onlinecell00
             0 to 1 -> binding.onlinecell01

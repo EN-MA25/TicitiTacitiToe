@@ -11,21 +11,27 @@ import kotlinx.coroutines.flow.StateFlow
 
 class OnlineGameRepository {
 
+    // =============== Firestore initilize ===============
     private val firestore = FirebaseFirestore.getInstance()
     private val gameCollection = firestore.collection("game")
 
+    // =============== State flow for online state ===============
     private val _onlineState = MutableStateFlow<OnlineGameState>(OnlineGameState())
     val onlineState: StateFlow<OnlineGameState> = _onlineState
 
+    // =============== Listener reference ===============
     private var listenerRegistration: ListenerRegistration? = null
 
     fun startListenToMove(gameId: String?) {
         listenerRegistration = gameCollection.document(gameId!!)
             .addSnapshotListener { snapshot, error ->
-                if (error != null || snapshot == null || !snapshot.exists()) return@addSnapshotListener
+                if (error != null || snapshot == null || !snapshot.exists())
+                    return@addSnapshotListener
 
+                // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
 
+                // =============== Update stateflow ===============
                 _onlineState.value = game!!
             }
     }
@@ -40,15 +46,20 @@ class OnlineGameRepository {
         onResult: (Result<String>) -> Unit
     ){
         if (gameId == null) {
-            //TODO: handle error
+            onResult(Result.failure(Exception("Can't make move, GameID is missing")))
         }
         gameCollection.document(gameId!!).get().addOnSuccessListener { doc ->
+
+            // =============== Convert Firestore document to OnlineGameState object ===============
             val game = doc.toObject(OnlineGameState::class.java)
+
+            // =============== Get current player, uid for players and list of already made moves ===============
             var currentPlayer = game?.currentPlayerUid
             var playerX = game?.playerX
             var playerO = game?.playerO
             var moves = game!!.moves
 
+            // =============== Check if box is already taken ===============
             for (madeMove in moves) {
                 if (madeMove.row == move.row && madeMove.col == move.col) {
                     onResult(
@@ -60,42 +71,46 @@ class OnlineGameRepository {
                 }
             }
 
+            // =============== Control if its the right player ===============
             if (move.player != currentPlayer) {
                 onResult(
                     Result.failure(
                         Exception("You are not the current player!")
                     )
                 )
-            }
-            else {
-                var playerResult = ""
+            } else {
+
+                // =============== Change player ===============
                 if (currentPlayer == playerX) {
                     currentPlayer = playerO
-                    playerResult = "playerX"
-                } else
-                {
+                } else {
                     currentPlayer = playerX
-                    playerResult = "playerO"
                 }
 
                 val game = gameCollection.document(gameId!!)
+
+                // =============== Add moves and updates current player ===============
                 game.update("moves",FieldValue.arrayUnion(move))
                 game.update("currentPlayerUid", currentPlayer)
 
-                onResult(Result.success(playerResult))
+                onResult(Result.success("success"))
             }
         }
     }
 
     fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
         firestore.collection("game")
+            // =============== Check id for players to see if theyre in a game & limit result to max 1 document  ===============
             .whereEqualTo("playerX", currentUserId)
             .whereEqualTo("playerO", otherUserId)
             .limit(1)
             .get()
             .addOnSuccessListener { documents ->
+
+                // =============== If game doesnt exist ===============
                 if (documents.isEmpty) {
-                    Log.d("FirestoreCheck", "Collection does not exist")
+
+                    // =============== Check if players are saved in reversed order ===============
                     firestore.collection("game")
                         .whereEqualTo("playerX", otherUserId)
                         .whereEqualTo("playerO", currentUserId)
@@ -103,19 +118,17 @@ class OnlineGameRepository {
                         .get()
                         .addOnSuccessListener { documents ->
                             if (documents.isEmpty) {
-                                Log.d("FirestoreCheck", "Collection does not exist")
                                 onResult(Result.failure(Exception("Collection does not exist")))
                             }
                             else {
-                                //collection exist!
+                                // =============== Collection exist ===============
                                 for (document in documents) {
                                     onResult(Result.success(document.getString("gameId")))
                                 }
                             }
                         }
                 } else {
-                    // Collection exists
-                    Log.d("FirestoreCheck", "Collection exists")
+                    // =============== Collection exist ===============
                     for (document in documents) {
                         onResult(Result.success(document.getString("gameId")))
                     }
@@ -129,7 +142,10 @@ class OnlineGameRepository {
         startingPlayer: String?,
         onResult: (Result<String>) -> Unit
     ){
+        // =============== New unique gameId ===============
         val gameId = firestore.collection("game").document().id
+
+        // =============== Create new gameobject in Firestore ===============
         val game = hashMapOf(
             "gameId" to gameId,
             "playerX" to playerX,
@@ -153,7 +169,6 @@ class OnlineGameRepository {
                                 ?: Exception("Game failed to start")
                         )
                     )
-
                 }
             }
     }
