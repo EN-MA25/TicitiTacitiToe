@@ -1,60 +1,133 @@
 package com.example.ticititacititoe.chat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.databinding.FragmentChatBinding
+import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
+import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ChatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ChatFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ChatFragment : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentChatBinding
+    private lateinit var userViewModel: UserViewModel
+
+    private lateinit var behavior: BottomSheetBehavior<View>
+
+    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ChatRecyclerAdapter
+    private  var currentUserId: String? = null
+    private var gameId: String? = null
+    private var opponentId: String? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        chatViewModel = ViewModelProvider(requireActivity())[ChatViewModel::class.java]
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+
+        gameId = arguments?.getString("gameId")
+        opponentId = arguments?.getString("opponentId")
+
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+        binding = FragmentChatBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChatFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChatFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        currentUserId = userViewModel.getCurrentUserId()
+
+        val gid = gameId ?: return
+        chatViewModel.listenToChat(gid)
+
+        adapter = ChatRecyclerAdapter(currentUserId!!)
+
+        recyclerView = binding.chatRecyclerView
+
+
+        val layoutManager = LinearLayoutManager(requireContext()).apply {
+            stackFromEnd = true
+            reverseLayout = false
+        }
+
+        recyclerView.layoutManager = layoutManager
+
+        recyclerView.adapter = adapter
+
+        binding.sendButton.setOnClickListener {
+
+            val gid = gameId ?: return@setOnClickListener
+            val uid = currentUserId ?: return@setOnClickListener
+            val text = binding.messageEditText.text.toString()
+            if (text.isBlank()) return@setOnClickListener
+
+            chatViewModel.sendMessage(gid, text, uid)
+            clearFields()
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                chatViewModel.messages.collect { list ->
+                    Log.d("CHAT", "messages size = ${list.size}")
+                    adapter.submitList(list) {
+                        recyclerView.post {
+                            recyclerView.scrollToPosition(adapter.itemCount - 1)
+                        }
+                    }
                 }
             }
+        }
     }
+
+    override fun onStart() {
+        super.onStart()
+
+        val dialog = dialog as? BottomSheetDialog ?: return
+        val bottomSheet = dialog.findViewById<View>(
+            com.google.android.material.R.id.design_bottom_sheet
+        ) ?: return
+
+        val behavior = BottomSheetBehavior.from(bottomSheet)
+
+        val screenHeight = resources.displayMetrics.heightPixels
+        val desiredHeight = (screenHeight * 0.35).toInt()
+
+        behavior.peekHeight = desiredHeight
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior.skipCollapsed = false
+        behavior.isDraggable = true
+    }
+
+    private fun clearFields() {
+        binding.messageEditText.text.clear()
+    }
+
 }
+

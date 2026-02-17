@@ -1,10 +1,7 @@
 package com.example.ticititacititoe.profile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ticititacititoe.chat.Message
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -62,9 +59,11 @@ class UserViewModel(): ViewModel() {
         return repository.getCurrentUserId()
     }
 
-    fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
-        if (userId != null) {
-            repository.getUserDetailsById(userId, callback)
+    fun loadCurrentUser(id: String?) {
+        if (id == null) return
+
+        viewModelScope.launch {
+            _currentUser.value = repository.getUserDetailsById(id)
         }
     }
 

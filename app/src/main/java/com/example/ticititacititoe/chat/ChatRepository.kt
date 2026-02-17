@@ -15,19 +15,20 @@ class ChatRepository {
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
-    suspend fun listenToChat(roomId: String): Flow<List<Message>> = callbackFlow {
+    fun listenToChat(roomId: String): Flow<List<Message>> = callbackFlow {
        val listener =  db.collection("chatRooms")
             .document(roomId)
             .collection("messages")
-            .orderBy("timestamp")
+            .orderBy("createdAt")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
                     return@addSnapshotListener
                 }
 
-                val messages = snapshot?.toObjects(Message::class.java)
-                    ?: emptyList()
+                val messages = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Message::class.java)?.copy(id = doc.id)
+                } ?: emptyList()
 
                 trySend(messages)
             }

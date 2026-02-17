@@ -2,7 +2,6 @@ package com.example.ticititacititoe.onlinegame
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -12,14 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
-import com.example.ticititacititoe.chat.ChatVieModel
-import com.example.ticititacititoe.databinding.ActivityGameBinding
+import com.example.ticititacititoe.chat.ChatFragment
+import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
-import com.example.ticititacititoe.game.GameResult
-import com.example.ticititacititoe.game.GameState
-import com.example.ticititacititoe.game.GameViewModel
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
-import com.example.ticititacititoe.game.Player
+import com.example.ticititacititoe.profile.ui.SearchUserFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -32,7 +28,7 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var onlineGameViewModel: OnlineGameViewModel
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
-    private lateinit var chatViewModel: ChatVieModel
+    private lateinit var chatViewModel: ChatViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +39,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
-        chatViewModel = ViewModelProvider(this)[ChatVieModel::class.java]
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
@@ -78,6 +74,16 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+        binding.chatButton.setOnClickListener {
+            val chatFragment = ChatFragment().apply {
+                arguments = Bundle().apply {
+                    putString("gameId", gameId)
+                    putString("opponentId", fromUserId)
+
+                }
+            }
+            chatFragment.show(supportFragmentManager, "chat_fragment_dialog")
+        }
         binding.onlinecell00.setOnClickListener {
             val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)

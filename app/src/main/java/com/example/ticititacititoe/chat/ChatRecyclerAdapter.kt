@@ -10,7 +10,7 @@ import com.example.ticititacititoe.databinding.MessageRecievedItemBinding
 import com.example.ticititacititoe.databinding.MessageSentItemBinding
 
 class ChatRecyclerAdapter(private val currentUserId: String): ListAdapter<Message,RecyclerView.ViewHolder>(Diff()) {
-    companion object {
+   private companion object {
         private const val SENT = 1
         private const val RECEIVED = 2
     }
