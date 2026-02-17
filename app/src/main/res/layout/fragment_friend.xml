@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".profile.FriendFragment">
+    tools:context=".profile.FriendFragment"
+    android:background="@drawable/bg_gradient_yellow_orange">
 
     <TextView
         android:id="@+id/friends_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/friends_"
+        android:fontFamily="@font/comic_neue_bold_italic"
+        android:background="@color/white"
         android:layout_marginTop="@dimen/_40dp"
         android:layout_marginHorizontal="@dimen/_20dp"
         app:layout_constraintTop_toTopOf="parent"
