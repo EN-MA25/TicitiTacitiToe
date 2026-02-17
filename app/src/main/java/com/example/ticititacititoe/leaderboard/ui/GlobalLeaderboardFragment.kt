@@ -47,7 +47,7 @@ class GlobalLeaderboardFragment : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
-        
+        leaderboardViewModel.loadGlobalLeaderboard()
     }
 
     private fun observeViewModel() {
