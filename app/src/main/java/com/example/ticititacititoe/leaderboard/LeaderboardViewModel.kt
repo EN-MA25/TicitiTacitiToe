@@ -9,8 +9,12 @@ import kotlinx.coroutines.launch
 
 class LeaderboardViewModel(): ViewModel() {
     private var repository = LeaderboardRepository()
+
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
+    private val _globalLeaderboard = MutableLiveData<List<LeaderboardEntry>>()
+    val globalLeaderboard: LiveData<List<LeaderboardEntry>> = _globalLeaderboard
+
 
     fun getAllUsers(){
         viewModelScope.launch {
@@ -23,9 +27,24 @@ class LeaderboardViewModel(): ViewModel() {
         }
     }
 
-    fun getRatings(userId: String, callback: (Double?) -> Unit){
-                 repository.getRatings(userId, callback)
 
+    fun loadGlobalLeaderboard() {
+        viewModelScope.launch {
+            try {
+                val users = repository.getAllUsers()
+                val leaderboardEntries = users
+                    .sortedByDescending { it.rating }
+                    .mapIndexed { index, user ->
+                        val winRate = if (user.totalGames > 0) {
+                            (user.wonGames.toDouble() / user.totalGames.toDouble()) * 100
+                        } else 0.0
+                        LeaderboardEntry(user, index + 1, winRate)
+                    }
+                _globalLeaderboard.value = leaderboardEntries
+            } catch (exception: Exception) {
+                _globalLeaderboard.value = emptyList()
+            }
+        }
     }
 
 

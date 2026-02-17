@@ -19,24 +19,22 @@ class LeaderboardRepository {
     }
 
 
-     fun getRatings(userId: String, callback: (Double?) -> Unit){
-        val docRef = db.collection("users")
-                          .document(userId)
-                           docRef.get()
-                               .addOnSuccessListener{document ->
-                                   if(document != null && document.exists()){
-                                     val rating = document.getDouble("raiting")
-                                       callback(rating)
-                                   }else{
-                                       callback(null)
-                                   }
-                               }
-                               .addOnFailureListener {
-                                   callback(null)
-                               }
-
-
-
-
+    suspend fun getRating(userId: String): Double? {
+        return try {
+            val doc = db.collection("users")
+                .document(userId)
+                .get()
+                .await()
+            doc.getDouble("rating")
+        } catch (e: Exception) {
+            null
+        }
     }
+
+
+
+
+
+
+
 }
