@@ -33,6 +33,11 @@ class OnlineGameRepository {
                 // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
 
+                if(game?.playerLeftId != "") {
+                    _onlineState.value = game!!
+                    return@addSnapshotListener
+                }
+
                 if (moveCount == game!!.moves.count())
                     return@addSnapshotListener
 
@@ -119,6 +124,14 @@ class OnlineGameRepository {
         }
     }
 
+    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit){
+
+        gameCollection.document(gameId!!).delete()
+            .addOnSuccessListener {
+                onResult(Result.success("Game is deleted"))
+            }
+    }
+
     fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
         firestore.collection("game")
             // =============== Check id for players to see if theyre in a game & limit result to max 1 document  ===============
@@ -184,6 +197,11 @@ class OnlineGameRepository {
             }
     }
 
+    fun userHasLeft(gameId: String?, userId: String?) {
+        gameCollection.document(gameId!!)
+            .update("playerLeftId", userId)
+    }
+
     fun createOnlineGame(
         playerX : String?,
         playerO: String?,
@@ -200,6 +218,7 @@ class OnlineGameRepository {
             "playerO" to playerO,
             "currentPlayerUid" to startingPlayer,
             "gameResult" to "Ongoing",
+            "playerLeftId" to "",
             "timestamp" to System.currentTimeMillis(),
             "moves" to emptyList<List<OnlineMove>>()
         )

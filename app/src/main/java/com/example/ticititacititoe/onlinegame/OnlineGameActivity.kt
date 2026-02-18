@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.onlinegame
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,7 +12,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityGameBinding
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.GameResult
@@ -35,6 +38,9 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
 
     private var hasStartedListening = false
+
+    private var currentUserId: String? = ""
+    private var otherUserId: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,13 +103,13 @@ class OnlineGameActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val currentUserId = intent.getStringExtra("currentUserId")
-        val fromUserId = intent.getStringExtra("fromUserId")
+        currentUserId = intent.getStringExtra("currentUserId")
+        otherUserId = intent.getStringExtra("fromUserId")
 
         // ========== Delete invitaions from db ==========
-        multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
+        multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
         // ========== Get game if exist ==========
-        onlineGameViewModel.getGameIfExist(currentUserId, fromUserId) {
+        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
                 result ->
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
@@ -111,7 +117,7 @@ class OnlineGameActivity : AppCompatActivity() {
             }
             else {
                 // ========== Create game state ==========
-                onlineGameViewModel.createOnlineGame(currentUserId, fromUserId, currentUserId) {
+                onlineGameViewModel.createOnlineGame(currentUserId, otherUserId, currentUserId) {
                         result ->
                     if (result.isSuccess) {
                         gameId = result.getOrNull()!!
@@ -125,6 +131,26 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+
+    fun isGameOver(onlineGameState: OnlineGameState) {
+        if(onlineGameState.playerLeftId != "") {
+            if(onlineGameState.playerLeftId != userViewModel.getCurrentUserId()) {
+                if(onlineGameState.gameResult == "Ongoing") {
+                    val gameResult = OnlineGameResult(otherUserId, currentUserId)
+                    onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
+                        if(result.isSuccess) {
+                            Toast.makeText(this, "Other player has left, you won!", Toast.LENGTH_SHORT).show()
+                            onlineGameViewModel.deleteGame(gameId) {
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun startListeningToMoves() {
         if (hasStartedListening) return
 
@@ -132,7 +158,6 @@ class OnlineGameActivity : AppCompatActivity() {
         hasStartedListening = true
 
         // ========== Collect online state via stateflow and render board ==========
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
@@ -142,6 +167,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     if (checkWinner(onlineState)){
                         Toast.makeText(this@OnlineGameActivity, onlineState.gameResult , Toast.LENGTH_SHORT).show()
                     }
+                    isGameOver(onlineState)
                 }
             }
         }
@@ -244,6 +270,16 @@ class OnlineGameActivity : AppCompatActivity() {
             } else {
                 val imageButton = getButton(move.row.toInt(), move.col.toInt())
                 imageButton.setImageResource(R.drawable.cell_o)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
+                result ->
+            if (result.isSuccess) {
+                onlineGameViewModel.userHasLeft(gameId, currentUserId)
             }
         }
     }

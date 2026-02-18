@@ -11,6 +11,7 @@ data class OnlineGameState (
     var moves: List<OnlineMove> = emptyList(),
     var playerX: String? = "",
     var playerO: String? = "",
+    var playerLeftId: String? = "",
     var startingPlayer: String? = "",
     var gameId: String = "",
     var timestamp: Long = System.currentTimeMillis()

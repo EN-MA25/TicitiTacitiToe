@@ -36,7 +36,7 @@ class OnlineGameViewModel : ViewModel() {
     }
     fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?, onResult: (Result<String>) -> Unit) {
 
-        // =========== Create onlinemove object===========
+        // =========== Create onlinemove object=============
         val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
 
         // =========== Send move to repository ===========
@@ -52,6 +52,17 @@ class OnlineGameViewModel : ViewModel() {
 
     fun updateGameResult(gameId: String, result: String) {
         repository.updateGameResult(gameId, result)
+    }
+
+    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
+        repository.deleteGame(gameId){ result ->
+            onResult(result)
+
+        }
+    }
+
+    fun userHasLeft(gameId: String?, userId: String?) {
+        repository.userHasLeft(gameId, userId)
     }
 
     fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
