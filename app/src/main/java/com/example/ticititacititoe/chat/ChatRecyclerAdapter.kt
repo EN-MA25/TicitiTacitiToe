@@ -9,11 +9,15 @@ import com.example.ticititacititoe.Util
 import com.example.ticititacititoe.databinding.MessageRecievedItemBinding
 import com.example.ticititacititoe.databinding.MessageSentItemBinding
 
-class ChatRecyclerAdapter(private val currentUserId: String): ListAdapter<Message,RecyclerView.ViewHolder>(Diff()) {
+class ChatRecyclerAdapter(private val currentUserId: String,
+                          private val opponentName: String
+): ListAdapter<Message,RecyclerView.ViewHolder>(Diff()) {
    private companion object {
         private const val SENT = 1
         private const val RECEIVED = 2
     }
+
+
 
 
     override fun onCreateViewHolder(
@@ -63,6 +67,7 @@ class ChatRecyclerAdapter(private val currentUserId: String): ListAdapter<Messag
         fun bind(message: Message) {
             binding.leftChatTextView.text = message.message
             binding.timestampLeftChat.text = Util.formatTime(message.createdAt)
+            binding.usernameLeftChat.text = opponentName
         }
     }
 

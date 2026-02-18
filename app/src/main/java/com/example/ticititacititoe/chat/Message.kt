@@ -7,5 +7,5 @@ data class Message(
     val senderId: String = "",
     val message: String = "",
     val roomId: String = "",
-    val createdAt: Timestamp = Timestamp.now(),
+    val createdAt: Timestamp = Timestamp.now()
 )

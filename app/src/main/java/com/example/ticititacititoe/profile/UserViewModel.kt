@@ -10,7 +10,8 @@ class UserViewModel(): ViewModel() {
     private val repository =  UserRepository()
 
 
-
+    private val _selectedUser = MutableStateFlow<User?>(null)
+    val selectedUser = _selectedUser.asStateFlow()
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
@@ -59,11 +60,11 @@ class UserViewModel(): ViewModel() {
         return repository.getCurrentUserId()
     }
 
-    fun loadCurrentUser(id: String?) {
+    fun loadUserById(id: String?) {
         if (id == null) return
 
         viewModelScope.launch {
-            _currentUser.value = repository.getUserDetailsById(id)
+            _selectedUser.value = repository.getUserDetailsById(id)
         }
     }
 

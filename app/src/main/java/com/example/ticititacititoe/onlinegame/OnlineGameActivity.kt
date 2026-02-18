@@ -15,6 +15,7 @@ import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.profile.UserViewModel
 import com.example.ticititacititoe.profile.ui.SearchUserFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -29,6 +30,8 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var chatViewModel: ChatViewModel
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var opponentUsername: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +43,28 @@ class OnlineGameActivity : AppCompatActivity() {
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+
 
         val currentUserId = intent.getStringExtra("currentUserId")
         val fromUserId = intent.getStringExtra("fromUserId")
+
+
+
+        if (fromUserId != null) {
+            userViewModel.loadUserById(fromUserId)
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.selectedUser.collect { user ->
+                    opponentUsername = user?.username ?: return@collect
+
+
+                }
+            }
+        }
 
         //delete invitation
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
@@ -79,6 +101,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 arguments = Bundle().apply {
                     putString("gameId", gameId)
                     putString("opponentId", fromUserId)
+                    putString("opponentUsername", opponentUsername )
 
                 }
             }
@@ -180,4 +203,6 @@ class OnlineGameActivity : AppCompatActivity() {
             else -> error("Invalid cell")
         }
     }
+
+
 }

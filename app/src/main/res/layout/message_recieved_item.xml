@@ -4,12 +4,23 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/username_left_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:layout_marginTop="@dimen/_4dp"
+        android:layout_marginStart="@dimen/_12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black_overlay"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/left_chat_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username_left_chat"
         android:backgroundTint="@color/blue"
         android:layout_marginHorizontal="6dp"
         app:cardCornerRadius="@dimen/_20dp">

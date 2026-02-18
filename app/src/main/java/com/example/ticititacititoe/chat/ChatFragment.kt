@@ -36,6 +36,7 @@ class ChatFragment : BottomSheetDialogFragment() {
     private  var currentUserId: String? = null
     private var gameId: String? = null
     private var opponentId: String? = null
+    private var opponentUsername: String? = null
 
 
 
@@ -46,6 +47,7 @@ class ChatFragment : BottomSheetDialogFragment() {
 
         gameId = arguments?.getString("gameId")
         opponentId = arguments?.getString("opponentId")
+        opponentUsername = arguments?.getString("opponentUsername")
 
 
     }
@@ -68,15 +70,15 @@ class ChatFragment : BottomSheetDialogFragment() {
         val gid = gameId ?: return
         chatViewModel.listenToChat(gid)
 
-        adapter = ChatRecyclerAdapter(currentUserId!!)
+        adapter = ChatRecyclerAdapter(
+            currentUserId!!,
+            opponentUsername ?: ""
+        )
 
         recyclerView = binding.chatRecyclerView
 
 
-        val layoutManager = LinearLayoutManager(requireContext()).apply {
-            stackFromEnd = true
-            reverseLayout = false
-        }
+        val layoutManager = LinearLayoutManager(requireContext())
 
         recyclerView.layoutManager = layoutManager
 
@@ -97,9 +99,7 @@ class ChatFragment : BottomSheetDialogFragment() {
                 chatViewModel.messages.collect { list ->
                     Log.d("CHAT", "messages size = ${list.size}")
                     adapter.submitList(list) {
-                        recyclerView.post {
-                            recyclerView.scrollToPosition(adapter.itemCount - 1)
-                        }
+                        recyclerView.scrollToPosition(adapter.itemCount - 1)
                     }
                 }
             }
