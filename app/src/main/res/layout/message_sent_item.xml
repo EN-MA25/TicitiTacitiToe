@@ -11,7 +11,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/red"
-        android:layout_margin="16dp"
+        android:layout_marginHorizontal="6dp"
         app:cardCornerRadius="@dimen/_20dp"
         >
         <TextView
