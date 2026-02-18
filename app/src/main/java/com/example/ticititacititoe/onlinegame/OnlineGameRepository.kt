@@ -22,16 +22,21 @@ class OnlineGameRepository {
     // =============== Listener reference ===============
     private var listenerRegistration: ListenerRegistration? = null
 
+    var moveCount: Int = 0
+
     fun startListenToMove(gameId: String?) {
         listenerRegistration = gameCollection.document(gameId!!)
             .addSnapshotListener { snapshot, error ->
                 if (error != null || snapshot == null || !snapshot.exists())
                     return@addSnapshotListener
 
-            //    if (snapshot.metadata.hasPendingWrites()) return@addSnapshotListener
-
                 // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
+
+                if (moveCount == game!!.moves.count())
+                    return@addSnapshotListener
+
+                moveCount = game.moves.count()
 
                 // =============== Update stateflow ===============
                 _onlineState.value = game!!
