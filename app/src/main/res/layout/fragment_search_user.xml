@@ -4,48 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_gradient_red_orange"
     tools:context=".profile.ui.SearchUserFragment">
 
     <EditText
         android:id="@+id/search_user_edit_text"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:hint="@string/search_by_username"
+        android:background="@drawable/bg_input_field"
+        android:fontFamily="@font/chewy"
+        android:letterSpacing="0.07"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hint"
+        android:textSize="16sp"
         android:layout_marginHorizontal="@dimen/_20dp"
         android:layout_marginTop="@dimen/_20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
         android:layout_marginHorizontal="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_20dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:background="@drawable/search_icon"
+        android:text="@string/search"
+        app:layout_constraintBottom_toBottomOf="@+id/search_user_edit_text"
+        app:layout_constraintEnd_toEndOf="@id/search_user_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/search_user_edit_text" />
 
     <TextView
         android:id="@+id/user_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/users"
-        android:layout_marginTop="@dimen/_40dp"
         android:layout_marginHorizontal="@dimen/_20dp"
-        app:layout_constraintTop_toBottomOf="@id/search_user_edit_text"/>
+        android:layout_marginTop="@dimen/_18dp"
+        android:fontFamily="@font/comic_neue_bold_italic"
+        android:text="@string/users"
+        android:padding="4dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/search_user_edit_text"
+        tools:layout_editor_absoluteX="20dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searched_users_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:listitem="@layout/user_list_item"
         android:layout_marginHorizontal="@dimen/_20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_text_view"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="159dp"
+        tools:listitem="@layout/user_list_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

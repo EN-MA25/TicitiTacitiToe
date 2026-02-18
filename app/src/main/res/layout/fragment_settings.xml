@@ -3,15 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/green"
+    android:padding="@dimen/_18dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".profile.ui.SettingsFragment">
 
-    <Button
+    <!-- Log out button -->
+    <LinearLayout
         android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/log_out"
+        android:background="@drawable/bg_button_red"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_40dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="18dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/_20dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/logout_icon"
+            android:layout_marginEnd="8dp"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bangers"
+            android:letterSpacing="0.1"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:text="@string/log_out"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sp" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
