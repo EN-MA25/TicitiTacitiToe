@@ -138,6 +138,7 @@ class GameRepository {
 
         }
 
+    // =========== Listen to invite status ============
     fun listenToInvite(currentUserId: String, otherUserId: String): Pair<StateFlow<InviteState>, ListenerRegistration> {
         val stateFlow = MutableStateFlow<InviteState>(InviteState.Idle)
 
@@ -157,15 +158,18 @@ class GameRepository {
         return stateFlow to registration
     }
 
+    // ======= Accept =============
     fun acceptInvitation(currentUserId: String,
                          otherUserId: String) {
 
+        // ======== Update recievers document ========
         db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
             .document(otherUserId)
             .update("status", "accepted")
 
+        // ======== Update senders document ==========
         db.collection("users")
             .document(otherUserId)
             .collection("outgoingGameInvitation")
@@ -173,15 +177,18 @@ class GameRepository {
             .update("status", "accepted")
     }
 
+    // ============ decline =========
     fun declineInvitation(currentUserId: String,
                          otherUserId: String) {
 
+        // ======== Update recievers document ========
         db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
             .document(otherUserId)
             .update("status", "declined")
 
+        // ======== Update senders document ==========
         db.collection("users")
             .document(otherUserId)
             .collection("outgoingGameInvitation")
@@ -189,11 +196,12 @@ class GameRepository {
             .update("status", "declined")
     }
 
+    // ============= delete =============
     suspend fun deleteInvitations(currentUserId: String,
                           otherUserId: String, deleteBothInvitations: Boolean = false) {
         val batch = db.batch()
 
-        // =========== delete invitations ==========
+        // =========== delete recievers invitations ==========
         if (deleteBothInvitations) {
             batch.delete(
                 db.collection("users")
@@ -201,6 +209,8 @@ class GameRepository {
                     .collection("gameInvitations")
                     .document(otherUserId)
             )
+
+            // ======== delete senders invitations =========
             batch.delete(
                 db.collection("users")
                     .document(otherUserId)
@@ -208,7 +218,6 @@ class GameRepository {
                     .document(currentUserId)
             )
         } else {
-
             if (auth.currentUser?.uid == currentUserId) {
                 batch.delete(
                     db.collection("users")
@@ -227,7 +236,4 @@ class GameRepository {
         }
         batch.commit().await()
     }
-
-
-
 }

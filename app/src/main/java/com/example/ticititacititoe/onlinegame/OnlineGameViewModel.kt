@@ -51,6 +51,12 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
+    fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
+        repository.addOnlineGameResult(onlineGameResult){ result ->
+            onResult(result)
+        }
+    }
+
     // =========== Clear ===========
     override fun onCleared() {
         super.onCleared()

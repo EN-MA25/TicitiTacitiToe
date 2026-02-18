@@ -28,6 +28,8 @@ class OnlineGameRepository {
                 if (error != null || snapshot == null || !snapshot.exists())
                     return@addSnapshotListener
 
+            //    if (snapshot.metadata.hasPendingWrites()) return@addSnapshotListener
+
                 // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
 
@@ -136,6 +138,33 @@ class OnlineGameRepository {
             }
     }
 
+    fun addOnlineGameResult(onlineGameResult: OnlineGameResult,
+                            onResult: (Result<String>) -> Unit){
+
+        val onlineGameResultId = firestore.collection("onlineGameResult").document().id
+
+        val onlineGameResult = hashMapOf(
+            "onlineGameResultId" to onlineGameResultId,
+            "playerWhoWon" to onlineGameResult._playerWhoWon,
+            "playerWhoLost" to onlineGameResult._playerWhoLost
+        )
+        firestore.collection("onlineGameResult")
+            .document(onlineGameResultId)
+            .set(onlineGameResult)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(Result.success(onlineGameResultId))
+                } else {
+                    onResult(
+                        Result.failure(
+                            task.exception
+                                ?: Exception("Failed to save")
+                        )
+                    )
+                }
+            }
+    }
+
     fun createOnlineGame(
         playerX : String?,
         playerO: String?,
@@ -151,7 +180,7 @@ class OnlineGameRepository {
             "playerX" to playerX,
             "playerO" to playerO,
             "currentPlayerUid" to startingPlayer,
-            "gameResult" to "",
+            "gameResult" to "Ongoing",
             "timestamp" to System.currentTimeMillis(),
             "moves" to emptyList<List<OnlineMove>>()
         )
