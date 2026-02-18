@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
 import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
@@ -83,8 +84,14 @@ class MyProfileActivity : AppCompatActivity() {
 
         userViewModel.currentUser.observe(this) { user ->
             if (user != null) {
-                binding.usernameTextView.text = user.username
+                binding.usernameTextView.text = "${user.username} ${user.rating}"
                 binding.initialsTextView.text = user.username.first().toString()
+                binding.wonGamesNumberTextView.text = user.wonGames.toString()
+                binding.lostGamesNumberTextView.text = user.lostGames.toString()
+                binding.totalGamesNumberTextView.text = user.totalGames.toString()
+                binding.currentStreakTextView.text = getString(R.string.current_streak, user.currentStreak)
+                binding.maxStreakTextView.text = getString(R.string.max_streak, user.maxStreak)
+
             }
         }
 

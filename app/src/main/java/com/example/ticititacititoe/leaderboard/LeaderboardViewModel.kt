@@ -12,8 +12,8 @@ class LeaderboardViewModel(): ViewModel() {
 
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
-    private val _globalLeaderboard = MutableLiveData<List<LeaderboardEntry>>()
-    val globalLeaderboard: LiveData<List<LeaderboardEntry>> = _globalLeaderboard
+    private val _globalLeaderboard = MutableLiveData<List<User>>()
+    val globalLeaderboard: LiveData<List<User>> = _globalLeaderboard
 
 
     fun getAllUsers(){
@@ -32,15 +32,15 @@ class LeaderboardViewModel(): ViewModel() {
         viewModelScope.launch {
             try {
                 val users = repository.getAllUsers()
-                val leaderboardEntries = users
+                val sortedUsers = users
                     .sortedByDescending { it.rating }
-                    .mapIndexed { index, user ->
-                        val winRate = if (user.totalGames > 0) {
-                            (user.wonGames.toDouble() / user.totalGames.toDouble()) * 100
-                        } else 0.0
-                        LeaderboardEntry(user, index + 1, winRate)
-                    }
-                _globalLeaderboard.value = leaderboardEntries
+                    //.mapIndexed { index, user ->
+                    //    val winRate = if (user.totalGames > 0) {
+                    //        (user.wonGames.toDouble() / user.totalGames.toDouble()) * 100
+                    //    } else 0.0
+                    // LeaderboardEntry(user, index + 1, winRate)
+                    //}
+                _globalLeaderboard.value = sortedUsers
             } catch (exception: Exception) {
                 _globalLeaderboard.value = emptyList()
             }

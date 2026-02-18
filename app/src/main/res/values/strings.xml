@@ -54,6 +54,8 @@
     <string name="total_games">Total Games:</string>
     <string name="won_games">Won Games:</string>
     <string name="log_out">Log Out</string>
+    <string name="winrate">Avg: %1$s</string>
+    <string name="moves_made">Moves: %1$s</string>
 
 
     <!-- profile / settings-->
