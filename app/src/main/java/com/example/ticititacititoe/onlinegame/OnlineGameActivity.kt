@@ -195,6 +195,8 @@ class OnlineGameActivity : AppCompatActivity() {
                 if (combinations.all {(r, c) -> playerXMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
 
                 state.gameResult = "Player X won"
+                    onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
+
 
                 val gameResult = OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
                     val currentUserId = userViewModel.getCurrentUserId()
@@ -214,6 +216,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
 
                     state.gameResult = "Player O won"
+                    onlineGameViewModel.updateGameResult(state.gameId, "Player O won")
 
                     val gameResult = OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
                     if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {

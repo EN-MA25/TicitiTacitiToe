@@ -47,6 +47,12 @@ class OnlineGameRepository {
         listenerRegistration?.remove()
     }
 
+    // ============== Update gameresult =========
+    fun updateGameResult(gameId: String, result: String) {
+        gameCollection.document(gameId)
+            .update("gameResult", result)
+    }
+
     fun playerMakeMove(
         gameId: String?,
         move: OnlineMove,
@@ -54,11 +60,19 @@ class OnlineGameRepository {
     ){
         if (gameId == null) {
             onResult(Result.failure(Exception("Can't make move, GameID is missing")))
+            return
         }
-        gameCollection.document(gameId!!).get().addOnSuccessListener { doc ->
+
+        gameCollection.document(gameId).get().addOnSuccessListener { doc ->
 
             // =============== Convert Firestore document to OnlineGameState object ===============
             val game = doc.toObject(OnlineGameState::class.java)
+
+            // ============== Stop players from making more moves =======
+            if (game?.gameResult != "Ongoing") {
+                onResult(Result.failure(Exception("Game is already finished")))
+                return@addOnSuccessListener
+            }
 
             // =============== Get current player, uid for players and list of already made moves ===============
             var currentPlayer = game?.currentPlayerUid

@@ -34,7 +34,6 @@ class OnlineGameViewModel : ViewModel() {
             result -> onResult(result)
         }
     }
-
     fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?, onResult: (Result<String>) -> Unit) {
 
         // =========== Create onlinemove object===========
@@ -49,6 +48,10 @@ class OnlineGameViewModel : ViewModel() {
                 onResult(result)
             }
         }
+    }
+
+    fun updateGameResult(gameId: String, result: String) {
+        repository.updateGameResult(gameId, result)
     }
 
     fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
