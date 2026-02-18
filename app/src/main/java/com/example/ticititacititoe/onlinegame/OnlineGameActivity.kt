@@ -229,6 +229,9 @@ class OnlineGameActivity : AppCompatActivity() {
                     if (gameResult._playerWhoWon == currentUserId) {
                     onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
                         if (result.isSuccess) {
+                            onlineGameViewModel.deleteGame(gameId!!){
+
+                            }
 
                         }
                     }
@@ -248,6 +251,9 @@ class OnlineGameActivity : AppCompatActivity() {
                     if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {
                         onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
                             if (result.isSuccess) {
+                                onlineGameViewModel.deleteGame(gameId!!){
+
+                                }
 
                             }
                         }
