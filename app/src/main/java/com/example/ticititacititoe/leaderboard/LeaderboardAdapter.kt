@@ -5,36 +5,30 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.RankingListItemBinding
+import com.example.ticititacititoe.profile.User
 
 class LeaderboardAdapter(
-    private var entries: List<LeaderboardEntry>
+    private var users: List<User>
 ) : RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder>() {
 
     class LeaderboardViewHolder(
         private val binding: RankingListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(entry: LeaderboardEntry) {
-            val user = entry.user
-
+        fun bind(user: User) {
 
             binding.initialsTextView.text = user.username.take(2).uppercase()
-
-            binding.usernameTextView.text = "${user.username} #${entry.rank}"
-
-            binding.winLossTextView.text = "${user.wonGames}/${user.lostGames}"
-
-            binding.averageTimeTextView.text = "Avg: --s"
-
-            binding.averageMovesTextView.text = "Moves: --"
-
-            binding.rankingTextView.text = "#${entry.rank}"
+            binding.usernameTextView.text = "${user.username} ${user.rating}"
+            binding.winLossTextView.text = "${user.wonGames}/${user.totalGames}"
+            binding.averageTimeTextView.text = "Avg: ${user.winRate}"
+            binding.averageMovesTextView.text = "Moves: ${user.totalMovesMade}"
+            binding.rankingTextView.text = "#${bindingAdapterPosition+1}"
 
             // Set colors for top 3 ranks
-            when (entry.rank) {
-                1 -> binding.rankingTextView.setTextColor(Color.parseColor("#FFD700")) // Gold
-                2 -> binding.rankingTextView.setTextColor(Color.parseColor("#C0C0C0")) // Silver
-                3 -> binding.rankingTextView.setTextColor(Color.parseColor("#CD7F32")) // Bronze
+            when (bindingAdapterPosition) {
+                0 -> binding.rankingTextView.setTextColor(Color.parseColor("#FFD700")) // Gold
+                1 -> binding.rankingTextView.setTextColor(Color.parseColor("#C0C0C0")) // Silver
+                2 -> binding.rankingTextView.setTextColor(Color.parseColor("#CD7F32")) // Bronze
                 else -> binding.rankingTextView.setTextColor(Color.BLACK)
             }
         }
@@ -50,13 +44,13 @@ class LeaderboardAdapter(
     }
 
     override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
-        holder.bind(entries[position])
+        holder.bind(users[position])
     }
 
-    override fun getItemCount(): Int = entries.size
+    override fun getItemCount(): Int = users.size
 
-    fun updateEntries(newEntries: List<LeaderboardEntry>) {
-        entries = newEntries
+    fun updateEntries(newUsers: List<User>) {
+        users = newUsers
         notifyDataSetChanged()
     }
 }
