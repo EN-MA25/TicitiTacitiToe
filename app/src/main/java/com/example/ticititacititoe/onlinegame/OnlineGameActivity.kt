@@ -38,8 +38,6 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
 
     private var hasStartedListening = false
-    private var hasHandledGameEnd = false
-
 
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
@@ -163,6 +161,7 @@ class OnlineGameActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
+                    deleteOldestMove(onlineState)
                     renderBoard(onlineState)
                     val currentUser = userViewModel.getCurrentUserId()
                     Log.d("!!!", "CURRENTUSER: " + currentUser)
@@ -186,6 +185,28 @@ class OnlineGameActivity : AppCompatActivity() {
                 Toast.makeText(this, result.exceptionOrNull()?.message ?: "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun deleteOldestMove(onlineGameState: OnlineGameState) {
+
+        if (userViewModel.getCurrentUserId() != onlineGameState.currentPlayerUid){
+            return
+        }
+
+        if (onlineGameState.moves.count() <= 6) {
+            return
+        }
+
+        var oldestMove: OnlineMove = onlineGameState.moves[0]
+
+        for (move in onlineGameState.moves) {
+            if (move.timestamp < oldestMove.timestamp) {
+                oldestMove = move
+            }
+        }
+        onlineGameState.moves.remove(oldestMove)
+
+        onlineGameViewModel.deleteOldestMove(gameId, onlineGameState.moves)
     }
 
     private fun checkWinner(state: OnlineGameState): Boolean {
@@ -242,6 +263,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
                 }
             }
+
             // Check if playerO has any win combo
             for (combo in winningPositions) {
                 if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
@@ -266,8 +288,34 @@ class OnlineGameActivity : AppCompatActivity() {
     return false
     }
 
+    private fun clearBoard(){
+        val imageButton00 = getButton(0,0)
+        val imageButton01 = getButton(0,1)
+        val imageButton02 = getButton(0,2)
+        val imageButton10 = getButton(1,0)
+        val imageButton11 = getButton(1,1)
+        val imageButton12 = getButton(1,2)
+        val imageButton20 = getButton(2,0)
+        val imageButton21 = getButton(2,1)
+        val imageButton22 = getButton(2,2)
+
+        imageButton00.setImageDrawable(null)
+        imageButton01.setImageDrawable(null)
+        imageButton02.setImageDrawable(null)
+        imageButton10.setImageDrawable(null)
+        imageButton11.setImageDrawable(null)
+        imageButton12.setImageDrawable(null)
+        imageButton20.setImageDrawable(null)
+        imageButton21.setImageDrawable(null)
+        imageButton22.setImageDrawable(null)
+
+    }
+
     // ========== Update board ==========
     private fun renderBoard(state: OnlineGameState) {
+
+        clearBoard()
+
         val playerX = state.playerX
         for (move in state.moves) {
 

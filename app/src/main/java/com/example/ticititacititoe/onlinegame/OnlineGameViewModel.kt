@@ -54,6 +54,10 @@ class OnlineGameViewModel : ViewModel() {
         repository.updateGameResult(gameId, result)
     }
 
+    fun deleteOldestMove(gameId: String?, moves: MutableList<OnlineMove>) {
+        repository.deleteOldestMove(gameId, moves)
+    }
+
     fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
         repository.deleteGame(gameId){ result ->
             onResult(result)

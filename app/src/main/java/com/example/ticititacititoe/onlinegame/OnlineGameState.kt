@@ -8,7 +8,7 @@ import java.sql.Timestamp
 data class OnlineGameState (
     var currentPlayerUid: String? = "",
     var gameResult: String = "Ongoing",
-    var moves: List<OnlineMove> = emptyList(),
+    var moves: MutableList<OnlineMove> = mutableListOf(),
     var playerX: String? = "",
     var playerO: String? = "",
     var playerLeftId: String? = "",

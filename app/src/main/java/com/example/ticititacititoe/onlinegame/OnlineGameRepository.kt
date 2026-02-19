@@ -126,6 +126,14 @@ class OnlineGameRepository {
         }
     }
 
+    fun deleteOldestMove(gameId: String?, moves: MutableList<OnlineMove>) {
+
+        val game = gameCollection.document(gameId!!)
+
+        game.update("moves",moves)
+
+    }
+
     fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit){
 
         gameCollection.document(gameId!!).delete()
