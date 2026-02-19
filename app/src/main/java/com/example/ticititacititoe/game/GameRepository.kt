@@ -3,9 +3,13 @@ package com.example.ticititacititoe.game
 import com.example.ticititacititoe.game.ui.QueueUiState
 import com.example.ticititacititoe.profile.User
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
@@ -13,6 +17,7 @@ import kotlin.collections.emptyList
 
 class GameRepository {
     private val db = Firebase.firestore
+    private val auth = FirebaseAuth.getInstance()
 
 
     // Speaking to Firebase to fetch game info
@@ -133,23 +138,67 @@ class GameRepository {
 
         }
 
+    fun listenToInvite(currentUserId: String, otherUserId: String): Pair<StateFlow<InviteState>, ListenerRegistration> {
+        val stateFlow = MutableStateFlow<InviteState>(InviteState.Idle)
+
+        val registration = db.collection("users")
+            .document(currentUserId)
+            .collection("outgoingGameInvitation")
+            .document(otherUserId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null || !snapshot.exists()) return@addSnapshotListener
+                when (snapshot.getString("status")) {
+                    "pending" -> stateFlow.value = InviteState.Pending
+                    "accepted" -> stateFlow.value = InviteState.Accepted
+                    "declined" -> stateFlow.value = InviteState.Declined
+                }
+            }
+
+        return stateFlow to registration
+    }
+
+    fun acceptInvitation(currentUserId: String,
+                         otherUserId: String) {
+
+//        db.collection("gameInvitations")
+//            .document(inviteId)
+//            .update("status", "Accepted")
+
+        db.collection("users")
+            .document(currentUserId)
+            .collection("gameInvitations")
+            .document(otherUserId)
+            .update("status", "accepted")
+
+        db.collection("users")
+            .document(otherUserId)
+            .collection("outgoingGameInvitation")
+            .document(currentUserId)
+            .update("status", "accepted")
+    }
+
     suspend fun deleteInvitations(currentUserId: String,
                           otherUserId: String) {
         val batch = db.batch()
 
-        batch.delete(
-            db.collection("users")
-                .document(currentUserId)
-                .collection("gameInvitations")
-                .document(otherUserId)
-        )
-
-        batch.delete(
-            db.collection("users")
-                .document(otherUserId)
-                .collection("outgoingGameInvitation")
-                .document(currentUserId)
-        )
+        if (auth.currentUser?.uid == currentUserId)
+        {
+            batch.delete(
+                db.collection("users")
+                    .document(currentUserId)
+                    .collection("gameInvitations")
+                    .document(otherUserId)
+            )
+        }
+        else
+        {
+            batch.delete(
+                db.collection("users")
+                    .document(otherUserId)
+                    .collection("outgoingGameInvitation")
+                    .document(currentUserId)
+            )
+        }
 
         batch.commit().await()
     }

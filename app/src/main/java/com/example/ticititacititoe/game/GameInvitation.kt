@@ -7,7 +7,8 @@ data class GameInvitation(
     val fromUserId: String = "",
     val fromUsername: String = "",
     val gameId: String = "",
-    val timestamp: Long = 0L
+    val timestamp: Long = 0L,
+    var pending: String? = ""
 
 
 )

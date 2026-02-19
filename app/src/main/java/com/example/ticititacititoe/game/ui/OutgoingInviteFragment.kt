@@ -1,20 +1,27 @@
 package com.example.ticititacititoe.game.ui
 
+import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentOutgoingInviteBinding
 import com.example.ticititacititoe.game.GameInvitation
+import com.example.ticititacititoe.game.InviteState
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class OutgoingInviteFragment : BottomSheetDialogFragment() {
@@ -74,6 +81,38 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
         val invitationText = binding.invitationTextView
         invitationText.text = getString(R.string.pending_invite_to, toUsername)
 
+        multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                multiplayerGameViewModel.inviteState.collect { state ->
+                    when (state) {
+                        is InviteState.Accepted -> {
+                            delay(2000)
+
+                            val intent = Intent(requireContext(), OnlineGameActivity::class.java)
+                            intent.putExtra("currentUserId", toUserId)
+                            intent.putExtra("fromUserId", fromUserId)
+                            startActivity(intent)
+                            dismiss()
+                        }
+                        is InviteState.Declined -> {
+                            multiplayerGameViewModel.deleteInvitations(toUserId!!, fromUserId!!)
+                            dismiss()
+                        }
+                        else -> {
+                            // Idle or Pending → optionally show waiting UI
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
     }
 
     override fun onStart() {
@@ -88,17 +127,18 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         behavior.isDraggable = true
+
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-        if (fromUserId != null && toUserId != null) {
-            multiplayerGameViewModel.deleteInvitations(
-                toUserId!!,
-                fromUserId!!
-            )
-        }
+//        if (fromUserId != null && toUserId != null) {
+//            multiplayerGameViewModel.deleteInvitations(
+//                toUserId!!,
+//                fromUserId!!
+//            )
+//        }
     }
 
 }

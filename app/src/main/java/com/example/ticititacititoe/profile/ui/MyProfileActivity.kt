@@ -15,6 +15,7 @@ import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.launch
+import kotlin.toString
 
 class MyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyProfileBinding
@@ -82,16 +83,19 @@ class MyProfileActivity : AppCompatActivity() {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         userViewModel.fetchCurrentUser()
 
-        userViewModel.currentUser.observe(this) { user ->
-            if (user != null) {
-                binding.usernameTextView.text = "${user.username} ${user.rating}"
-                binding.initialsTextView.text = user.username.first().toString()
-                binding.wonGamesNumberTextView.text = user.wonGames.toString()
-                binding.lostGamesNumberTextView.text = user.lostGames.toString()
-                binding.totalGamesNumberTextView.text = user.totalGames.toString()
-                binding.currentStreakTextView.text = getString(R.string.current_streak, user.currentStreak)
-                binding.maxStreakTextView.text = getString(R.string.max_streak, user.maxStreak)
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.currentUser.collect { user ->
+                    binding.usernameTextView.text = "${user?.username} ${user?.rating}"
+                    binding.initialsTextView.text = user?.username?.take(2)
+                    binding.wonGamesNumberTextView.text = user?.wonGames.toString()
+                    binding.lostGamesNumberTextView.text = user?.lostGames.toString()
+                    binding.totalGamesNumberTextView.text = user?.totalGames.toString()
+                    binding.currentStreakTextView.text = getString(R.string.current_streak, user?.currentStreak)
+                    binding.maxStreakTextView.text = getString(R.string.max_streak, user?.maxStreak)
+
+                }
             }
         }
 

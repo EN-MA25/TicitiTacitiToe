@@ -24,6 +24,7 @@ import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 
 
 class MainActivity : AppCompatActivity() {
