@@ -2,6 +2,7 @@ package com.example.ticititacititoe.onlinegame
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.transition.Visibility
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
@@ -78,6 +80,18 @@ class OnlineGameActivity : AppCompatActivity() {
                 startListeningToMoves()
                 chatViewModel.createChatRoom(gameId, userIds)
 
+                val chatFragment = ChatFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("gameId", gameId)
+                        putString("opponentId", fromUserId)
+                        putString("opponentUsername", opponentUsername)
+                    }
+                }
+
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.chatContainer.id, chatFragment)
+                    .commit()
+
             }
             else {
             //Create game state
@@ -96,17 +110,18 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
-        binding.chatButton.setOnClickListener {
-            val chatFragment = ChatFragment().apply {
-                arguments = Bundle().apply {
-                    putString("gameId", gameId)
-                    putString("opponentId", fromUserId)
-                    putString("opponentUsername", opponentUsername )
 
-                }
-            }
-            chatFragment.show(supportFragmentManager, "chat_fragment_dialog")
-        }
+//        binding.chatButton.setOnClickListener {
+//            val chatFragment = ChatFragment().apply {
+//                arguments = Bundle().apply {
+//                    putString("gameId", gameId)
+//                    putString("opponentId", fromUserId)
+//                    putString("opponentUsername", opponentUsername )
+//
+//                }
+//            }
+//            chatFragment.show(supportFragmentManager, "chat_fragment_dialog")
+//        }
         binding.onlinecell00.setOnClickListener {
             val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
@@ -151,6 +166,8 @@ class OnlineGameActivity : AppCompatActivity() {
             val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
+
+        binding.onlineNewGameButton.visibility = View.GONE
     }
 
     fun startListeningToMoves() {
@@ -169,6 +186,7 @@ class OnlineGameActivity : AppCompatActivity() {
         Log.d("!!!", "Pressed")
         onlineGameViewModel.playerMakeMove(gameId, row, col, auth.currentUser!!.uid) { result ->
             if (result.isSuccess) {
+
             }
             else {
                 Toast.makeText(this, result.exceptionOrNull()?.message ?: "Something went wrong", Toast.LENGTH_SHORT).show()
