@@ -167,19 +167,40 @@ class OnlineGameActivity : AppCompatActivity() {
                     when (onlineState.gameStatus) {
 
                         OnlineGameStatus.PLAYER_LEFT.name -> {
-                            Toast.makeText(this@OnlineGameActivity, "Opponent left", Toast.LENGTH_SHORT).show()
-                            onlineGameViewModel.deleteGame(onlineState.gameId) {}
 
-                            startActivity(Intent(this@OnlineGameActivity, MainActivity::class.java))
-                            finish()
-                            return@collect
-                        }
+                            val currentUser = userViewModel.getCurrentUserId()
 
-                        OnlineGameStatus.FINISHED.name -> {
-                            Toast.makeText(this@OnlineGameActivity, onlineState.gameResult, Toast.LENGTH_SHORT).show()
+                            // ⭐ kolla att DU inte är den som lämnade
+                            val leaver = onlineState.playerLeftId
 
-                            startActivity(Intent(this@OnlineGameActivity, MainActivity::class.java))
-                            finish()
+                            if (currentUser != leaver) {
+
+                                // ⭐ du är vinnaren
+                                val winner = currentUser
+                                val loser = leaver
+
+                                val result = OnlineGameResult(winner, loser)
+
+                                onlineGameViewModel.addOnlineGameResult(result) {
+
+                                    Toast.makeText(
+                                        this@OnlineGameActivity,
+                                        "Opponent left — you win!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    onlineGameViewModel.setGameStatus(
+                                        onlineState.gameId,
+                                        OnlineGameStatus.FINISHED
+                                    )
+
+                                    onlineGameViewModel.deleteGame(onlineState.gameId) {}
+
+                                    startActivity(Intent(this@OnlineGameActivity, MainActivity::class.java))
+                                    finish()
+                                }
+                            }
+
                             return@collect
                         }
                     }
