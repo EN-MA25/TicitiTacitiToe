@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentChallengeBinding
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
@@ -18,6 +21,7 @@ import com.example.ticititacititoe.profile.ui.SettingsFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 
 class ChallengeFragment : BottomSheetDialogFragment() {
@@ -47,9 +51,12 @@ class ChallengeFragment : BottomSheetDialogFragment() {
 
         currentUserId = userViewModel.getCurrentUserId() ?: return
 
-        userViewModel.getUserDetailsById(currentUserId) {user ->
-            currentUsername = user?.username ?: ""
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.currentUser.collect { user ->
+                    currentUsername = user?.username ?: "null"
+                }
+            }
         }
 
         binding.searchPlayerButton.setOnClickListener {

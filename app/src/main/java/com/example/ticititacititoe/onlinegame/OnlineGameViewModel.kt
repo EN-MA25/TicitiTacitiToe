@@ -1,0 +1,61 @@
+package com.example.ticititacititoe.onlinegame
+
+import androidx.lifecycle.ViewModel
+import com.example.ticititacititoe.game.GameResult
+import com.example.ticititacititoe.game.Move
+import com.example.ticititacititoe.game.Player
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+
+class OnlineGameViewModel : ViewModel() {
+
+    private val repository = OnlineGameRepository()
+
+    val onlineState: StateFlow<OnlineGameState> = repository.onlineState
+    fun startListenToMove(gameId: String) {
+        repository.startListenToMove(gameId)
+    }
+
+    fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
+        repository.getGameIfExist(currentUserId, otherUserId){ result ->
+            onResult(result)
+        }
+    }
+
+    fun createOnlineGame(
+        playerX : String?,
+        playerO: String?,
+        startingPlayer: String?,
+        onResult: (Result<String>) -> Unit
+    ){
+        repository.createOnlineGame(playerX, playerO, startingPlayer) {
+            result -> onResult(result)
+        }
+    }
+
+    fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String, onResult: (Result<String>) -> Unit) {
+        val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
+        repository.playerMakeMove(
+            gameId = gameId,
+            move = onlineMove,
+        ) { result ->
+            if (result.isSuccess) {
+                onResult(result)
+            }
+        }
+    }
+
+    private fun copyBoard(
+        board: Array<Array<Player?>>
+    ): Array<Array<Player?>> {
+        return Array(3) { r ->
+            Array(3) { c -> board[r][c] }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.removeListener()
+    }
+}

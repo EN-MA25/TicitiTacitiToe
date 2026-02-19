@@ -21,6 +21,9 @@
             android:name=".game.ui.GameActivity"
             android:exported="false" />
         <activity
+            android:name=".onlinegame.OnlineGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity

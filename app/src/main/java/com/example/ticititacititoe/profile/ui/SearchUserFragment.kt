@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
@@ -16,8 +19,7 @@ import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
-
+import kotlinx.coroutines.launch
 
 
 class SearchUserFragment : BottomSheetDialogFragment() {
@@ -67,9 +69,15 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currentUserId = userViewModel.getCurrentUserId()
-        userViewModel.getUserDetailsById(currentUserId) {user ->
-            currentUsername = user?.username ?: "null"
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.currentUser.collect { user ->
+                    currentUsername = user?.username ?: "null"
+                }
+            }
         }
+
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
             multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username )
         })
@@ -95,8 +103,13 @@ class SearchUserFragment : BottomSheetDialogFragment() {
                 userViewModel.fetchAllUsers()
             }
         }
-        userViewModel.users.observe(viewLifecycleOwner) {list ->
-            adapter.submitList(list)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.users.collect { list ->
+                    adapter.submitList(list)
+                }
+            }
         }
 
 

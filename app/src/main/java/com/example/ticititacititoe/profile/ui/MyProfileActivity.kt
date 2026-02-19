@@ -81,10 +81,13 @@ class MyProfileActivity : AppCompatActivity() {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         userViewModel.fetchCurrentUser()
 
-        userViewModel.currentUser.observe(this) { user ->
-            if (user != null) {
-                binding.usernameTextView.text = user.username
-                binding.initialsTextView.text = user.username.first().toString()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.currentUser.collect { user ->
+                    binding.usernameTextView.text = user?.username
+                    binding.initialsTextView.text = user?.username?.take(2)
+                }
             }
         }
 

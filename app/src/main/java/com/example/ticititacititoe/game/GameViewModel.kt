@@ -106,5 +106,4 @@ class GameViewModel: ViewModel() {
             Array(3) { c -> board[r][c] }
         }
     }
-
 }

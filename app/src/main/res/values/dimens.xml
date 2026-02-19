@@ -21,6 +21,10 @@
     <dimen name="cell_size">100dp</dimen>
     <dimen name="turn_pic_ordinary_size">200dp</dimen>
     <dimen name="turn_pic_big_size">300dp</dimen>
+    <dimen name="_16sp">16sp</dimen>
+    <dimen name="_4dp">4dp</dimen>
+
+    <dimen name="chat_preview_height">100dp</dimen>
 
 
 </resources>
