@@ -98,6 +98,8 @@ class OnlineGameActivity : AppCompatActivity() {
             val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
+
+
     }
 
     override fun onStart() {
@@ -161,6 +163,26 @@ class OnlineGameActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
+
+                    when (onlineState.gameStatus) {
+
+                        OnlineGameStatus.PLAYER_LEFT.name -> {
+                            Toast.makeText(this@OnlineGameActivity, "Opponent left", Toast.LENGTH_SHORT).show()
+                            onlineGameViewModel.deleteGame(onlineState.gameId) {}
+
+                            startActivity(Intent(this@OnlineGameActivity, MainActivity::class.java))
+                            finish()
+                            return@collect
+                        }
+
+                        OnlineGameStatus.FINISHED.name -> {
+                            Toast.makeText(this@OnlineGameActivity, onlineState.gameResult, Toast.LENGTH_SHORT).show()
+
+                            startActivity(Intent(this@OnlineGameActivity, MainActivity::class.java))
+                            finish()
+                            return@collect
+                        }
+                    }
                     renderBoard(onlineState)
                     val currentUser = userViewModel.getCurrentUserId()
                     Log.d("!!!", "CURRENTUSER: " + currentUser)
@@ -282,11 +304,9 @@ class OnlineGameActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
-                result ->
-            if (result.isSuccess) {
-                onlineGameViewModel.userHasLeft(gameId, currentUserId)
-            }
+        if (::gameId.isInitialized) {
+            onlineGameViewModel.setGameStatus(gameId, OnlineGameStatus.PLAYER_LEFT)
+
         }
     }
 

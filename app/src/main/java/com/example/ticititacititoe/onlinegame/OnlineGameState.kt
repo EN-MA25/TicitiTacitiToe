@@ -14,6 +14,7 @@ data class OnlineGameState (
     var playerLeftId: String? = "",
     var startingPlayer: String? = "",
     var gameId: String = "",
+    var gameStatus: String = OnlineGameStatus.ACTIVE.name,
     var timestamp: Long = System.currentTimeMillis()
 
     //val oldestMove: Pair<Int, Int>? = null

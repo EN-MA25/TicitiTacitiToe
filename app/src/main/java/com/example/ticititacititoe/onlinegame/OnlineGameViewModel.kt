@@ -61,14 +61,18 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-    fun userHasLeft(gameId: String?, userId: String?) {
-        repository.userHasLeft(gameId, userId)
-    }
+//    fun userHasLeft(gameId: String?, userId: String?) {
+//        repository.userHasLeft(gameId, userId)
+//    }
 
     fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
         repository.addOnlineGameResult(onlineGameResult){ result ->
             onResult(result)
         }
+    }
+
+    fun setGameStatus(gameId: String, status: OnlineGameStatus) {
+        repository.setGameStatus(gameId, status)
     }
 
     // =========== Clear ===========

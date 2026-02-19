@@ -25,26 +25,15 @@ class OnlineGameRepository {
     var moveCount: Int = 0
 
     fun startListenToMove(gameId: String?) {
+
         listenerRegistration = gameCollection.document(gameId!!)
             .addSnapshotListener { snapshot, error ->
-                if (error != null || snapshot == null || !snapshot.exists())
-                    return@addSnapshotListener
 
-                // =============== Convert document to OnlineGameState ===============
-                val game = snapshot.toObject(OnlineGameState::class.java)
+                if (error != null || snapshot == null || !snapshot.exists()) return@addSnapshotListener
 
-                if(game?.playerLeftId != "") {
-                    _onlineState.value = game!!
-                    return@addSnapshotListener
-                }
+                val game = snapshot.toObject(OnlineGameState::class.java) ?: return@addSnapshotListener
 
-                if (moveCount == game!!.moves.count())
-                    return@addSnapshotListener
-
-                moveCount = game.moves.count()
-
-                // =============== Update stateflow ===============
-                _onlineState.value = game!!
+                _onlineState.value = game
             }
     }
 
@@ -72,6 +61,11 @@ class OnlineGameRepository {
 
             // =============== Convert Firestore document to OnlineGameState object ===============
             val game = doc.toObject(OnlineGameState::class.java)
+
+            if (game?.gameStatus != OnlineGameStatus.ACTIVE.name) {
+                onResult(Result.failure(Exception("Game is not active")))
+                return@addOnSuccessListener
+            }
 
             // ============== Stop players from making more moves =======
             if (game?.gameResult != "Ongoing") {
@@ -197,10 +191,10 @@ class OnlineGameRepository {
             }
     }
 
-    fun userHasLeft(gameId: String?, userId: String?) {
-        gameCollection.document(gameId!!)
-            .update("playerLeftId", userId)
-    }
+//    fun userHasLeft(gameId: String?, userId: String?) {
+//        gameCollection.document(gameId!!)
+//            .update("playerLeftId", userId)
+//    }
 
     fun createOnlineGame(
         playerX : String?,
@@ -218,7 +212,7 @@ class OnlineGameRepository {
             "playerO" to playerO,
             "currentPlayerUid" to startingPlayer,
             "gameResult" to "Ongoing",
-            "playerLeftId" to "",
+            "gameStatus" to OnlineGameStatus.ACTIVE.name,
             "timestamp" to System.currentTimeMillis(),
             "moves" to emptyList<List<OnlineMove>>()
         )
@@ -238,5 +232,10 @@ class OnlineGameRepository {
                     )
                 }
             }
+    }
+
+    fun setGameStatus(gameId: String, status: OnlineGameStatus) {
+        gameCollection.document(gameId)
+            .update("gameStatus", status.name)
     }
 }
