@@ -1,11 +1,9 @@
 package com.example.ticititacititoe.leaderboard
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.RankingListItemBinding
 import com.example.ticititacititoe.profile.User
 
@@ -18,19 +16,12 @@ class LeaderboardAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User) {
-            //val user = entry.user
-
 
             binding.initialsTextView.text = user.username.take(2).uppercase()
-
             binding.usernameTextView.text = "${user.username} ${user.rating}"
-
             binding.winLossTextView.text = "${user.wonGames}/${user.totalGames}"
-
             binding.averageTimeTextView.text = "Avg: ${user.winRate}"
-
             binding.averageMovesTextView.text = "Moves: ${user.totalMovesMade}"
-
             binding.rankingTextView.text = "#${bindingAdapterPosition+1}"
 
             // Set colors for top 3 ranks
