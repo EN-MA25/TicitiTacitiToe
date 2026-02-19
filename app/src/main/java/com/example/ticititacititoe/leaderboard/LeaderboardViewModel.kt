@@ -34,12 +34,6 @@ class LeaderboardViewModel(): ViewModel() {
                 val users = repository.getAllUsers()
                 val sortedUsers = users
                     .sortedByDescending { it.rating }
-                    //.mapIndexed { index, user ->
-                    //    val winRate = if (user.totalGames > 0) {
-                    //        (user.wonGames.toDouble() / user.totalGames.toDouble()) * 100
-                    //    } else 0.0
-                    // LeaderboardEntry(user, index + 1, winRate)
-                    //}
                 _globalLeaderboard.value = sortedUsers
             } catch (exception: Exception) {
                 _globalLeaderboard.value = emptyList()

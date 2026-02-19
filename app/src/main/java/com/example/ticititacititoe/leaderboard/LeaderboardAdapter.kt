@@ -23,13 +23,13 @@ class LeaderboardAdapter(
 
             binding.initialsTextView.text = user.username.take(2).uppercase()
 
-            binding.usernameTextView.text = "${user.username} ${user.rating}" //#${entry.rank}"
+            binding.usernameTextView.text = "${user.username} ${user.rating}"
 
-            binding.winLossTextView.text = "${user.wonGames}/${user.lostGames}"
+            binding.winLossTextView.text = "${user.wonGames}/${user.totalGames}"
 
-            binding.averageTimeTextView.text = "Avg: ${user.winRate}" //Resources.getSystem().getString(R.string.winrate, user.winRate)
+            binding.averageTimeTextView.text = "Avg: ${user.winRate}"
 
-            binding.averageMovesTextView.text = "Moves: ${user.totalMovesMade}" //Resources.getSystem().getString(R.string.moves_made, user.totalMovesMade)
+            binding.averageMovesTextView.text = "Moves: ${user.totalMovesMade}"
 
             binding.rankingTextView.text = "#${bindingAdapterPosition+1}"
 
