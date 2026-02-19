@@ -43,6 +43,8 @@ class OnlineGameRepository {
 
                 moveCount = game.moves.count()
 
+
+
                 // =============== Update stateflow ===============
                 _onlineState.value = game!!
             }

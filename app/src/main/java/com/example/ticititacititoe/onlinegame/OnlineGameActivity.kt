@@ -38,6 +38,8 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
 
     private var hasStartedListening = false
+    private var hasHandledGameEnd = false
+
 
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
@@ -285,7 +287,7 @@ class OnlineGameActivity : AppCompatActivity() {
         onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
                 result ->
             if (result.isSuccess) {
-                onlineGameViewModel.userHasLeft(gameId, currentUserId)
+                onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
             }
         }
     }
