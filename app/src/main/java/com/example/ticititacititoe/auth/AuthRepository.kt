@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+//import kotlin.Int
 
 class AuthRepository {
 
@@ -49,7 +50,14 @@ class AuthRepository {
                         val user = hashMapOf(
                             "uid" to uid,
                             "username" to username,
-                            "email" to email
+                            "email" to email,
+                            "rating" to 1300,
+                            "totalGames" to 0,
+                            "lostGames" to 0,
+                            "wonGames" to 0,
+                            "totalMovesMade" to 0,
+                            "currentStreak" to 0,
+                            "maxStreak" to 0
                         )
 
                         // =========== Save user in Firestore ============

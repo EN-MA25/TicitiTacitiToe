@@ -16,13 +16,13 @@ import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityGameBinding
+import com.example.ticititacititoe.chat.ChatFragment
+import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
-import com.example.ticititacititoe.game.GameResult
-import com.example.ticititacititoe.game.GameState
-import com.example.ticititacititoe.game.GameViewModel
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.Player
 import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.profile.ui.SearchUserFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -31,9 +31,12 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var binding: OnlineGameActivityBinding
     private lateinit var gameId: String
 
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var onlineGameViewModel: OnlineGameViewModel
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var opponentUsername: String
 
     private lateinit var userViewModel: UserViewModel
 
@@ -52,8 +55,73 @@ class OnlineGameActivity : AppCompatActivity() {
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+
+
+        val currentUserId = intent.getStringExtra("currentUserId")
+        val fromUserId = intent.getStringExtra("fromUserId")
 
         // ========== Cell click listeners ==========
+
+
+        if (fromUserId != null) {
+            userViewModel.getUserDetailsById(fromUserId) { user ->
+                opponentUsername = user?.username ?: ""
+            }
+        }
+
+
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                userViewModel.selectedUser.collect { user ->
+//                    opponentUsername = user?.username ?: return@collect
+//
+//
+//                }
+//            }
+//        }
+
+//        //delete invitation
+//        multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
+//        val userIds = listOf(currentUserId, fromUserId)
+//
+//        //get game if exist
+//        onlineGameViewModel.getGameIfExist(currentUserId, fromUserId) {
+//            result ->
+//            if (result.isSuccess) {
+//                gameId = result.getOrNull()!!
+//                startListeningToMoves()
+//                chatViewModel.createChatRoom(gameId, userIds)
+//
+//            }
+//            else {
+//            //Create game state
+//            onlineGameViewModel.createOnlineGame(currentUserId, fromUserId, currentUserId) {
+//                result ->
+//                if (result.isSuccess) {
+//                    gameId = result.getOrNull()!!
+//                    startListeningToMoves()
+//                    chatViewModel.createChatRoom(gameId, userIds)
+//
+//                }
+//                else {
+//                    //handle error
+//                }
+//            }
+//        }
+//    }
+
+        binding.chatButton.setOnClickListener {
+            val chatFragment = ChatFragment().apply {
+                arguments = Bundle().apply {
+                    putString("gameId", gameId)
+                    putString("opponentId", fromUserId)
+                    putString("opponentUsername", opponentUsername )
+
+                }
+            }
+            chatFragment.show(supportFragmentManager, "chat_fragment_dialog")
+        }
         binding.onlinecell00.setOnClickListener {
             val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
@@ -329,6 +397,8 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
