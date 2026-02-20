@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityGameBinding
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
@@ -38,6 +39,10 @@ class OnlineGameActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
 
     private var hasStartedListening = false
+
+    private var meId: String? = ""
+    private var me: User? = null
+    private var opponent: User? = null
 
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
@@ -106,24 +111,47 @@ class OnlineGameActivity : AppCompatActivity() {
         currentUserId = intent.getStringExtra("currentUserId")
         otherUserId = intent.getStringExtra("fromUserId")
 
+        meId = userViewModel.getCurrentUserId()
+
+        if (meId!! == currentUserId!!) {
+            Log.d("TEST!!!", "I am currentId")
+
+            userViewModel.getUserDetailsById(currentUserId) { user ->
+                me = user
+            }
+            userViewModel.getUserDetailsById(otherUserId) { user ->
+                opponent = user
+            }
+
+        } else {
+            Log.d("TEST!!!", "I am otherId")
+
+            userViewModel.getUserDetailsById(currentUserId) { user ->
+                opponent = user
+            }
+            userViewModel.getUserDetailsById(otherUserId) { user ->
+                me = user
+            }
+        }
+
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
         // ========== Get game if exist ==========
-        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
-                result ->
+        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
                 startListeningToMoves()
-            }
-            else {
+            } else {
                 // ========== Create game state ==========
-                onlineGameViewModel.createOnlineGame(currentUserId, otherUserId, currentUserId) {
-                        result ->
+                onlineGameViewModel.createOnlineGame(
+                    currentUserId,
+                    otherUserId,
+                    currentUserId
+                ) { result ->
                     if (result.isSuccess) {
                         gameId = result.getOrNull()!!
                         startListeningToMoves()
-                    }
-                    else {
+                    } else {
                         //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -133,13 +161,17 @@ class OnlineGameActivity : AppCompatActivity() {
 
 
     fun isGameOver(onlineGameState: OnlineGameState) {
-        if(onlineGameState.playerLeftId != "") {
-            if(onlineGameState.playerLeftId != userViewModel.getCurrentUserId()) {
-                if(onlineGameState.gameResult == "Ongoing") {
+        if (onlineGameState.playerLeftId != "") {
+            if (onlineGameState.playerLeftId != userViewModel.getCurrentUserId()) {
+                if (onlineGameState.gameResult == "Ongoing") {
                     val gameResult = OnlineGameResult(otherUserId, currentUserId)
                     onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
-                        if(result.isSuccess) {
-                            Toast.makeText(this, "Other player has left, you won!", Toast.LENGTH_SHORT).show()
+                        if (result.isSuccess) {
+                            Toast.makeText(
+                                this,
+                                "Other player has left, you won!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             onlineGameViewModel.deleteGame(gameId) {
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
@@ -164,8 +196,12 @@ class OnlineGameActivity : AppCompatActivity() {
                     renderBoard(onlineState)
                     val currentUser = userViewModel.getCurrentUserId()
                     Log.d("!!!", "CURRENTUSER: " + currentUser)
-                    if (checkWinner(onlineState)){
-                        Toast.makeText(this@OnlineGameActivity, onlineState.gameResult , Toast.LENGTH_SHORT).show()
+                    if (checkWinner(onlineState)) {
+                        Toast.makeText(
+                            this@OnlineGameActivity,
+                            onlineState.gameResult,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     isGameOver(onlineState)
                 }
@@ -176,12 +212,20 @@ class OnlineGameActivity : AppCompatActivity() {
     fun playerMakeMove(gameId: String?, row: Long, col: Long) {
 
         // ========== Call viewmodel and send gameid, row/col, uid ==========
-        onlineGameViewModel.playerMakeMove(gameId, row, col, userViewModel.getCurrentUserId()) { result ->
+        onlineGameViewModel.playerMakeMove(
+            gameId,
+            row,
+            col,
+            userViewModel.getCurrentUserId()
+        ) { result ->
             if (result.isSuccess) {
-            // Updates UI
-            }
-            else {
-                Toast.makeText(this, result.exceptionOrNull()?.message ?: "Something went wrong", Toast.LENGTH_SHORT).show()
+                // Updates UI
+            } else {
+                Toast.makeText(
+                    this,
+                    result.exceptionOrNull()?.message ?: "Something went wrong",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -205,63 +249,76 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
 
-            // List of winning combos
-            val winningPositions = listOf(
-                listOf(0 to 0, 0 to 1, 0 to 2),
-                listOf(1 to 0, 1 to 1, 1 to 2),
-                listOf(2 to 0, 2 to 1, 2 to 2),
-                listOf(0 to 0, 1 to 0, 2 to 0),
-                listOf(0 to 1, 1 to 1, 2 to 1),
-                listOf(0 to 2, 1 to 2, 2 to 2),
-                listOf(0 to 0, 1 to 1, 2 to 2),
-                listOf(0 to 2, 1 to 1, 2 to 0)
-            )
-            // Check if playerX has any win combo
-            for (combinations in winningPositions) {
-                if (combinations.all {(r, c) -> playerXMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
+        // List of winning combos
+        val winningPositions = listOf(
+            listOf(0 to 0, 0 to 1, 0 to 2),
+            listOf(1 to 0, 1 to 1, 1 to 2),
+            listOf(2 to 0, 2 to 1, 2 to 2),
+            listOf(0 to 0, 1 to 0, 2 to 0),
+            listOf(0 to 1, 1 to 1, 2 to 1),
+            listOf(0 to 2, 1 to 2, 2 to 2),
+            listOf(0 to 0, 1 to 1, 2 to 2),
+            listOf(0 to 2, 1 to 1, 2 to 0)
+        )
+        // Check if playerX has any win combo
+        for (combinations in winningPositions) {
+            if (combinations.all { (r, c) -> playerXMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
 
                 state.gameResult = "Player X won"
-                    onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
+                onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
 
 
-                val gameResult = OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
-                    val currentUserId = userViewModel.getCurrentUserId()
-                    if (gameResult._playerWhoWon == currentUserId) {
+                val gameResult =
+                    OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
+                //val currentUserId = userViewModel.getCurrentUserId()
+                if (gameResult._playerWhoWon == meId!!) {
                     onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
                         if (result.isSuccess) {
-                            onlineGameViewModel.deleteGame(gameId!!){
+                            onlineGameViewModel.deleteGame(gameId!!) {
 
                             }
 
                         }
                     }
-                        return true
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, true)
+
+                } else {
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, false)
                 }
 
-                }
+                return true
+
             }
-            // Check if playerO has any win combo
-            for (combo in winningPositions) {
-                if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
+        }
+        // Check if playerO has any win combo
+        for (combo in winningPositions) {
+            if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
 
-                    state.gameResult = "Player O won"
-                    onlineGameViewModel.updateGameResult(state.gameId, "Player O won")
+                state.gameResult = "Player O won"
+                onlineGameViewModel.updateGameResult(state.gameId, "Player O won")
 
-                    val gameResult = OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
-                    if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {
-                        onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
-                            if (result.isSuccess) {
-                                onlineGameViewModel.deleteGame(gameId!!){
-
-                                }
+                val gameResult =
+                    OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
+                if (gameResult._playerWhoWon == meId!!) {
+                    onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
+                        if (result.isSuccess) {
+                            onlineGameViewModel.deleteGame(gameId!!) {
 
                             }
+
                         }
-                        return true
                     }
+
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, true)
+
+                } else {
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, false)
                 }
+
+                return true
             }
-    return false
+        }
+        return false
     }
 
     // ========== Update board ==========
@@ -282,8 +339,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) {
-                result ->
+        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
             if (result.isSuccess) {
                 onlineGameViewModel.userHasLeft(gameId, currentUserId)
             }
