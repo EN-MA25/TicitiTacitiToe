@@ -75,6 +75,7 @@ class OnlineGameRepository {
             // =============== Convert Firestore document to OnlineGameState object ===============
             val game = doc.toObject(OnlineGameState::class.java)
 
+
             // ============== Stop players from making more moves =======
             if (game?.gameResult != "Ongoing") {
                 onResult(Result.failure(Exception("Game is already finished")))
@@ -82,13 +83,13 @@ class OnlineGameRepository {
             }
 
             // =============== Get current player, uid for players and list of already made moves ===============
-            var currentPlayer = game?.currentPlayerUid
-            var playerX = game?.playerX
-            var playerO = game?.playerO
-            var moves = game!!.moves
+            var currentPlayer = game.currentPlayerUid
+            var playerX = game.playerX
+            var playerO = game.playerO
+            var moves = game.moves
 
             // =============== Check if box is already taken ===============
-            for (madeMove in moves) {
+            for (madeMove in moves.takeLast(6)) {
                 if (madeMove.row == move.row && madeMove.col == move.col) {
                     onResult(
                         Result.failure(
