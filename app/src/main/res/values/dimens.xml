@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  -->
+    <dimen name="_4dp">4dp</dimen>
     <dimen name="_6dp">6dp</dimen>
     <dimen name="_8dp">8dp</dimen>
     <dimen name="_12dp">12dp</dimen>
@@ -13,6 +14,7 @@
     <dimen name="_250dp">250dp</dimen>
 
     <!-- Text -->
+    <dimen name="_16sp">16sp</dimen>
     <dimen name="_18sp">18sp</dimen>
     <dimen name="_24sp">24sp</dimen>
     <dimen name="_30sp">30sp</dimen>
@@ -21,10 +23,13 @@
     <dimen name="cell_size">100dp</dimen>
     <dimen name="turn_pic_ordinary_size">200dp</dimen>
     <dimen name="turn_pic_big_size">300dp</dimen>
-    <dimen name="_16sp">16sp</dimen>
-    <dimen name="_4dp">4dp</dimen>
 
+    <!-- Chat -->
     <dimen name="chat_preview_height">100dp</dimen>
+
+    <!-- Profile -->
+    <dimen name="profile_box_margin">8dp</dimen>
+    <dimen name="profile_text">24sp</dimen>
 
 
 </resources>
