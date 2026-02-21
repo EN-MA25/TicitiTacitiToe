@@ -7,6 +7,8 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -39,9 +41,24 @@ class OnlineGameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+
         binding = OnlineGameActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Vi sätter padding på fragmentets rot så att EditText trycks upp
+            // Vi tar imeInsets.bottom (tangentbordet) men drar bort systemBars.bottom
+            // för att inte få dubbel padding om navigationsfältet redan finns där.
+            v.setPadding(0, 0, 0, imeInsets.bottom)
+
+            insets
+        }
+
+        binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
