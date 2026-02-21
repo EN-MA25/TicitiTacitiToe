@@ -13,6 +13,8 @@
     <color name="bright_yellow">#FFFF00</color>
     <color name="light_orange">#FFB84D</color>
     <color name="light_yellow">#FFFEF5</color>
+    <color name="dark_blue">#0F3460</color>
+    <color name="deeper_blue">#16213E</color>
 
 
     <!-- Cell Colors -->
