@@ -3,7 +3,6 @@ package com.example.ticititacititoe.chat
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +36,7 @@ class ChatRepository {
 
     suspend fun createChatRoom(
         gameId: String,
-        userIds: List<String>,
+        userIds: MutableList<String?>,
                        ) {
 
        val chatRoomRef = db.collection("chatRooms")

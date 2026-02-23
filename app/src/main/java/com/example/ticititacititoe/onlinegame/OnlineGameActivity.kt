@@ -2,27 +2,24 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
-import com.example.ticititacititoe.auth.ui.LoginActivity
-import com.example.ticititacititoe.databinding.ActivityGameBinding
 import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
-import com.example.ticititacititoe.game.Player
 import com.example.ticititacititoe.profile.UserViewModel
-import com.example.ticititacititoe.profile.ui.SearchUserFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -52,10 +49,21 @@ class OnlineGameActivity : AppCompatActivity() {
         binding = OnlineGameActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            v.setPadding(0, 0, 0, imeInsets.bottom)
+
+            insets
+        }
+
+        binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
 
         val currentUserId = intent.getStringExtra("currentUserId")
@@ -70,58 +78,6 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
 
-
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                userViewModel.selectedUser.collect { user ->
-//                    opponentUsername = user?.username ?: return@collect
-//
-//
-//                }
-//            }
-//        }
-
-//        //delete invitation
-//        multiplayerGameViewModel.deleteInvitations(currentUserId!!, fromUserId!!)
-//        val userIds = listOf(currentUserId, fromUserId)
-//
-//        //get game if exist
-//        onlineGameViewModel.getGameIfExist(currentUserId, fromUserId) {
-//            result ->
-//            if (result.isSuccess) {
-//                gameId = result.getOrNull()!!
-//                startListeningToMoves()
-//                chatViewModel.createChatRoom(gameId, userIds)
-//
-//            }
-//            else {
-//            //Create game state
-//            onlineGameViewModel.createOnlineGame(currentUserId, fromUserId, currentUserId) {
-//                result ->
-//                if (result.isSuccess) {
-//                    gameId = result.getOrNull()!!
-//                    startListeningToMoves()
-//                    chatViewModel.createChatRoom(gameId, userIds)
-//
-//                }
-//                else {
-//                    //handle error
-//                }
-//            }
-//        }
-//    }
-
-        binding.chatButton.setOnClickListener {
-            val chatFragment = ChatFragment().apply {
-                arguments = Bundle().apply {
-                    putString("gameId", gameId)
-                    putString("opponentId", fromUserId)
-                    putString("opponentUsername", opponentUsername)
-
-                }
-            }
-            chatFragment.show(supportFragmentManager, "chat_fragment_dialog")
-        }
         binding.onlinecell00.setOnClickListener {
             val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
@@ -166,6 +122,8 @@ class OnlineGameActivity : AppCompatActivity() {
             val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toLong() }
             playerMakeMove(gameId, row, col)
         }
+
+        binding.onlineNewGameButton.visibility = View.GONE
     }
 
     override fun onStart() {
@@ -173,6 +131,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         currentUserId = intent.getStringExtra("currentUserId")
         otherUserId = intent.getStringExtra("fromUserId")
+        val userIds = mutableListOf(currentUserId, otherUserId)
 
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
@@ -181,6 +140,9 @@ class OnlineGameActivity : AppCompatActivity() {
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
                 startListeningToMoves()
+                chatViewModel.createChatRoom(gameId, userIds)
+
+                openChatFragment()
             } else {
                 // ========== Create game state ==========
                 onlineGameViewModel.createOnlineGame(
@@ -191,6 +153,9 @@ class OnlineGameActivity : AppCompatActivity() {
                     if (result.isSuccess) {
                         gameId = result.getOrNull()!!
                         startListeningToMoves()
+                        chatViewModel.createChatRoom(gameId, userIds)
+
+                        openChatFragment()
                     } else {
                         //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
@@ -414,5 +379,19 @@ class OnlineGameActivity : AppCompatActivity() {
             2 to 2 -> binding.onlinecell22
             else -> error("Invalid cell")
         }
+    }
+
+    private fun openChatFragment(){
+        val chatFragment = ChatFragment().apply {
+            arguments = Bundle().apply {
+                putString("gameId", gameId)
+                putString("opponentId", otherUserId)
+                putString("opponentUsername", opponentUsername)
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(binding.chatContainer.id, chatFragment)
+            .commit()
     }
 }
