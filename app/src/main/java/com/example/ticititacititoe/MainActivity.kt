@@ -15,9 +15,11 @@ import com.example.ticititacititoe.profile.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
 import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
 import com.example.ticititacititoe.game.ui.QueueFragment
 import com.example.ticititacititoe.profile.UserViewModel
@@ -25,6 +27,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameActivity
+import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var authViewModel: AuthViewModel
     private lateinit var userViewModel: UserViewModel
+    private lateinit var onlineGameViewModel: OnlineGameViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
 
 
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
@@ -137,6 +142,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+        }
+        binding.recentGamesRecyclerView.layoutManager = LinearLayoutManager(this)
+        if (currentUserId != null){
+            onlineGameViewModel.fetchRecentGames(currentUserId){ result ->
+                result.onSuccess { games ->
+                    runOnUiThread {
+                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games)
+                    }
+                }
+            }
         }
 
         binding.profileButton.setOnClickListener {

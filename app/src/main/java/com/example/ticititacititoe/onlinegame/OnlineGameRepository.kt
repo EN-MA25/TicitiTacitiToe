@@ -265,44 +265,53 @@ class OnlineGameRepository {
 
 
     fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
-
         firestore.collection("onlineGameResult")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .limit(5)
             .get()
             .addOnSuccessListener { documents ->
                 val recentGames = mutableListOf<RecentGame>()
-                for (doc in documents) {
+
+                val userDocs = documents.filter { doc ->
+                    val playerWhoWon = doc.getString("playerWhoWon") ?: ""
+                    val playerWhoLost = doc.getString("playerWhoLost") ?: ""
+                    playerWhoWon == userId || playerWhoLost == userId
+                }
+
+                if (userDocs.isEmpty()) {
+                    onResult(Result.success(emptyList()))
+                    return@addOnSuccessListener
+                }
+
+                var completedCount = 0
+
+                for (doc in userDocs) {
                     val playerWhoWon = doc.getString("playerWhoWon") ?: ""
                     val playerWhoLost = doc.getString("playerWhoLost") ?: ""
                     val timestamp = doc.getLong("timestamp") ?: 0L
                     val movesMade = doc.getLong("movesMade")?.toInt() ?: 0
-                    if (playerWhoWon == userId || playerWhoLost == userId) {
-                        val opponentId = if (playerWhoWon == userId) playerWhoLost else playerWhoWon
-                        val result = if (playerWhoWon == userId) "Won" else "Lost"
-                        firestore.collection("users")
-                            .document(opponentId)
-                            .get()
-                            .addOnSuccessListener { userDoc ->
-                                val username = userDoc.getString("username") ?: "Unknown"
-                                recentGames.add(
-                                    RecentGame(
-                                        doc.id,
-                                        opponentId,
-                                        username,
-                                        result,
-                                        timestamp,
-                                        movesMade
-                                    )
-                                )
-                                if (recentGames.size == documents.size()) {
-                                    onResult(Result.success(recentGames))
-                                }
+                    val opponentId = if (playerWhoWon == userId) playerWhoLost else playerWhoWon
+                    val result = if (playerWhoWon == userId) "Won" else "Lost"
+
+                    firestore.collection("users")
+                        .document(opponentId)
+                        .get()
+                        .addOnSuccessListener { userDoc ->
+                            val username = userDoc.getString("username") ?: "Unknown"
+                            recentGames.add(
+                                RecentGame(doc.id, opponentId, username, result, timestamp, movesMade)
+                            )
+                            completedCount++
+                            if (completedCount == userDocs.size) {
+                                onResult(Result.success(recentGames))
                             }
-                    }
-                }
-                if (documents.isEmpty) {
-                    onResult(Result.success(emptyList()))
+                        }
+                        .addOnFailureListener {
+                            completedCount++
+                            if (completedCount == userDocs.size) {
+                                onResult(Result.success(recentGames))
+                            }
+                        }
                 }
             }
             .addOnFailureListener { exception ->

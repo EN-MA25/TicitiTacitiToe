@@ -70,8 +70,11 @@ class OnlineGameViewModel : ViewModel() {
         repository.userHasLeft(gameId, userId)
     }
 
-    fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
-        repository.addOnlineGameResult(onlineGameResult){ result ->
+    fun addOnlineGameResult(onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
+        repository.addOnlineGameResult(
+            onlineGameResult,
+            timestamp ,
+            movesMade){ result ->
             onResult(result)
         }
     }
