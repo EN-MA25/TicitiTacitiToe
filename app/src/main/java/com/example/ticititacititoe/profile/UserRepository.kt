@@ -2,6 +2,7 @@ package com.example.ticititacititoe.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.ticititacititoe.Util
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.FirebaseAuth
@@ -78,5 +79,29 @@ class UserRepository {
             }
     }
 
+    fun updateUserAfterGame(me: User, opponent: User, didWin: Boolean, movesMade: Int) {
+
+        val newRating = Util.newRating(me.rating, opponent.rating, me.totalGames, if (didWin) 1.0 else 0.0)
+        val newCurrentStreak = if (didWin) me.currentStreak + 1 else 0
+        val newMaxStreak = maxOf(newCurrentStreak, me.maxStreak)
+        val newTotalMovesMade = me.totalMovesMade + movesMade
+
+        db.runTransaction { transaction ->
+            val ref = db.collection("users").document(me.id)
+
+            transaction.update(ref, mapOf(
+                "totalGames" to me.totalGames + 1,
+                "wonGames" to if (didWin) me.wonGames + 1 else me.wonGames,
+                "lostGames" to if (didWin) me.lostGames else me.lostGames + 1,
+                "rating" to newRating,
+                "currentStreak" to newCurrentStreak,
+                "maxStreak" to newMaxStreak,
+                "totalMovesMade" to newTotalMovesMade
+
+            ))
+
+        }
+
+    }
 
 }

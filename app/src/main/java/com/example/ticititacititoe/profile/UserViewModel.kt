@@ -74,6 +74,9 @@ class UserViewModel(): ViewModel() {
         }
     }
 
+    fun updateUserAfterGame(me: User, opponent: User, didWin: Boolean, movesMade: Int) {
+        repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+    }
 
 
 }

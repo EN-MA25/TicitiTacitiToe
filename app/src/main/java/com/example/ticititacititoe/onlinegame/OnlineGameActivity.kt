@@ -2,6 +2,7 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -19,6 +20,7 @@ import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -33,14 +35,19 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var chatViewModel: ChatViewModel
-    private lateinit var opponentUsername: String
+    //private lateinit var opponentUsername: String
 
     private lateinit var userViewModel: UserViewModel
 
     private var hasStartedListening = false
 
+    private var me: User? = null
+    private var opponent: User? = null
+
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
+
+    private var movesMade = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,24 +66,14 @@ class OnlineGameActivity : AppCompatActivity() {
             insets
         }
 
+
+
+
         binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
-
-        val currentUserId = intent.getStringExtra("currentUserId")
-        val fromUserId = intent.getStringExtra("fromUserId")
-
-        // ========== Cell click listeners ==========
-
-
-        if (fromUserId != null) {
-            userViewModel.getUserDetailsById(fromUserId) { user ->
-                opponentUsername = user?.username ?: ""
-            }
-        }
 
         binding.onlineNewGameButton.visibility = View.GONE
     }
@@ -86,6 +83,17 @@ class OnlineGameActivity : AppCompatActivity() {
 
         currentUserId = intent.getStringExtra("currentUserId")
         otherUserId = intent.getStringExtra("fromUserId")
+
+        val meId = userViewModel.getCurrentUserId()
+
+        if (meId!! == currentUserId!!) {
+            userViewModel.getUserDetailsById(currentUserId) { user -> me = user }
+            userViewModel.getUserDetailsById(otherUserId) { user -> opponent = user }
+        } else {
+            userViewModel.getUserDetailsById(currentUserId) { user -> opponent = user }
+            userViewModel.getUserDetailsById(otherUserId) { user -> me = user }
+        }
+
         val userIds = mutableListOf(currentUserId, otherUserId)
 
         // ========== Delete invitaions from db ==========
@@ -157,10 +165,7 @@ class OnlineGameActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
-                    //val newGameState = deleteOldestMove(onlineState)
                     renderBoard(onlineState)
-                    //val currentUser = userViewModel.getCurrentUserId()
-                    //Log.d("!!!", "CURRENTUSER: " + currentUser)
                     if (checkWinner(onlineState)) {
                         Toast.makeText(
                             this@OnlineGameActivity,
@@ -184,7 +189,7 @@ class OnlineGameActivity : AppCompatActivity() {
             userViewModel.getCurrentUserId()
         ) { result ->
             if (result.isSuccess) {
-                // Updates UI
+                movesMade++
             } else {
                 Toast.makeText(
                     this,
@@ -246,7 +251,9 @@ class OnlineGameActivity : AppCompatActivity() {
 
                         }
                     }
-
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
+                } else {
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, false, movesMade)
                 }
                 return true
             }
@@ -264,13 +271,15 @@ class OnlineGameActivity : AppCompatActivity() {
                 if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {
                     onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
                         if (result.isSuccess) {
-                            onlineGameViewModel.deleteGame(gameId!!) {
+                            onlineGameViewModel.deleteGame(gameId) {
 
                             }
 
                         }
                     }
-
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
+                } else {
+                    userViewModel.updateUserAfterGame(me!!, opponent!!, false, movesMade)
                 }
                 return true
             }
@@ -345,7 +354,7 @@ class OnlineGameActivity : AppCompatActivity() {
             arguments = Bundle().apply {
                 putString("gameId", gameId)
                 putString("opponentId", otherUserId)
-                putString("opponentUsername", opponentUsername)
+                putString("opponentUsername", opponent?.username ?: "")
             }
         }
 
