@@ -78,51 +78,6 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
 
-        binding.onlinecell00.setOnClickListener {
-            val (row, col) = binding.onlinecell00.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell01.setOnClickListener {
-            val (row, col) = binding.onlinecell01.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell02.setOnClickListener {
-            val (row, col) = binding.onlinecell02.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell10.setOnClickListener {
-            val (row, col) = binding.onlinecell10.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell11.setOnClickListener {
-            val (row, col) = binding.onlinecell11.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell12.setOnClickListener {
-            val (row, col) = binding.onlinecell12.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell20.setOnClickListener {
-            val (row, col) = binding.onlinecell20.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell21.setOnClickListener {
-            val (row, col) = binding.onlinecell21.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
-        binding.onlinecell22.setOnClickListener {
-            val (row, col) = binding.onlinecell22.tag.toString().split(",").map { it.toLong() }
-            playerMakeMove(gameId, row, col)
-        }
-
         binding.onlineNewGameButton.visibility = View.GONE
     }
 
@@ -164,6 +119,10 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+    fun squarePressed(view: View) {
+        val (row, col) = view.tag.toString().split(",").map { it.toLong() }
+        playerMakeMove(gameId, row, col)
+    }
 
     fun isGameOver(onlineGameState: OnlineGameState) {
         if (onlineGameState.playerLeftId != "") {
