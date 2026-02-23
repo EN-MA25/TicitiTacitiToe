@@ -14,7 +14,7 @@ class ChatViewModel: ViewModel() {
     val messages = _messages.asStateFlow()
     fun createChatRoom(
         gameId: String,
-        userIds: List<String>
+        userIds: MutableList<String?>
     ) {
         viewModelScope.launch {
             try {

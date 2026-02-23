@@ -51,14 +51,31 @@ class UserRepository {
         fun getCurrentUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
 
 
-    suspend fun getUserDetailsById(userId: String): User? {
-        val document = db.collection("users")
+//    suspend fun getUserDetailsById(userId: String): User? {
+//        val document = db.collection("users")
+//            .document(userId)
+//            .get()
+//            .await()
+//
+//        return document.toObject(User::class.java)?.copy(id = document.id)
+//
+//    }
+
+    fun getUserDetailsById(userId: String, callback: (User?) -> Unit) {
+        db.collection("users")
             .document(userId)
             .get()
-            .await()
-
-        return document.toObject(User::class.java)?.copy(id = document.id)
-
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val user = document.toObject(User::class.java)
+                    callback(user?.copy(id = document.id))
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback(null)
+            }
     }
 
 

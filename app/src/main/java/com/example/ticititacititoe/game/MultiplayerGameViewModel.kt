@@ -83,15 +83,22 @@ class MultiplayerGameViewModel: ViewModel() {
         }
     }
 
+    // ========= Accept invite ===========
     fun acceptInvite(currentUserId: String, fromUserId: String) {
         repository.acceptInvitation(currentUserId, fromUserId)
     }
 
+    // ========== Decline invite =======
+    fun declineInvite(currentUserId: String, fromUserId: String) {
+        repository.declineInvitation(currentUserId, fromUserId)
+    }
+
+    // ======= Delete invite ========
     fun deleteInvitations(currentUserId: String,
-                          otherUserId: String) {
+                          otherUserId: String, deleteBothInvitations : Boolean = false) {
         viewModelScope.launch {
             try {
-                repository.deleteInvitations(currentUserId, otherUserId)
+                repository.deleteInvitations(currentUserId, otherUserId, deleteBothInvitations)
             } catch (exception: Exception) {
                 Log.e("Invite", "Failed to delete invite", exception)
 

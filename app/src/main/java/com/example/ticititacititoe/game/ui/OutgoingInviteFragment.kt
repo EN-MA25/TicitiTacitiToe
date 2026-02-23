@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -83,9 +84,12 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
 
         multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
 
+        // ================== Observe invite state ==================
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 multiplayerGameViewModel.inviteState.collect { state ->
+
+                    // ================== Handling different conditions for invite ==================
                     when (state) {
                         is InviteState.Accepted -> {
                             delay(2000)
@@ -98,15 +102,15 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                         }
                         is InviteState.Declined -> {
                             multiplayerGameViewModel.deleteInvitations(toUserId!!, fromUserId!!)
+                            //Toast.makeText(requireContext(), "The opponent declined your invation", Toast.LENGTH_SHORT).show()
                             dismiss()
                         }
                         else -> {
-                            // Idle or Pending → optionally show waiting UI
+                            // Pending
                         }
                     }
                 }
             }
-
         }
 
     }
@@ -133,12 +137,14 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-//        if (fromUserId != null && toUserId != null) {
-//            multiplayerGameViewModel.deleteInvitations(
-//                toUserId!!,
-//                fromUserId!!
-//            )
-//        }
+        // =========== Call viewmodel to delete in db for both (when sender cut off invation  ===========
+        if (fromUserId != null && toUserId != null) {
+            multiplayerGameViewModel.deleteInvitations(
+                toUserId!!,
+                fromUserId!!,
+                true
+            )
+        }
     }
 
 }
