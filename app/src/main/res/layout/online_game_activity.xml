@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/speech_bubble_red_border_stars_200"
-        android:text="vems tur???"
+        android:text="Player X"
         android:textAlignment="center"
         android:gravity="center"
         android:fontFamily="@font/permanent_marker"

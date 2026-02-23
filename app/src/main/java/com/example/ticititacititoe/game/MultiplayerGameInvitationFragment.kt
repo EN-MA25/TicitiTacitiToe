@@ -77,17 +77,19 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         invitationText.text = getString(R.string.has_challenged_you_in_a_blitz_game, fromUsername)
 
+        // ======== Update status and delete invitaion in db =======
         binding.declineInviteButton.setOnClickListener {
-            fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
+            multiplayerGameViewModel.declineInvite(currentUserId, fromUserId!!)
+            multiplayerGameViewModel.deleteInvitations(currentUserId, fromUserId!!)
             dismiss()
         }
 
         binding.acceptInviteButton.setOnClickListener {
-            // Start blitz game
+            // =========== Start blitz game ==========
             multiplayerGameViewModel.acceptInvite(currentUserId, fromUserId!!)
-            //fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
             dismiss()
 
+            // ========== Send to game ========
             val intent = Intent(requireContext(), OnlineGameActivity::class.java)
             intent.putExtra("currentUserId", currentUserId)
             intent.putExtra("fromUserId", fromUserId)

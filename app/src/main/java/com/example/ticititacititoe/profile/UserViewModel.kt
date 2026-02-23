@@ -60,11 +60,17 @@ class UserViewModel(): ViewModel() {
         return repository.getCurrentUserId()
     }
 
-    fun loadUserById(id: String?) {
-        if (id == null) return
+//    fun loadUserById(id: String?) {
+//        if (id == null) return
+//
+//        viewModelScope.launch {
+//            _selectedUser.value = repository.getUserDetailsById(id)
+//        }
+//    }
 
-        viewModelScope.launch {
-            _selectedUser.value = repository.getUserDetailsById(id)
+    fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
+        if (userId != null) {
+            repository.getUserDetailsById(userId, callback)
         }
     }
 
