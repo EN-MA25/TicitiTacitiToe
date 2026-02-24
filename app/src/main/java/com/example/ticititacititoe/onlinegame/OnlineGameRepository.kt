@@ -1,11 +1,15 @@
 package com.example.ticititacititoe.onlinegame
 
 import android.util.Log
+import com.example.ticititacititoe.databinding.RecentGameListItemBinding
 import com.example.ticititacititoe.game.InviteState
 import com.example.ticititacititoe.game.Player
+import com.example.ticititacititoe.game.recentGame.RecentGame
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,7 +37,7 @@ class OnlineGameRepository {
                 // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
 
-                if(game?.playerLeftId != "") {
+                if (game?.playerLeftId != "") {
                     _onlineState.value = game!!
                     return@addSnapshotListener
                 }
@@ -42,7 +46,6 @@ class OnlineGameRepository {
                     return@addSnapshotListener
 
                 moveCount = game.moves.count()
-
 
 
                 // =============== Update stateflow ===============
@@ -64,7 +67,7 @@ class OnlineGameRepository {
         gameId: String?,
         move: OnlineMove,
         onResult: (Result<String>) -> Unit
-    ){
+    ) {
         if (gameId == null) {
             onResult(Result.failure(Exception("Can't make move, GameID is missing")))
             return
@@ -119,7 +122,7 @@ class OnlineGameRepository {
                 val game = gameCollection.document(gameId!!)
 
                 // =============== Add moves and updates current player ===============
-                game.update("moves",FieldValue.arrayUnion(move))
+                game.update("moves", FieldValue.arrayUnion(move))
                 game.update("currentPlayerUid", currentPlayer)
 
                 onResult(Result.success("success"))
@@ -131,11 +134,11 @@ class OnlineGameRepository {
 
         val game = gameCollection.document(gameId!!)
 
-        game.update("moves",moves)
+        game.update("moves", moves)
 
     }
 
-    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit){
+    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
 
         gameCollection.document(gameId!!).delete()
             .addOnSuccessListener {
@@ -143,7 +146,11 @@ class OnlineGameRepository {
             }
     }
 
-    fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
+    fun getGameIfExist(
+        currentUserId: String?,
+        otherUserId: String?,
+        onResult: (Result<String?>) -> Unit
+    ) {
         firestore.collection("game")
             // =============== Check id for players to see if theyre in a game & limit result to max 1 document  ===============
             .whereEqualTo("playerX", currentUserId)
@@ -164,8 +171,7 @@ class OnlineGameRepository {
                         .addOnSuccessListener { documents ->
                             if (documents.isEmpty) {
                                 onResult(Result.failure(Exception("Collection does not exist")))
-                            }
-                            else {
+                            } else {
                                 // =============== Collection exist ===============
                                 for (document in documents) {
                                     onResult(Result.success(document.getString("gameId")))
@@ -181,15 +187,21 @@ class OnlineGameRepository {
             }
     }
 
-    fun addOnlineGameResult(onlineGameResult: OnlineGameResult,
-                            onResult: (Result<String>) -> Unit){
+    fun addOnlineGameResult(
+        onlineGameResult: OnlineGameResult,
+        timestamp: Long,
+        movesMade: Int,
+        onResult: (Result<String>) -> Unit
+    ) {
 
         val onlineGameResultId = firestore.collection("onlineGameResult").document().id
 
         val onlineGameResult = hashMapOf(
             "onlineGameResultId" to onlineGameResultId,
             "playerWhoWon" to onlineGameResult._playerWhoWon,
-            "playerWhoLost" to onlineGameResult._playerWhoLost
+            "playerWhoLost" to onlineGameResult._playerWhoLost,
+            "timestamp" to timestamp,
+            "movesMade" to movesMade
         )
         firestore.collection("onlineGameResult")
             .document(onlineGameResultId)
@@ -214,11 +226,11 @@ class OnlineGameRepository {
     }
 
     fun createOnlineGame(
-        playerX : String?,
+        playerX: String?,
         playerO: String?,
         startingPlayer: String?,
         onResult: (Result<String>) -> Unit
-    ){
+    ) {
         // =============== New unique gameId ===============
         val gameId = firestore.collection("game").document().id
 
@@ -250,4 +262,65 @@ class OnlineGameRepository {
                 }
             }
     }
+
+
+    fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+
+        firestore.collection("onlineGameResult")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(20)
+            .get()
+            .addOnSuccessListener { documents ->
+                val recentGames = mutableListOf<RecentGame>()
+
+                val userDocs = documents.filter { doc ->
+                    val playerWhoWon = doc.getString("playerWhoWon") ?: ""
+                    val playerWhoLost = doc.getString("playerWhoLost") ?: ""
+                    playerWhoWon == userId || playerWhoLost == userId
+                }.take(5)
+
+                if (userDocs.isEmpty()) {
+                    onResult(Result.success(emptyList()))
+                    return@addOnSuccessListener
+                }
+
+                var completedCount = 0
+
+                for (doc in userDocs) {
+                    val playerWhoWon = doc.getString("playerWhoWon") ?: ""
+                    val playerWhoLost = doc.getString("playerWhoLost") ?: ""
+                    val timestamp = doc.getLong("timestamp") ?: 0L
+                    val movesMade = doc.getLong("movesMade")?.toInt() ?: 0
+                    val opponentId = if (playerWhoWon == userId) playerWhoLost else playerWhoWon
+                    val result = if (playerWhoWon == userId) "Won" else "Lost"
+
+                    firestore.collection("users")
+                        .document(opponentId)
+                        .get()
+                        .addOnSuccessListener { userDoc ->
+                            val username = userDoc.getString("username") ?: "Unknown"
+                            recentGames.add(
+                                RecentGame(doc.id, opponentId, username, result, timestamp, movesMade)
+                            )
+                            completedCount++
+                            if (completedCount == userDocs.size) {
+                                onResult(Result.success(recentGames))
+                            }
+                        }
+                        .addOnFailureListener {
+                            completedCount++
+                            if (completedCount == userDocs.size) {
+                                onResult(Result.success(recentGames))
+                            }
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                onResult(Result.failure(exception))
+            }
+    }
 }
+
+
+
+

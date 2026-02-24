@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.ticititacititoe.game.GameResult
 import com.example.ticititacititoe.game.Move
 import com.example.ticititacititoe.game.Player
+import com.example.ticititacititoe.game.recentGame.RecentGame
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -69,8 +70,11 @@ class OnlineGameViewModel : ViewModel() {
         repository.userHasLeft(gameId, userId)
     }
 
-    fun addOnlineGameResult(onlineGameResult: OnlineGameResult, onResult: (Result<String>) -> Unit){
-        repository.addOnlineGameResult(onlineGameResult){ result ->
+    fun addOnlineGameResult(onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
+        repository.addOnlineGameResult(
+            onlineGameResult,
+            timestamp ,
+            movesMade){ result ->
             onResult(result)
         }
     }
@@ -79,5 +83,9 @@ class OnlineGameViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         repository.removeListener()
+    }
+
+    fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>)-> Unit){
+        repository.getRecentGames(userId, onResult)
     }
 }
