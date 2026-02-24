@@ -155,7 +155,8 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
     fun startListeningToMoves() {
-        if (hasStartedListening) return
+        if (hasStartedListening)
+            return
 
         onlineGameViewModel.startListenToMove(gameId)
         hasStartedListening = true
@@ -165,6 +166,7 @@ class OnlineGameActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.onlineState.collect { onlineState ->
                     renderBoard(onlineState)
+                    renderStatus(onlineState)
                     if (checkWinner(onlineState)) {
                         Toast.makeText(
                             this@OnlineGameActivity,
@@ -198,6 +200,23 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun renderStatus(state: OnlineGameState) {
+
+        if (state.gameResult != "Ongoing")
+            return
+
+        if (state.currentPlayerUid == state.playerX) {
+
+            binding.onlineStatusTextView.text = "X"
+            binding.onlineStatusTextView.setBackgroundResource(R.drawable.speech_bubble_red_border_red_center)
+
+        } else {
+            binding.onlineStatusTextView.text = "O"
+            binding.onlineStatusTextView.setBackgroundResource(R.drawable.speech_bubble_red_border_blue_center)
+        }
+    }
+
 
 
     private fun checkWinner(state: OnlineGameState): Boolean {
