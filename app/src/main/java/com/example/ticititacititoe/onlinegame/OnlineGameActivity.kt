@@ -41,7 +41,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
-    private var gameAlreadyEnded = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,7 +204,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     //val currentUser = userViewModel.getCurrentUserId()
                     //Log.d("!!!", "CURRENTUSER: " + currentUser)
                     if (checkWinner(onlineState)) {
-                        gameAlreadyEnded = true
+
                         Toast.makeText(
                             this@OnlineGameActivity,
                             onlineState.gameResult,

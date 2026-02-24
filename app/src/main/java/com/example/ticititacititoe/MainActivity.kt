@@ -144,15 +144,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.recentGamesRecyclerView.layoutManager = LinearLayoutManager(this)
-        if (currentUserId != null){
-            onlineGameViewModel.fetchRecentGames(currentUserId){ result ->
-                result.onSuccess { games ->
-                    runOnUiThread {
-                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games)
-                    }
-                }
-            }
-        }
+
 
         binding.profileButton.setOnClickListener {
             val intent = Intent(this, MyProfileActivity::class.java)
@@ -170,6 +162,19 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "challenge_fragment_dialog")
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        val currentUserId = userViewModel.getCurrentUserId()
+        if (currentUserId != null) {
+            onlineGameViewModel.fetchRecentGames(currentUserId) { result ->
+                result.onSuccess { games ->
+                    runOnUiThread {
+                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games)
+                    }
+                }
+            }
+        }
     }
 
     fun newGame() {

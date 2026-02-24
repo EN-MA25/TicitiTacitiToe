@@ -265,9 +265,10 @@ class OnlineGameRepository {
 
 
     fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+
         firestore.collection("onlineGameResult")
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
+            .limit(20)
             .get()
             .addOnSuccessListener { documents ->
                 val recentGames = mutableListOf<RecentGame>()
@@ -276,7 +277,7 @@ class OnlineGameRepository {
                     val playerWhoWon = doc.getString("playerWhoWon") ?: ""
                     val playerWhoLost = doc.getString("playerWhoLost") ?: ""
                     playerWhoWon == userId || playerWhoLost == userId
-                }
+                }.take(5)
 
                 if (userDocs.isEmpty()) {
                     onResult(Result.success(emptyList()))
