@@ -35,7 +35,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var chatViewModel: ChatViewModel
-    //private lateinit var opponentUsername: String
 
     private lateinit var userViewModel: UserViewModel
 
@@ -137,7 +136,7 @@ class OnlineGameActivity : AppCompatActivity() {
             if (onlineGameState.playerLeftId != userViewModel.getCurrentUserId()) {
                 if (onlineGameState.gameResult == "Ongoing") {
                     val gameResult = OnlineGameResult(otherUserId, currentUserId)
-                    onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
+                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(), onlineGameState.moves.size) { result ->
                         if (result.isSuccess) {
                             Toast.makeText(
                                 this,
@@ -243,7 +242,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
                 val currentUserId = userViewModel.getCurrentUserId()
                 if (gameResult._playerWhoWon == currentUserId) {
-                    onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
+                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(),state.moves.size) { result ->
                         if (result.isSuccess) {
                             onlineGameViewModel.deleteGame(gameId) {
 
@@ -269,7 +268,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 val gameResult =
                     OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
                 if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {
-                    onlineGameViewModel.addOnlineGameResult(gameResult) { result ->
+                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(), state.moves.size) { result ->
                         if (result.isSuccess) {
                             onlineGameViewModel.deleteGame(gameId) {
 
