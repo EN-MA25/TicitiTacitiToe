@@ -2,6 +2,7 @@ package com.example.ticititacititoe
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -166,6 +167,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val currentUserId = userViewModel.getCurrentUserId()
+        Log.d("RecentGames", "onResume userId: $currentUserId")
         if (currentUserId != null) {
             onlineGameViewModel.fetchRecentGames(currentUserId) { result ->
                 result.onSuccess { games ->

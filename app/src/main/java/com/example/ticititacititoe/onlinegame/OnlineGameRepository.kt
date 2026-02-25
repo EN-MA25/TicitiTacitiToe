@@ -265,28 +265,34 @@ class OnlineGameRepository {
 
 
     fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+        Log.d("RecentGames", "FUNCTION CALLED with userId: $userId")
 
-        firestore.collection("onlineGameResult")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(20)
-            .get()
-            .addOnSuccessListener { documents ->
-                val recentGames = mutableListOf<RecentGame>()
+        val wonQuery = firestore.collection("onlineGameResult")
+            .whereEqualTo("playerWhoWon", userId)
 
-                val userDocs = documents.filter { doc ->
-                    val playerWhoWon = doc.getString("playerWhoWon") ?: ""
-                    val playerWhoLost = doc.getString("playerWhoLost") ?: ""
-                    playerWhoWon == userId || playerWhoLost == userId
-                }.take(5)
 
-                if (userDocs.isEmpty()) {
+        val lostQuery = firestore.collection("onlineGameResult")
+            .whereEqualTo("playerWhoLost", userId)
+
+
+        wonQuery.get().addOnSuccessListener { wonDocs ->
+            Log.d("RecentGames", "wonDocs count: ${wonDocs.size()}")
+            lostQuery.get().addOnSuccessListener { lostDocs ->
+                Log.d("RecentGames", "lostDocs count: ${lostDocs.size()}")
+
+                val allDocs = (wonDocs.documents + lostDocs.documents)
+                    .sortedByDescending { it.getLong("timestamp") ?: 0L }
+                    .take(5)
+
+                if (allDocs.isEmpty()) {
                     onResult(Result.success(emptyList()))
                     return@addOnSuccessListener
                 }
 
+                val recentGames = mutableListOf<RecentGame>()
                 var completedCount = 0
 
-                for (doc in userDocs) {
+                for (doc in allDocs) {
                     val playerWhoWon = doc.getString("playerWhoWon") ?: ""
                     val playerWhoLost = doc.getString("playerWhoLost") ?: ""
                     val timestamp = doc.getLong("timestamp") ?: 0L
@@ -303,21 +309,25 @@ class OnlineGameRepository {
                                 RecentGame(doc.id, opponentId, username, result, timestamp, movesMade)
                             )
                             completedCount++
-                            if (completedCount == userDocs.size) {
+                            if (completedCount == allDocs.size) {
                                 onResult(Result.success(recentGames))
                             }
                         }
                         .addOnFailureListener {
                             completedCount++
-                            if (completedCount == userDocs.size) {
+                            if (completedCount == allDocs.size) {
                                 onResult(Result.success(recentGames))
                             }
                         }
                 }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
+                Log.e("RecentGames", "lostQuery failed: ${exception.message}")
                 onResult(Result.failure(exception))
             }
+        }.addOnFailureListener { exception ->
+            Log.e("RecentGames", "wonQuery failed: ${exception.message}")
+            onResult(Result.failure(exception))
+        }
     }
 }
 
