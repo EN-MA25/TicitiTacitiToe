@@ -265,6 +265,7 @@ class OnlineGameRepository {
 
 
     fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+        Log.d("RecentGames", "FUNCTION CALLED with userId: $userId")
 
         val wonQuery = firestore.collection("onlineGameResult")
             .whereEqualTo("playerWhoWon", userId)
@@ -277,7 +278,9 @@ class OnlineGameRepository {
             .limit(5)
 
         wonQuery.get().addOnSuccessListener { wonDocs ->
+            Log.d("RecentGames", "wonDocs count: ${wonDocs.size()}")
             lostQuery.get().addOnSuccessListener { lostDocs ->
+                Log.d("RecentGames", "lostDocs count: ${lostDocs.size()}")
 
                 val allDocs = (wonDocs.documents + lostDocs.documents)
                     .sortedByDescending { it.getLong("timestamp") ?: 0L }
@@ -320,9 +323,11 @@ class OnlineGameRepository {
                         }
                 }
             }.addOnFailureListener { exception ->
+                Log.e("RecentGames", "lostQuery failed: ${exception.message}")
                 onResult(Result.failure(exception))
             }
         }.addOnFailureListener { exception ->
+            Log.e("RecentGames", "wonQuery failed: ${exception.message}")
             onResult(Result.failure(exception))
         }
     }
