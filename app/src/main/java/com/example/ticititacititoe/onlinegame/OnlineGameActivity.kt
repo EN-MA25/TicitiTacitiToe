@@ -24,11 +24,13 @@ import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import android.view.Gravity
 
 class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var binding: OnlineGameActivityBinding
     private lateinit var gameId: String
+    private var hasShownPlayerRole = false
 
     private val auth = FirebaseAuth.getInstance()
     private lateinit var onlineGameViewModel: OnlineGameViewModel
@@ -45,8 +47,8 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
-
     private var movesMade = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +66,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
             insets
         }
-
-
-
 
         binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
@@ -168,11 +167,21 @@ class OnlineGameActivity : AppCompatActivity() {
                     renderBoard(onlineState)
                     renderStatus(onlineState)
                     if (checkWinner(onlineState)) {
-                        Toast.makeText(
-                            this@OnlineGameActivity,
-                            onlineState.gameResult,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val winner: String
+                        if (onlineState.gameResult.contains("X")) {
+                            winner = "Player X"
+                        } else {
+                            winner = "Player O"
+                        }
+                        val dialog = GameOverFragment(winner)
+                        dialog.isCancelable = false
+                        dialog.show(supportFragmentManager, "game_over_dialog")
+
+//                        Toast.makeText(
+//                            this@OnlineGameActivity,
+//                            onlineState.gameResult,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                     isGameOver(onlineState)
                 }
@@ -203,6 +212,15 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private fun renderStatus(state: OnlineGameState) {
 
+        val myUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (!hasShownPlayerRole &&
+            myUid != null && !state.playerX.isNullOrEmpty() && !state.playerO.isNullOrEmpty()) {
+            Toast.makeText(this, if (myUid == state.playerX) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+
+            hasShownPlayerRole = true
+        }
+
         if (state.gameResult != "Ongoing")
             return
 
@@ -216,8 +234,6 @@ class OnlineGameActivity : AppCompatActivity() {
             binding.onlineStatusTextView.setBackgroundResource(R.drawable.speech_bubble_red_border_blue_center)
         }
     }
-
-
 
     private fun checkWinner(state: OnlineGameState): Boolean {
 
@@ -256,7 +272,6 @@ class OnlineGameActivity : AppCompatActivity() {
                 state.gameResult = "Player X won"
                 onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
 
-
                 val gameResult =
                     OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
                 val currentUserId = userViewModel.getCurrentUserId()
@@ -264,9 +279,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(),state.moves.size) { result ->
                         if (result.isSuccess) {
                             onlineGameViewModel.deleteGame(gameId) {
-
                             }
-
                         }
                     }
                     userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
@@ -292,7 +305,6 @@ class OnlineGameActivity : AppCompatActivity() {
                             onlineGameViewModel.deleteGame(gameId) {
 
                             }
-
                         }
                     }
                     userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
@@ -315,7 +327,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
             }
         }
-
     }
 
     // ========== Update board ==========

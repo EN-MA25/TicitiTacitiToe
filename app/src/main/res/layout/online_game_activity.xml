@@ -21,6 +21,7 @@
         app:layout_constraintVertical_weight="2"
         app:layout_constraintVertical_chainStyle="spread_inside"
         app:layout_constraintVertical_bias="0.5">
+
         <ImageButton
             android:id="@+id/onlinecell00"
             android:layout_width="0dp"
