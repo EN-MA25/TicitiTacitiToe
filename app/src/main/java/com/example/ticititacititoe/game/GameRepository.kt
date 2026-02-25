@@ -201,7 +201,7 @@ class GameRepository {
                           otherUserId: String, deleteBothInvitations: Boolean = false) {
         val batch = db.batch()
 
-        // =========== delete recievers invitations ==========
+        // =========== delete receivers invitations ==========
         if (deleteBothInvitations) {
             batch.delete(
                 db.collection("users")

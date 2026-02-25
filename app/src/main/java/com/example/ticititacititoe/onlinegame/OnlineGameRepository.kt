@@ -122,8 +122,9 @@ class OnlineGameRepository {
                 val game = gameCollection.document(gameId!!)
 
                 // =============== Add moves and updates current player ===============
-                game.update("moves", FieldValue.arrayUnion(move))
                 game.update("currentPlayerUid", currentPlayer)
+                game.update("moves", FieldValue.arrayUnion(move))
+
 
                 onResult(Result.success("success"))
             }
