@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
-import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior

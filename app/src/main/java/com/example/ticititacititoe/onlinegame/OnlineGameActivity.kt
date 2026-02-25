@@ -19,7 +19,7 @@ import com.example.ticititacititoe.R
 import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
-import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth

@@ -11,15 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityLeaderboardBinding
-import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.MultiplayerGameViewModel
-import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
-import com.example.ticititacititoe.game.ui.QueueFragment
+import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.leaderboard.ViewPagerAdapter
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class LeaderboardActivity : AppCompatActivity() {

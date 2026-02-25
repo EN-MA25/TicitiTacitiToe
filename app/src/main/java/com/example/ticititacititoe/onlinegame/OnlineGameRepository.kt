@@ -1,11 +1,6 @@
 package com.example.ticititacititoe.onlinegame
 
-import android.util.Log
-import com.example.ticititacititoe.databinding.RecentGameListItemBinding
-import com.example.ticititacititoe.game.InviteState
-import com.example.ticititacititoe.game.Player
 import com.example.ticititacititoe.game.recentGame.RecentGame
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration

@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.game
+package com.example.ticititacititoe.game.invitations
 
 sealed class InviteState {
     object Idle : InviteState()
