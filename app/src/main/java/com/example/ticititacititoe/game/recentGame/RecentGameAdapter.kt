@@ -8,7 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class RecentGameAdapter(private var recentGames: List<RecentGame>)
+class RecentGameAdapter(private var recentGames: List<RecentGame>,
+    private val onPlayAgainClick: (RecentGame) -> Unit)
     : RecyclerView.Adapter<RecentGameAdapter.RecentGameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentGameViewHolder {
@@ -19,7 +20,7 @@ class RecentGameAdapter(private var recentGames: List<RecentGame>)
     }
 
     override fun onBindViewHolder(holder: RecentGameViewHolder, position: Int) {
-        holder.bind(recentGames[position])
+        holder.bind(recentGames[position], onPlayAgainClick)
     }
 
     override fun getItemCount(): Int = recentGames.size
@@ -27,13 +28,16 @@ class RecentGameAdapter(private var recentGames: List<RecentGame>)
     class RecentGameViewHolder(private val binding: RecentGameListItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(game: RecentGame) {
+        fun bind(game: RecentGame, onPlayAgainClick: (RecentGame) -> Unit) {
             binding.initialsTextView.text = game.opponentUsername.take(1).uppercase()
             binding.usernameTextView.text = game.opponentUsername
             binding.resultTextView.text = game.result
             binding.gameTimeTextView.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 .format(Date(game.timestamp))
             binding.movesMadeTextView.text = "${game.movesMade} moves"
+            binding.playAgainButton.setOnClickListener {
+                onPlayAgainClick(game)
+            }
         }
     }
 }

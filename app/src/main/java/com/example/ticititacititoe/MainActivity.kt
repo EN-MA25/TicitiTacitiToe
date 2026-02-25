@@ -167,10 +167,19 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val currentUserId = userViewModel.getCurrentUserId()
         if (currentUserId != null) {
+            userViewModel.fetchCurrentUser()
             onlineGameViewModel.fetchRecentGames(currentUserId) { result ->
                 result.onSuccess { games ->
                     runOnUiThread {
-                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games)
+                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games) { game ->
+                            val currentUsername = userViewModel.currentUser.value?.username ?: return@RecentGameAdapter
+                            multiplayerGameViewModel.sendGameInvitation(
+                                currentUserId,
+                                currentUsername,
+                                game.opponentId,
+                                game.opponentUsername
+                            )
+                        }
                     }
                 }
             }
