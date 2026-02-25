@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
+import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
@@ -25,6 +26,8 @@ import kotlinx.coroutines.launch
 class SearchUserFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentSearchUserBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var friendViewModel: FriendViewModel
+
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var searchInput: EditText
     private lateinit var recyclerView: RecyclerView
@@ -39,6 +42,8 @@ class SearchUserFragment : BottomSheetDialogFragment() {
 
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        friendViewModel = ViewModelProvider(requireActivity())[FriendViewModel::class.java]
+
 
     }
 
@@ -78,10 +83,20 @@ class SearchUserFragment : BottomSheetDialogFragment() {
             }
         }
 
+
+
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
             multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username )
-        })
+        }, {user ->
+            friendViewModel.addFriend( currentUserId!!, user.id)},
+            onDeleteFriendClick = {user ->
+                friendViewModel.deleteFriend( currentUserId!!, user.id)
+            })
 
+
+        if (currentUserId != null) {
+            userViewModel.startFriendListener(currentUserId!!)
+        }
         recyclerView = binding.searchedUsersRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = adapter
@@ -104,10 +119,18 @@ class SearchUserFragment : BottomSheetDialogFragment() {
             }
         }
 
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                userViewModel.users.collect { list ->
+//                    adapter.submitList(list)
+//                }
+//            }
+//        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                userViewModel.users.collect { list ->
-                    adapter.submitList(list)
+                userViewModel.searchUIList.collect { uiList ->
+                    adapter.submitList(uiList)
                 }
             }
         }
