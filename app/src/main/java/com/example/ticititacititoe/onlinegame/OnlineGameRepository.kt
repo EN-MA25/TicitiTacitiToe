@@ -269,13 +269,11 @@ class OnlineGameRepository {
 
         val wonQuery = firestore.collection("onlineGameResult")
             .whereEqualTo("playerWhoWon", userId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
+
 
         val lostQuery = firestore.collection("onlineGameResult")
             .whereEqualTo("playerWhoLost", userId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
+
 
         wonQuery.get().addOnSuccessListener { wonDocs ->
             Log.d("RecentGames", "wonDocs count: ${wonDocs.size()}")
