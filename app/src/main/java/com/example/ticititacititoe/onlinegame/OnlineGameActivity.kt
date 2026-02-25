@@ -30,7 +30,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var binding: OnlineGameActivityBinding
     private lateinit var gameId: String
-    private var hasShownPlayerRole = false
 
     private val auth = FirebaseAuth.getInstance()
     private lateinit var onlineGameViewModel: OnlineGameViewModel
@@ -117,6 +116,12 @@ class OnlineGameActivity : AppCompatActivity() {
                         chatViewModel.createChatRoom(gameId, userIds)
 
                         openChatFragment()
+
+                        val myUid = userViewModel.getCurrentUserId()
+
+                        Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+
+
                     } else {
                         //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
@@ -211,15 +216,6 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
     private fun renderStatus(state: OnlineGameState) {
-
-        val myUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        if (!hasShownPlayerRole &&
-            myUid != null && !state.playerX.isNullOrEmpty() && !state.playerO.isNullOrEmpty()) {
-            Toast.makeText(this, if (myUid == state.playerX) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
-
-            hasShownPlayerRole = true
-        }
 
         if (state.gameResult != "Ongoing")
             return
