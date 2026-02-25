@@ -11,7 +11,7 @@ import com.example.ticititacititoe.profile.ui.UserSearchUIModel
 class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit,
     val onAddFriendClick: (User) -> Unit,
     val onDeleteFriendClick: (User) -> Unit): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
-    private var users: List<UserSearchUIModel> = emptyList<UserSearchUIModel>()
+    private var users: List<UserSearchUIModel> = emptyList()
     fun submitList(userList: List<UserSearchUIModel>) {
         users = userList
         notifyDataSetChanged()

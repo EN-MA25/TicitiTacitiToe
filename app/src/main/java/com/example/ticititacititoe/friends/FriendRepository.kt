@@ -3,6 +3,7 @@ package com.example.ticititacititoe.friends
 import android.util.Log
 import com.example.ticititacititoe.profile.User
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -54,5 +55,20 @@ class FriendRepository {
             }
 
         awaitClose { subscription.remove() }
+    }
+
+    suspend fun getFriendProfiles(currentUserId: String): List<User> {
+        val snapshot = db.collection("users").document(currentUserId)
+            .collection("friends").get().await()
+
+        val friendIds = snapshot.documents.map { it.id }
+        if (friendIds.isEmpty()) return emptyList()
+
+        val userSnapshots = db.collection("users")
+            .whereIn(FieldPath.documentId(), friendIds)
+            .get().await()
+        return userSnapshots.documents.mapNotNull { doc ->
+            doc.toObject(User::class.java)?.copy(id = doc.id)
+        }
     }
 }

@@ -22,7 +22,7 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
-
+    private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
 
@@ -105,5 +105,33 @@ class UserViewModel(): ViewModel() {
         repository.updateUserAfterGame(me, opponent, didWin, movesMade)
     }
 
+    fun loadFriendProfiles(currentUserId: String) {
+        viewModelScope.launch {
+            try {
+                val friends = friendRepository.getFriendProfiles(currentUserId)
+                _friends.value = friends
+            } catch (e: Exception) {
+//                _errorEvents.emit("Could not fetch friend profiles")
+            }
+        }
+    }
 
+
+    val friendUIList: StateFlow<List<UserSearchUIModel>> = combine(
+        _friends,
+        _friendIds
+    ) { profiles, friendIds ->
+        profiles.filter { user ->
+            friendIds.contains(user.id)
+        }.map { user ->
+            UserSearchUIModel(
+                user = user,
+                isFriend = true
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 }

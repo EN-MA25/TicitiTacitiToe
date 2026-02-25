@@ -4,15 +4,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.databinding.FragmentFriendBinding
+import com.example.ticititacititoe.friends.FriendViewModel
+import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class FriendFragment : BottomSheetDialogFragment() {
 
+    private lateinit var binding: FragmentFriendBinding
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var friendViewModel: FriendViewModel
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SearchUserRecyclerAdapter
+
+    private  var currentUserId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        friendViewModel = ViewModelProvider(requireActivity())[FriendViewModel::class.java]
+
 
     }
 
@@ -20,8 +44,41 @@ class FriendFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend, container, false)
+        binding = FragmentFriendBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        currentUserId = userViewModel.getCurrentUserId() ?: return
+
+        adapter = SearchUserRecyclerAdapter(onUserClick = {
+            // Go to user profile
+
+        }, { user ->
+            friendViewModel.addFriend(currentUserId!!, user.id) },
+            {user ->
+                friendViewModel.deleteFriend(currentUserId!!, user.id)
+
+            })
+
+        if (currentUserId != null) {
+            userViewModel.startFriendListener(currentUserId!!)
+            userViewModel.loadFriendProfiles(currentUserId!!)
+        }
+
+        recyclerView = binding.friendsRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.friendUIList.collect { uiList ->
+                    adapter.submitList(uiList)
+                }
+            }
+        }
     }
 
     override fun onStart() {
