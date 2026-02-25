@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.CredentialManager
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.MainActivity
+import com.example.ticititacititoe.R
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivityLoginBinding
 import com.example.ticititacititoe.game.ui.GameActivity
@@ -19,6 +22,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
 
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var credentialManager: CredentialManager
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
 
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
+
+        credentialManager = CredentialManager.create(this)
 
         val emailFromRegister = intent.getStringExtra("email")
         val passwordFromRegister = intent.getStringExtra("password")
@@ -44,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
         binding.tryButton.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.googleSignInButton.setOnClickListener {
+            authViewModel.loginWithGoogle(this, credentialManager)
         }
 
 

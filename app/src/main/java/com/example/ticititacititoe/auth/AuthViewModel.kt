@@ -1,22 +1,25 @@
 package com.example.ticititacititoe.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.content.Context
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
-import com.example.ticititacititoe.profile.User
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-
-class AuthViewModel: ViewModel() {
+import androidx.lifecycle.viewModelScope
+import com.example.ticititacititoe.R
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import kotlinx.coroutines.launch
 
 
+class AuthViewModel: ViewModel(
 
-    private val auth = Firebase.auth
+) {
+
+
     private val repository = AuthRepository()
     fun isLoggedIn(): Boolean = repository.isLoggedIn()
+
+
 
     fun registerUser(username: String, email: String, password: String, onResult: (Result<Unit>) -> Unit) {
         repository.registerUser(username, email, password) { result ->
@@ -31,4 +34,29 @@ class AuthViewModel: ViewModel() {
     fun logout(){
         repository.logout()
     }
+
+    fun loginWithGoogle(context: Context, credentialManager: CredentialManager) {
+        viewModelScope.launch {
+            try {
+                val googleIdOption = GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(context.getString(R.string.default_web_client_id))
+                    .build()
+
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(googleIdOption)
+                    .build()
+
+                val result = credentialManager.getCredential(context, request)
+                val authResult = repository.handleSignIn(result)
+
+
+
+            } catch (exception: GetCredentialException) {
+                repository.handleFailure(exception, context)
+            }
+        }
+    }
+
+
 }

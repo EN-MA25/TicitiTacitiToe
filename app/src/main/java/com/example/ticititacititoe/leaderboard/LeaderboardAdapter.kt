@@ -17,7 +17,7 @@ class LeaderboardAdapter(
 
         fun bind(user: User) {
 
-            binding.initialsTextView.text = user.username.take(2).uppercase()
+            binding.initialsTextView.text = user.username?.take(2)?.uppercase()
             binding.usernameTextView.text = "${user.username} ${user.rating}"
             binding.winLossTextView.text = "${user.wonGames}/${user.totalGames}"
             binding.averageTimeTextView.text = "Avg: ${user.winRate}"

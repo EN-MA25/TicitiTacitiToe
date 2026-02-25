@@ -1,6 +1,5 @@
 package com.example.ticititacititoe.friends
 
-import android.util.Log
 import com.example.ticititacititoe.profile.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
@@ -9,8 +8,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import kotlin.text.get
-import kotlin.toString
 
 class FriendRepository {
     private val db = Firebase.firestore
