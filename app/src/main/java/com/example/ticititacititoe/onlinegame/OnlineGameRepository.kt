@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.onlinegame
 
+import android.util.Log
 import com.example.ticititacititoe.game.recentGame.RecentGame
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
