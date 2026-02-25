@@ -18,8 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.auth.AuthViewModel
-import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
 import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
 import com.example.ticititacititoe.game.ui.QueueFragment
@@ -27,7 +27,6 @@ import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
 
 

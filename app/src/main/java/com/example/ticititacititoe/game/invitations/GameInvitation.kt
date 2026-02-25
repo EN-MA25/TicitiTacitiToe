@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.game
+package com.example.ticititacititoe.game.invitations
 
 data class GameInvitation(
     val id: String = "",

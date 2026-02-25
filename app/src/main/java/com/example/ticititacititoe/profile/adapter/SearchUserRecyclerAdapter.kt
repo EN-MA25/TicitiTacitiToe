@@ -3,12 +3,16 @@ package com.example.ticititacititoe.profile.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.UserListItemBinding
 import com.example.ticititacititoe.profile.User
+import com.example.ticititacititoe.profile.ui.UserSearchUIModel
 
-class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
-    private var users = emptyList<User>()
-    fun submitList(userList: List<User>) {
+class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit,
+    val onAddFriendClick: (User) -> Unit,
+    val onDeleteFriendClick: (User) -> Unit): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
+    private var users: List<UserSearchUIModel> = emptyList()
+    fun submitList(userList: List<UserSearchUIModel>) {
         users = userList
         notifyDataSetChanged()
     }
@@ -37,14 +41,27 @@ class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit): RecyclerView.A
 
     inner class UserViewHolder(private val binding: UserListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: User) {
+        fun bind(item: UserSearchUIModel) {
+            val user = item.user
 
+            if (item.isFriend) {
+                binding.friendsImageButton.setImageResource(R.drawable.delete_friend)
+                binding.friendsImageButton.setOnClickListener {
+                    onDeleteFriendClick(user)
+                }
+            } else {
+                binding.friendsImageButton.setImageResource(R.drawable.add_friend)
+                binding.friendsImageButton.setOnClickListener {
+                    onAddFriendClick(user)
+                }
+            }
             // TODO: Update what we want to show from each user. This is just example
             binding.usernameTextView.text = user.username
             binding.initialsTextView.text = user.username.take(2).uppercase()
             binding.winLossTextView.text = user.rating.toString()
             binding.averageMovesTextView.text = "Streak: ${user.currentStreak}"
             binding.averageTimeTextView.text = "Won ${user.winRate}%"
+            binding.friendsImageButton
             binding.root.setOnClickListener { onUserClick(user)}
 
 

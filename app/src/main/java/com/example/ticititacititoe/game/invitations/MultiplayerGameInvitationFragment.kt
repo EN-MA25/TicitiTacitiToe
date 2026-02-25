@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.game
+package com.example.ticititacititoe.game.invitations
 
 import android.content.DialogInterface
 import android.content.Intent

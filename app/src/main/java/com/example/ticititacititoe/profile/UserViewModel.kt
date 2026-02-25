@@ -2,8 +2,14 @@ package com.example.ticititacititoe.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ticititacititoe.friends.FriendRepository
+import com.example.ticititacititoe.profile.ui.UserSearchUIModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserViewModel(): ViewModel() {
@@ -16,8 +22,31 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
+    private val _friends = MutableStateFlow<List<User>>(emptyList())
+    private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
+    private val friendRepository = FriendRepository()
 
-
+    fun startFriendListener(currentUserId: String) {
+        viewModelScope.launch {
+            friendRepository.listenToFriends(currentUserId).collect { friendList ->
+                _friendIds.value = friendList.map { it.id }.toSet()
+            }
+        }
+    }
+    val searchUIList: StateFlow<List<UserSearchUIModel>> = combine(_users, _friendIds) { users, friendIds ->
+        users.map { user ->
+            val myId = getCurrentUserId()
+            users.filter { user -> user.id != myId }
+            UserSearchUIModel(
+                user = user,
+                isFriend = friendIds.contains(user.id)
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun searchUsers(searchTerm: String, currentUserId: String) {
         if(searchTerm.isBlank()) {
@@ -78,5 +107,33 @@ class UserViewModel(): ViewModel() {
         repository.updateUserAfterGame(me, opponent, didWin, movesMade)
     }
 
+    fun loadFriendProfiles(currentUserId: String) {
+        viewModelScope.launch {
+            try {
+                val friends = friendRepository.getFriendProfiles(currentUserId)
+                _friends.value = friends
+            } catch (e: Exception) {
+//                _errorEvents.emit("Could not fetch friend profiles")
+            }
+        }
+    }
 
+
+    val friendUIList: StateFlow<List<UserSearchUIModel>> = combine(
+        _friends,
+        _friendIds
+    ) { profiles, friendIds ->
+        profiles.filter { user ->
+            friendIds.contains(user.id)
+        }.map { user ->
+            UserSearchUIModel(
+                user = user,
+                isFriend = true
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 }

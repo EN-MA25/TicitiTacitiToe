@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.profile.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LeaderboardViewModel(): ViewModel() {
@@ -14,6 +16,9 @@ class LeaderboardViewModel(): ViewModel() {
     val users: LiveData<List<User>> = _users
     private val _globalLeaderboard = MutableLiveData<List<User>>()
     val globalLeaderboard: LiveData<List<User>> = _globalLeaderboard
+
+    private val _friendLeaderboard = MutableStateFlow<List<User>>(emptyList())
+    val friendLeaderboard = _friendLeaderboard.asStateFlow()
 
 
     fun getAllUsers(){
@@ -37,6 +42,19 @@ class LeaderboardViewModel(): ViewModel() {
                 _globalLeaderboard.value = sortedUsers
             } catch (exception: Exception) {
                 _globalLeaderboard.value = emptyList()
+            }
+        }
+    }
+
+    fun loadFriendLeaderboard(currentUserId: String) {
+        viewModelScope.launch {
+            try {
+                val friends = repository.getFriendsForLeaderboard(currentUserId)
+                    .sortedByDescending { it.rating }
+                _friendLeaderboard.value = friends
+            } catch (exception: Exception) {
+                // error message
+                _friendLeaderboard.value = emptyList()
             }
         }
     }

@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
-import com.example.ticititacititoe.game.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.launch
 import kotlin.toString

@@ -1,7 +1,5 @@
-package com.example.ticititacititoe.game
+package com.example.ticititacititoe.game.invitations
 
-import com.example.ticititacititoe.game.ui.QueueUiState
-import com.example.ticititacititoe.profile.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
@@ -15,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 import kotlin.collections.emptyList
 
-class GameRepository {
+class GameInvitationRepository {
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
