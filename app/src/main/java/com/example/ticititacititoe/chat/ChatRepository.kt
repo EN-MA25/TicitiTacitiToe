@@ -71,4 +71,29 @@ class ChatRepository {
             .await()
     }
 
+    suspend fun deleteChat(gameId: String) {
+        val chatRoomRef = db.collection("chatRooms").document(gameId)
+        val messageRef = chatRoomRef.collection("messages")
+
+        // ======== get all messages =========
+        val messagesSnapshot = messageRef.get().await()
+
+
+        val batch = db.batch()
+
+        // ======== Loop throguh every message and add to delete in batch =========
+        for (document in messagesSnapshot.documents) {
+            batch.delete(document.reference)
+        }
+
+        // ======== Delete chatroom =========
+        batch.delete(db.collection("chatRooms")
+            .document(gameId))
+
+        // ======== Do everything simultaneously =========
+        batch.commit().await()
+    }
+
+
+
 }

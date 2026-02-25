@@ -2,10 +2,10 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -75,6 +75,13 @@ class OnlineGameActivity : AppCompatActivity() {
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         binding.onlineNewGameButton.visibility = View.GONE
+
+        onBackPressedDispatcher.addCallback(this) {
+            chatViewModel.deleteChat(gameId)
+            onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
+
+            finish()
+        }
     }
 
     override fun onStart() {
@@ -144,6 +151,7 @@ class OnlineGameActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             onlineGameViewModel.deleteGame(gameId) {
+                                chatViewModel.deleteChat(gameId)
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                             }
@@ -264,7 +272,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(),state.moves.size) { result ->
                         if (result.isSuccess) {
                             onlineGameViewModel.deleteGame(gameId) {
-
+                                chatViewModel.deleteChat(gameId)
                             }
 
                         }
@@ -290,6 +298,7 @@ class OnlineGameActivity : AppCompatActivity() {
                     onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(), state.moves.size) { result ->
                         if (result.isSuccess) {
                             onlineGameViewModel.deleteGame(gameId) {
+                                chatViewModel.deleteChat(gameId)
 
                             }
 
@@ -342,14 +351,15 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
-            if (result.isSuccess) {
-                onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
-            }
-        }
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
+//            if (result.isSuccess) {
+//                onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
+//                chatViewModel.deleteChat(gameId)
+//            }
+//        }
+//    }
 
     private fun getButton(row: Int, col: Int): ImageButton {
         // ========== Return correct imagebutton based on row/col ==========
