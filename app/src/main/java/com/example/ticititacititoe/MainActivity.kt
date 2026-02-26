@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
+import com.example.ticititacititoe.profile.TutorialFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -151,6 +151,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.tutorialButton.setOnClickListener {
+
+            val dialog = TutorialFragment()
+            dialog.show(supportFragmentManager, "tutorial_dialog")
+
+        }
+
 
         binding.highscoreButton.setOnClickListener {
             val intent = Intent(this, LeaderboardActivity::class.java)
@@ -184,6 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     override fun onStop() {
         super.onStop()
         val userId = userViewModel.getCurrentUserId()
@@ -191,4 +199,6 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.leaveQueue(userId)
         }
     }
+
+
 }
