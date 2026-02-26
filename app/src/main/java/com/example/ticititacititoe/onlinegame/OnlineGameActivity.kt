@@ -2,6 +2,7 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -24,6 +25,7 @@ import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import android.view.Gravity
 
 class OnlineGameActivity : AppCompatActivity() {
 
@@ -48,6 +50,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private var movesMade = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -64,9 +67,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
             insets
         }
-
-
-
 
         binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
@@ -125,6 +125,12 @@ class OnlineGameActivity : AppCompatActivity() {
                         chatViewModel.createChatRoom(gameId, userIds)
 
                         openChatFragment()
+
+                        val myUid = userViewModel.getCurrentUserId()
+
+                        Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+
+
                     } else {
                         //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
@@ -176,11 +182,21 @@ class OnlineGameActivity : AppCompatActivity() {
                     renderBoard(onlineState)
                     renderStatus(onlineState)
                     if (checkWinner(onlineState)) {
-                        Toast.makeText(
-                            this@OnlineGameActivity,
-                            onlineState.gameResult,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val winner: String
+                        if (onlineState.gameResult.contains("X")) {
+                            winner = "Player X"
+                        } else {
+                            winner = "Player O"
+                        }
+                        val dialog = GameOverFragment(winner)
+                        dialog.isCancelable = false
+                        dialog.show(supportFragmentManager, "game_over_dialog")
+
+//                        Toast.makeText(
+//                            this@OnlineGameActivity,
+//                            onlineState.gameResult,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                     isGameOver(onlineState)
                 }
@@ -225,8 +241,6 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun checkWinner(state: OnlineGameState): Boolean {
 
         //Get player from state
@@ -264,7 +278,6 @@ class OnlineGameActivity : AppCompatActivity() {
                 state.gameResult = "Player X won"
                 onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
 
-
                 val gameResult =
                     OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
                 val currentUserId = userViewModel.getCurrentUserId()
@@ -274,7 +287,6 @@ class OnlineGameActivity : AppCompatActivity() {
                             onlineGameViewModel.deleteGame(gameId) {
                                 chatViewModel.deleteChat(gameId)
                             }
-
                         }
                     }
                     userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
@@ -301,7 +313,6 @@ class OnlineGameActivity : AppCompatActivity() {
                                 chatViewModel.deleteChat(gameId)
 
                             }
-
                         }
                     }
                     userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
@@ -324,7 +335,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
             }
         }
-
     }
 
     // ========== Update board ==========

@@ -114,11 +114,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
             }
-
-
             }
-
-
         }
 
         lifecycleScope.launch {
