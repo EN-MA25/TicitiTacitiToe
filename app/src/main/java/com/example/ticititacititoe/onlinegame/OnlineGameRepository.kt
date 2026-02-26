@@ -1,6 +1,7 @@
 package com.example.ticititacititoe.onlinegame
 
 import android.util.Log
+import com.example.ticititacititoe.game.GameResult
 import com.example.ticititacititoe.game.recentGame.RecentGame
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,6 +9,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
 
 
 class OnlineGameRepository {
@@ -186,27 +188,27 @@ class OnlineGameRepository {
     }
 
     fun addOnlineGameResult(
+        gameId: String,
         onlineGameResult: OnlineGameResult,
         timestamp: Long,
         movesMade: Int,
         onResult: (Result<String>) -> Unit
     ) {
 
-        val onlineGameResultId = firestore.collection("onlineGameResult").document().id
 
         val onlineGameResult = hashMapOf(
-            "onlineGameResultId" to onlineGameResultId,
-            "playerWhoWon" to onlineGameResult._playerWhoWon,
-            "playerWhoLost" to onlineGameResult._playerWhoLost,
+            "onlineGameResultId" to gameId,
+            "playerWhoWon" to onlineGameResult.playerWhoWon,
+            "playerWhoLost" to onlineGameResult.playerWhoLost,
             "timestamp" to timestamp,
             "movesMade" to movesMade
         )
         firestore.collection("onlineGameResult")
-            .document(onlineGameResultId)
+            .document(gameId)
             .set(onlineGameResult)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onResult(Result.success(onlineGameResultId))
+                    onResult(Result.success(gameId))
                 } else {
                     onResult(
                         Result.failure(
@@ -259,6 +261,14 @@ class OnlineGameRepository {
                     )
                 }
             }
+    }
+
+    suspend fun getGameResult(gameId: String): OnlineGameResult? {
+        val document = firestore.collection("onlineGameResult")
+            .document(gameId)
+            .get()
+            .await()
+        return document.toObject(OnlineGameResult::class.java)
     }
 
 

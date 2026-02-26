@@ -6,14 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 
 
 import com.example.ticititacititoe.databinding.GameOverFragmentBinding
+import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.profile.UserViewModel
+import kotlinx.coroutines.launch
 
-class GameOverFragment(private val winner: String) : DialogFragment() {
+class GameOverFragment() : DialogFragment() {
 
     private var _binding: GameOverFragmentBinding? = null
     private val binding get() = _binding!!
+    private var currentUserId: String? = ""
+
+    private lateinit var onlineGameViewModel: OnlineGameViewModel
+    private lateinit var userViewModel: UserViewModel
 
 
 
@@ -28,12 +39,39 @@ class GameOverFragment(private val winner: String) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.gameOverTextView.text = winner + " won"
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+
+        onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
+//        binding.gameOverTextView.text = winner + " won"
+
+
+        currentUserId = userViewModel.getCurrentUserId() ?: return
 
         binding.closeButton.setOnClickListener {
             dismiss()
             requireActivity().finish()
         }
+
+        binding.playAgainButton.setOnClickListener {
+            
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                onlineGameViewModel.gameResult.collect { result ->
+                    result?.let { gameResult ->
+                        binding.gameOverTextView.text = if (gameResult.playerWhoWon == currentUserId) {
+                            "You won!"
+                        } else {
+                            "You lost"
+                        }
+
+                        binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"
+                    }
+                }
+            }
+        }
+
     }
 
 

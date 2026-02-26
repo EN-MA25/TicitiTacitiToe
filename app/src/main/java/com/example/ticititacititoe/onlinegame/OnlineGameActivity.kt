@@ -149,7 +149,7 @@ class OnlineGameActivity : AppCompatActivity() {
             if (onlineGameState.playerLeftId != userViewModel.getCurrentUserId()) {
                 if (onlineGameState.gameResult == "Ongoing") {
                     val gameResult = OnlineGameResult(otherUserId, currentUserId)
-                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(), onlineGameState.moves.size) { result ->
+                    onlineGameViewModel.addOnlineGameResult(gameId,gameResult, System.currentTimeMillis(), onlineGameState.moves.size) { result ->
                         if (result.isSuccess) {
                             Toast.makeText(
                                 this,
@@ -182,15 +182,30 @@ class OnlineGameActivity : AppCompatActivity() {
                     renderBoard(onlineState)
                     renderStatus(onlineState)
                     if (checkWinner(onlineState)) {
-                        val winner: String
-                        if (onlineState.gameResult.contains("X")) {
-                            winner = "Player X"
-                        } else {
-                            winner = "Player O"
+                        val currentUserId = userViewModel.getCurrentUserId()
+
+                        val winnerId = if (onlineState.gameResult.contains("X")) onlineState.playerX else onlineState.playerO
+
+                        if (currentUserId != winnerId) {
+                            lifecycleScope.launch {
+                                kotlinx.coroutines.delay(1000) // Vänta 1 sek på att vinnaren sparar
+                                onlineGameViewModel.fetchGameResult(gameId)
+
+                                val dialog = GameOverFragment()
+                                dialog.isCancelable = false
+                                dialog.show(supportFragmentManager, "game_over_dialog")
+                            }
                         }
-                        val dialog = GameOverFragment(winner)
-                        dialog.isCancelable = false
-                        dialog.show(supportFragmentManager, "game_over_dialog")
+//                        val winner: String
+//                        if (onlineState.gameResult.contains("X")) {
+//                            winner = "Player X"
+//                        } else {
+//                            winner = "Player O"
+//                        }
+//
+//                        val dialog = GameOverFragment()
+//                        dialog.isCancelable = false
+//                        dialog.show(supportFragmentManager, "game_over_dialog")
 
 //                        Toast.makeText(
 //                            this@OnlineGameActivity,
@@ -281,9 +296,14 @@ class OnlineGameActivity : AppCompatActivity() {
                 val gameResult =
                     OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
                 val currentUserId = userViewModel.getCurrentUserId()
-                if (gameResult._playerWhoWon == currentUserId) {
-                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(),state.moves.size) { result ->
+                if (gameResult.playerWhoWon == currentUserId) {
+                    onlineGameViewModel.addOnlineGameResult(gameId,gameResult, System.currentTimeMillis(),state.moves.size) { result ->
                         if (result.isSuccess) {
+                            onlineGameViewModel.fetchGameResult(gameId)
+
+                            val dialog = GameOverFragment()
+                            dialog.isCancelable = false
+                            dialog.show(supportFragmentManager, "game_over_dialog")
                             onlineGameViewModel.deleteGame(gameId) {
                                 chatViewModel.deleteChat(gameId)
                             }
@@ -306,9 +326,18 @@ class OnlineGameActivity : AppCompatActivity() {
 
                 val gameResult =
                     OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
-                if (gameResult._playerWhoWon == userViewModel.getCurrentUserId()) {
-                    onlineGameViewModel.addOnlineGameResult(gameResult, System.currentTimeMillis(), state.moves.size) { result ->
+                if (gameResult.playerWhoWon == userViewModel.getCurrentUserId()) {
+                    onlineGameViewModel.addOnlineGameResult(gameId, gameResult, System.currentTimeMillis(), state.moves.size) { result ->
                         if (result.isSuccess) {
+                            onlineGameViewModel.fetchGameResult(gameId)
+
+                            val dialog = GameOverFragment()
+                            dialog.isCancelable = false
+                            dialog.show(supportFragmentManager, "game_over_dialog")
+
+                            onlineGameViewModel.deleteGame(gameId) {
+                                chatViewModel.deleteChat(gameId)
+                            }
                             onlineGameViewModel.deleteGame(gameId) {
                                 chatViewModel.deleteChat(gameId)
 

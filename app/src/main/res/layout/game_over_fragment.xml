@@ -42,7 +42,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/play_again_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play again"
         android:shadowColor="@color/black"
@@ -57,6 +57,7 @@
         android:paddingBottom="12dp"
         android:paddingHorizontal="@dimen/_18dp"
         android:letterSpacing="0.1"
+        app:layout_constraintEnd_toStartOf="@id/close_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/moves_text_view"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,7 +68,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/close_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Close"
         android:background="@drawable/bg_button_red"
@@ -83,6 +84,7 @@
         android:paddingHorizontal="@dimen/_18dp"
         android:letterSpacing="0.1"
         android:layout_margin="@dimen/_20dp"
+        app:layout_constraintStart_toEndOf="@id/play_again_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/moves_text_view"
         app:layout_constraintBottom_toBottomOf="parent"
