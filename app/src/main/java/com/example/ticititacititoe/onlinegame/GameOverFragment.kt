@@ -22,9 +22,16 @@ class GameOverFragment() : DialogFragment() {
     private var _binding: GameOverFragmentBinding? = null
     private val binding get() = _binding!!
     private var currentUserId: String? = ""
+    private var opponentUserId: String? = ""
+    private var opponentUsername: String? = ""
+    private var currentUsername: String? = ""
+
+
+
 
     private lateinit var onlineGameViewModel: OnlineGameViewModel
     private lateinit var userViewModel: UserViewModel
+    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
 
 
 
@@ -42,6 +49,8 @@ class GameOverFragment() : DialogFragment() {
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
         onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
+        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+
 //        binding.gameOverTextView.text = winner + " won"
 
 
@@ -56,6 +65,11 @@ class GameOverFragment() : DialogFragment() {
             
         }
 
+          userViewModel.getUserDetailsById(currentUserId) {user ->
+              currentUsername = user?.username
+
+          }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 onlineGameViewModel.gameResult.collect { result ->
@@ -64,6 +78,26 @@ class GameOverFragment() : DialogFragment() {
                             "You won!"
                         } else {
                             "You lost"
+                        }
+
+                        if (currentUserId == gameResult.playerWhoWon) {
+                            userViewModel.getUserDetailsById(gameResult.playerWhoLost) { user ->
+                                opponentUsername = user?.username
+                                opponentUserId = user?.id
+
+
+                            }
+                        } else {
+                            userViewModel.getUserDetailsById(gameResult.playerWhoWon) { user ->
+                                opponentUsername = user?.username
+                                opponentUserId = user?.id
+                            }
+
+                        }
+                        binding.playAgainButton.setOnClickListener {
+                            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
+                            dismiss()
+                            requireActivity().finish()
                         }
 
                         binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"

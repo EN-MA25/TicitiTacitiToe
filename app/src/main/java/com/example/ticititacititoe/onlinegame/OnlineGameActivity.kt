@@ -26,6 +26,8 @@ import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import android.view.Gravity
+import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
 
 class OnlineGameActivity : AppCompatActivity() {
 
@@ -82,6 +84,58 @@ class OnlineGameActivity : AppCompatActivity() {
 
             finish()
         }
+
+//        currentUserId = userViewModel.getCurrentUserId()
+//
+//        if (currentUserId != null) {
+//            multiplayerGameViewModel.startListeningForInvites(currentUserId!!)
+//            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId!!)
+//        }
+
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//
+//                multiplayerGameViewModel.incomingInvites.collect { invites ->
+//                    val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
+//
+//                    if (invites.isNotEmpty()) {
+//                        val invite = invites.first()
+//
+//                        MultiplayerGameInvitationFragment
+//                            .newInstance(invite)
+//                            .show(supportFragmentManager, "invite_dialog")
+//                    } else {
+//                        if (existing is MultiplayerGameInvitationFragment) {
+//                            existing.dismissAllowingStateLoss()
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                multiplayerGameViewModel.outgoingInvites.collect { invites ->
+//                    val existing =
+//                        supportFragmentManager.findFragmentByTag("pending_invite_dialog")
+//
+//                    if(invites.isNotEmpty()) {
+//                        val invite = invites.first()
+//
+//                        OutgoingInviteFragment
+//                            .newInstance(invite)
+//                            .show(supportFragmentManager, "pending_invite_dialog")
+//
+//                    }else {
+//                        if (existing is OutgoingInviteFragment) {
+//                            existing.dismissAllowingStateLoss()
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
     }
 
     override fun onStart() {
