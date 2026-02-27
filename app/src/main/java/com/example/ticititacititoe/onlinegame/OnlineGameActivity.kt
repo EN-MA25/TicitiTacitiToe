@@ -84,58 +84,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
             finish()
         }
-
-//        currentUserId = userViewModel.getCurrentUserId()
-//
-//        if (currentUserId != null) {
-//            multiplayerGameViewModel.startListeningForInvites(currentUserId!!)
-//            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId!!)
-//        }
-
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//
-//                multiplayerGameViewModel.incomingInvites.collect { invites ->
-//                    val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
-//
-//                    if (invites.isNotEmpty()) {
-//                        val invite = invites.first()
-//
-//                        MultiplayerGameInvitationFragment
-//                            .newInstance(invite)
-//                            .show(supportFragmentManager, "invite_dialog")
-//                    } else {
-//                        if (existing is MultiplayerGameInvitationFragment) {
-//                            existing.dismissAllowingStateLoss()
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                multiplayerGameViewModel.outgoingInvites.collect { invites ->
-//                    val existing =
-//                        supportFragmentManager.findFragmentByTag("pending_invite_dialog")
-//
-//                    if(invites.isNotEmpty()) {
-//                        val invite = invites.first()
-//
-//                        OutgoingInviteFragment
-//                            .newInstance(invite)
-//                            .show(supportFragmentManager, "pending_invite_dialog")
-//
-//                    }else {
-//                        if (existing is OutgoingInviteFragment) {
-//                            existing.dismissAllowingStateLoss()
-//                        }
-//                    }
-//                }
-//            }
-//
-//        }
     }
 
     override fun onStart() {
@@ -442,17 +390,6 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
     }
-
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
-//            if (result.isSuccess) {
-//                onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
-//                chatViewModel.deleteChat(gameId)
-//            }
-//        }
-//    }
 
     private fun getButton(row: Int, col: Int): ImageButton {
         // ========== Return correct imagebutton based on row/col ==========
