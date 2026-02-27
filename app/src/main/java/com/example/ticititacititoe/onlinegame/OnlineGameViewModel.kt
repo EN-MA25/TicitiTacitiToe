@@ -1,18 +1,23 @@
 package com.example.ticititacititoe.onlinegame
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.game.GameResult
 import com.example.ticititacititoe.game.Move
 import com.example.ticititacititoe.game.Player
 import com.example.ticititacititoe.game.recentGame.RecentGame
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
 
+    private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
+    val gameResult = _gameResult.asStateFlow()
     // =========== Online state ===========
     val onlineState: StateFlow<OnlineGameState> = repository.onlineState
     fun startListenToMove(gameId: String) {
@@ -70,8 +75,9 @@ class OnlineGameViewModel : ViewModel() {
         repository.userHasLeft(gameId, userId)
     }
 
-    fun addOnlineGameResult(onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
+    fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
         repository.addOnlineGameResult(
+            gameId,
             onlineGameResult,
             timestamp ,
             movesMade){ result ->
@@ -87,5 +93,16 @@ class OnlineGameViewModel : ViewModel() {
 
     fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>)-> Unit){
         repository.getRecentGames(userId, onResult)
+    }
+
+    fun fetchGameResult(gameId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repository.getGameResult(gameId)
+                _gameResult.value = result
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
     }
 }
