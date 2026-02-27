@@ -180,7 +180,7 @@ class AuthRepository {
             val userMap = User(
                 id = firebaseUser.uid,
                 username = firebaseUser.displayName,
-                rating = 0,
+                rating = 1300,
             )
 
             Firebase.firestore.collection("users")
