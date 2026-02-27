@@ -68,6 +68,10 @@ class AuthViewModel: ViewModel() {
 
     }
 
+    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
+    repository.resetPassword(email,onSuccess, onFailure)
+    }
+
     fun loginWithGoogle(context: Context, credentialManager: CredentialManager) {
         viewModelScope.launch {
             _authUiState.value = AuthUiState.Loading

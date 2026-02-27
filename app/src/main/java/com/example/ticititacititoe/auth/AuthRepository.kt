@@ -1,4 +1,5 @@
 package com.example.ticititacititoe.auth
+
 import android.content.Context
 import android.widget.Toast
 import androidx.credentials.CustomCredential
@@ -193,6 +194,14 @@ class AuthRepository {
             Result.failure(e)
         }
     }
+
+
+
+
+    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
+      auth.sendPasswordResetEmail(email)
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener {onFailure(it)}
+
+    }
 }
-
-

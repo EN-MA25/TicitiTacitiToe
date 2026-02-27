@@ -96,6 +96,21 @@ class LoginActivity : AppCompatActivity() {
                 login()
 
         }
+        binding.resetPasswordTextView.setOnClickListener {
+            val email = binding.emailEditText.text.toString().trim()
+            if (email.isEmpty()) {
+                binding.emailEditText.error = "Enter your email first"
+                return@setOnClickListener
+            }
+            authViewModel.resetPassword(email,
+                onSuccess = {
+                    Toast.makeText(this, "Reset link sent to your email", Toast.LENGTH_SHORT).show()
+                },
+                onFailure = {
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
     }
     
     fun login() {
