@@ -4,12 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
+import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivityLoginBinding
 import com.example.ticititacititoe.game.ui.GameActivity
+import com.example.ticititacititoe.game.ui.QueueFragment
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 
 class LoginActivity : AppCompatActivity() {
@@ -19,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
 
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var credentialManager: CredentialManager
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +44,20 @@ class LoginActivity : AppCompatActivity() {
 
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
+
+        credentialManager = CredentialManager.create(this)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.authUiState.collect { state ->
+                    if (state == AuthUiState.LoggedIn) {
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                }
+            }
+        }
 
         val emailFromRegister = intent.getStringExtra("email")
         val passwordFromRegister = intent.getStringExtra("password")
@@ -44,6 +73,10 @@ class LoginActivity : AppCompatActivity() {
         binding.tryButton.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.googleSignInButton.setOnClickListener {
+            authViewModel.loginWithGoogle(this, credentialManager)
         }
 
 
@@ -69,8 +102,8 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
         authViewModel.login(email, password, onSuccess = {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
         }, onFailure = {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         })

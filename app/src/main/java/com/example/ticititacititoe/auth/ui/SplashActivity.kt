@@ -8,12 +8,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivitySplashBinding
-
+import kotlinx.coroutines.launch
 
 
 class SplashActivity : AppCompatActivity() {
@@ -24,22 +28,39 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-     binding = ActivitySplashBinding.inflate(layoutInflater)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (authViewModel.isLoggedIn()){
-                startActivity(Intent(this, MainActivity::class.java))
-            }else{
-                startActivity(Intent(this, LoginActivity::class.java))
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    authViewModel.authUiState.collect { state ->
+                        when (state) {
+                            is AuthUiState.LoggedIn -> {
+                                val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+
+                            is AuthUiState.LoggedOut -> {
+                                val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+
+                            is AuthUiState.Loading -> {
+                            }
+                        }
+                    }
+                }
             }
-            finish()
+       },  1000)
 
 
-        },  2500) // 2/5 sec
 
 
 

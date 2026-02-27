@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.profile.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthUiState
+import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
@@ -20,6 +25,8 @@ import kotlin.toString
 class MyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyProfileBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var authViewModel: AuthViewModel
+
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +42,7 @@ class MyProfileActivity : AppCompatActivity() {
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
 
         val currentUserId = userViewModel.getCurrentUserId()
@@ -42,6 +50,19 @@ class MyProfileActivity : AppCompatActivity() {
         if (currentUserId != null) {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.authUiState.collect { state ->
+                    if (state == AuthUiState.LoggedOut) {
+                        val intent = Intent(this@MyProfileActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
         }
 
 

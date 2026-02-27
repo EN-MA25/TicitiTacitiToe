@@ -57,7 +57,7 @@ class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit,
             }
             // TODO: Update what we want to show from each user. This is just example
             binding.usernameTextView.text = user.username
-            binding.initialsTextView.text = user.username.take(2).uppercase()
+            binding.initialsTextView.text = user.username?.take(2)?.uppercase()
             binding.winLossTextView.text = user.rating.toString()
             binding.averageMovesTextView.text = "Streak: ${user.currentStreak}"
             binding.averageTimeTextView.text = "Won ${user.winRate}%"
