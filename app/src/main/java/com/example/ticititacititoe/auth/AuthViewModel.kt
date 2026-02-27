@@ -31,4 +31,8 @@ class AuthViewModel: ViewModel() {
     fun logout(){
         repository.logout()
     }
+
+    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
+    repository.resetPassword(email,onSuccess, onFailure)
+    }
 }
