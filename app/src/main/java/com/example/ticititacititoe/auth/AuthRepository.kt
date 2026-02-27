@@ -99,4 +99,11 @@ class AuthRepository {
     fun logout(){
         auth.signOut()
     }
+
+    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
+      auth.sendPasswordResetEmail(email)
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener {onFailure(it)}
+          
+    }
 }
