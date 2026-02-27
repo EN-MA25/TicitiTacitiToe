@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class LeaderboardViewModel(): ViewModel() {
     private var repository = LeaderboardRepository()
-
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
     private val _globalLeaderboard = MutableLiveData<List<User>>()

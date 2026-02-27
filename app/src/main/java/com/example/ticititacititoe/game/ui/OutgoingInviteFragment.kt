@@ -91,7 +91,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                     // ================== Handling different conditions for invite ==================
                     when (state) {
                         is InviteState.Accepted -> {
-                            delay(2000)
+                            delay(500)
 
                             val intent = Intent(requireContext(), OnlineGameActivity::class.java)
                             intent.putExtra("currentUserId", toUserId)

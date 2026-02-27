@@ -86,7 +86,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
 
 
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
-            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username )
+            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username!!)
         }, {user ->
             friendViewModel.addFriend( currentUserId!!, user.id)},
             onDeleteFriendClick = {user ->

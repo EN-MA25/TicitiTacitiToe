@@ -17,7 +17,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
+import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
+import com.example.ticititacititoe.profile.TutorialFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -67,6 +69,8 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
+
 
 
 
@@ -114,11 +118,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
             }
-
-
             }
-
-
         }
 
         lifecycleScope.launch {
@@ -151,6 +151,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.tutorialButton.setOnClickListener {
+
+            val dialog = TutorialFragment()
+            dialog.show(supportFragmentManager, "tutorial_dialog")
+
+        }
+
 
         binding.highscoreButton.setOnClickListener {
             val intent = Intent(this, LeaderboardActivity::class.java)
@@ -168,10 +175,19 @@ class MainActivity : AppCompatActivity() {
         val currentUserId = userViewModel.getCurrentUserId()
         Log.d("RecentGames", "onResume userId: $currentUserId")
         if (currentUserId != null) {
+            userViewModel.fetchCurrentUser()
             onlineGameViewModel.fetchRecentGames(currentUserId) { result ->
                 result.onSuccess { games ->
                     runOnUiThread {
-                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games)
+                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games) { game ->
+                            val currentUsername = userViewModel.currentUser.value?.username ?: return@RecentGameAdapter
+                            multiplayerGameViewModel.sendGameInvitation(
+                                currentUserId,
+                                currentUsername,
+                                game.opponentId,
+                                game.opponentUsername
+                            )
+                        }
                     }
                 }
             }
@@ -184,6 +200,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     override fun onStop() {
         super.onStop()
         val userId = userViewModel.getCurrentUserId()
@@ -191,4 +208,6 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.leaveQueue(userId)
         }
     }
+
+
 }
