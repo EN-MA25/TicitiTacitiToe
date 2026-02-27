@@ -37,7 +37,7 @@ class LeaderboardViewModel(): ViewModel() {
             try {
                 val users = repository.getAllUsers()
                 val sortedUsers = users
-                    .sortedByDescending { it.winRate}
+                    .sortedByDescending { it.rating}
                 _globalLeaderboard.value = sortedUsers
             } catch (exception: Exception) {
                 _globalLeaderboard.value = emptyList()
