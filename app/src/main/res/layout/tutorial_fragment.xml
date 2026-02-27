@@ -36,12 +36,8 @@ Player X goes first.
 Players take turns placing their symbol.
 
 The first player to get three in a row wins:
-• Horizontal
-• Vertical
-• Diagonal
-
-If all squares are filled and no one has three in a row,
-the game is a draw." />
+Horizontal, Vertical, Diagonal
+" />
 
     </ScrollView>
 
