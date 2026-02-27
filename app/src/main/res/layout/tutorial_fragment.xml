@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/green">
+
+
+    <TextView
+        android:id="@+id/tutorialTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How to Play"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp" />
+
+
+    <ScrollView
+        android:layout_width="180dp"
+        android:layout_height="230dp"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tutorialDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:lineSpacingExtra="2dp"
+            android:text="Tic Tac Toe is played on a 3x3 grid.
+
+Player X goes first.
+Players take turns placing their symbol.
+
+The first player to get three in a row wins:
+• Horizontal
+• Vertical
+• Diagonal
+
+If all squares are filled and no one has three in a row,
+the game is a draw." />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/red"
+        />
+</LinearLayout>
+
+
+
