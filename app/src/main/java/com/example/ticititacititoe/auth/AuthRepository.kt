@@ -1,4 +1,5 @@
 package com.example.ticititacititoe.auth
+
 import android.content.Context
 import android.widget.Toast
 import androidx.credentials.CustomCredential
@@ -193,7 +194,6 @@ class AuthRepository {
             Result.failure(e)
         }
     }
-}
 
 
 
