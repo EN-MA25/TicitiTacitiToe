@@ -25,9 +25,7 @@ import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import android.view.Gravity
-import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
+
 
 class OnlineGameActivity : AppCompatActivity() {
 
