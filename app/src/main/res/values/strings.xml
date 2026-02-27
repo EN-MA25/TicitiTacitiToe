@@ -77,4 +77,8 @@
     <string name="has_challenged_you_in_a_blitz_game">%1$s has challenged you in a Blitz game!</string>
     <string name="waiting_for_player">Waiting for player</string>
 
+
+    <string name="default_web_client_id">485621892165-7kccg236l5ic936uhqi2u90btd22eapj.apps.googleusercontent.com</string>
+
+
 </resources>

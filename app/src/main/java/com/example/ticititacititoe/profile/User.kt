@@ -2,7 +2,7 @@ package com.example.ticititacititoe.profile
 
 data class User(
     val id: String = "",
-    val username: String = "",
+    val username: String? = "",
     val email: String = "",
     val rating: Int = 1300,
     val totalGames: Int = 0,

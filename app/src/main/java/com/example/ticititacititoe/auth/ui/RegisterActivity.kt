@@ -9,15 +9,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivityRegisterBinding
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
     // =========== ViewBinding ============
     lateinit var binding: ActivityRegisterBinding
+
 
     // =========== ViewModel ============
     private lateinit var viewModel: AuthViewModel
@@ -32,6 +39,18 @@ class RegisterActivity : AppCompatActivity() {
         // =========== Initilize ViewModel ============
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.authUiState.collect { state ->
+                    if (state == AuthUiState.LoggedIn) {
+                        val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+        }
 
         // =========== Register buttonclick ============
         binding.registerButton.setOnClickListener {
@@ -55,11 +74,11 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
 
                         // =========== Navigate to LoginActivity ============
-                        val intent = Intent(this, LoginActivity::class.java)
-                        intent.putExtra("email", email)
-                        intent.putExtra("password", password)
-                        startActivity(intent)
-                        finish()
+//                        val intent = Intent(this, LoginActivity::class.java)
+//                        intent.putExtra("email", email)
+//                        intent.putExtra("password", password)
+//                        startActivity(intent)
+//                        finish()
                     }
 
                     // =========== Registration failed ============

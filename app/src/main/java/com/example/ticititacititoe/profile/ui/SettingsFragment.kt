@@ -54,10 +54,6 @@ class SettingsFragment : BottomSheetDialogFragment() {
 
         binding.logoutButton.setOnClickListener {
             authViewModel.logout()
-            // Temporary solution, check log in state in Main Activity, not go back Profile Activity as it is now
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
             dismiss()
         }
 
