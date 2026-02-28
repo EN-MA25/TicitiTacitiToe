@@ -69,17 +69,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
         binding.onlineNewGameButton.visibility = View.GONE
 
-        onBackPressedDispatcher.addCallback(this) {
-            chatViewModel.deleteChat(gameId)
-            onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
-
-            finish()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
         currentUserId = intent.getStringExtra("currentUserId")
         otherUserId = intent.getStringExtra("fromUserId")
 
@@ -104,6 +93,9 @@ class OnlineGameActivity : AppCompatActivity() {
                 startListeningToMoves()
                 chatViewModel.createChatRoom(gameId, userIds)
 
+                val myUid = userViewModel.getCurrentUserId()
+                Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+
                 openChatFragment()
             } else {
                 // ========== Create game state ==========
@@ -120,13 +112,19 @@ class OnlineGameActivity : AppCompatActivity() {
                         openChatFragment()
 
                         val myUid = userViewModel.getCurrentUserId()
-
                         Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            chatViewModel.deleteChat(gameId)
+            onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
+
+            finish()
         }
     }
 
