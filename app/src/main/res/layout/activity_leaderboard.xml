@@ -5,13 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_yellow_orange_w_red_lines"
     tools:context=".leaderboard.ui.LeaderboardActivity">
 
 
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
         android:src="@drawable/back_icon"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,9 +24,12 @@
         android:id="@+id/container_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/back_button">
-
-    </com.google.android.material.tabs.TabLayout>
+        android:background="@color/red"
+        app:tabTextColor="@color/orange"
+        app:tabSelectedTextColor="@color/yellow"
+        app:tabIndicatorColor="@color/yellow"
+        app:tabTextAppearance="@style/TabTextAppearance"
+        app:layout_constraintTop_toBottomOf="@id/back_button"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
