@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
 import com.example.ticititacititoe.profile.TutorialFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.flow.combine
 
 
 class MainActivity : AppCompatActivity() {
@@ -102,46 +104,48 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    multiplayerGameViewModel.incomingInvites,
+                    multiplayerGameViewModel.outgoingInvites
+                ) { incoming, outgoing ->
+                    Pair(incoming, outgoing)
+                }.collect { (incoming, outgoing) ->
 
-                multiplayerGameViewModel.incomingInvites.collect { invites ->
-                    val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
+                    val incomingDialog = supportFragmentManager.findFragmentByTag("invite_dialog")
+                    val outgoingDialog = supportFragmentManager.findFragmentByTag("pending_invite_dialog")
 
-                    if (invites.isNotEmpty()) {
-                        val invite = invites.first()
+                    when {
+                        incoming.isNotEmpty() -> {
+                            if (outgoingDialog is OutgoingInviteFragment) {
+                                outgoingDialog.dismissAllowingStateLoss()
+                            }
 
-                        MultiplayerGameInvitationFragment
-                            .newInstance(invite)
-                            .show(supportFragmentManager, "invite_dialog")
-                    } else {
-                        if (existing is MultiplayerGameInvitationFragment) {
-                            existing.dismissAllowingStateLoss()
+                            if (incomingDialog == null) {
+                                MultiplayerGameInvitationFragment
+                                    .newInstance(incoming.first())
+                                    .show(supportFragmentManager, "invite_dialog")
+                            }
                         }
-                    }
-            }
-            }
-        }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                multiplayerGameViewModel.outgoingInvites.collect { invites ->
-                    val existing =
-                        supportFragmentManager.findFragmentByTag("pending_invite_dialog")
+                        outgoing.isNotEmpty() -> {
+                            if (incomingDialog is MultiplayerGameInvitationFragment) {
+                                incomingDialog.dismissAllowingStateLoss()
+                            }
 
-                    if(invites.isNotEmpty()) {
-                        val invite = invites.first()
+                            if (outgoingDialog == null) {
+                                OutgoingInviteFragment
+                                    .newInstance(outgoing.first())
+                                    .show(supportFragmentManager, "pending_invite_dialog")
+                            }
+                        }
 
-                        OutgoingInviteFragment
-                            .newInstance(invite)
-                            .show(supportFragmentManager, "pending_invite_dialog")
-
-                    }else {
-                        if (existing is OutgoingInviteFragment) {
-                            existing.dismissAllowingStateLoss()
+                        else -> {
+                            (incomingDialog as? BottomSheetDialogFragment)?.dismissAllowingStateLoss()
+                            (outgoingDialog as? BottomSheetDialogFragment)?.dismissAllowingStateLoss()
                         }
                     }
                 }
             }
-
         }
         binding.recentGamesRecyclerView.layoutManager = LinearLayoutManager(this)
 
