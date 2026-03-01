@@ -23,24 +23,10 @@
 
         <TextView
             android:id="@+id/initials_text_view"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="@dimen/_40dp"
+            style="@style/InitialsTextView"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/bg_profile_100_75"
-            android:backgroundTint="@color/yellow"
-            android:fontFamily="@font/permanent_marker"
-            android:gravity="center"
-            android:paddingBottom="12dp"
-            android:shadowColor="@color/black"
-            android:shadowDx="4"
-            android:shadowDy="4"
-            android:shadowRadius="8"
             android:text="SM"
-            android:textAllCaps="true"
-            android:textColor="@color/red"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
