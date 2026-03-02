@@ -15,9 +15,6 @@ import kotlinx.coroutines.launch
 class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
-    private val gameLogic = OnlineGameLogic()
-    private val _gameId = MutableStateFlow<String?>(null)
-    val gameId = _gameId
 
     private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
     val gameResult = _gameResult.asStateFlow()
@@ -33,19 +30,13 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-    fun createOnlineGame(
+    suspend fun createOnlineGame(
         playerX : String?,
         playerO: String?,
         startingPlayer: String?
-    ){
-        viewModelScope.launch {
-            try {
-             val gameId = repository.createOnlineGame(playerX, playerO, startingPlayer)
-                _gameId.value = gameId
-            } catch (e: Exception) {
-                // Handle error
-            }
-        }
+    ): Result<String?> {
+
+        return repository.createOnlineGame(playerX, playerO, startingPlayer)
     }
 
     fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?, onResult: (Result<String>) -> Unit) {

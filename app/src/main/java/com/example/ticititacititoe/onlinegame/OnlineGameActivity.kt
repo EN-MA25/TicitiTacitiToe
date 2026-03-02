@@ -84,7 +84,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
         val userIds = mutableListOf(currentUserId, otherUserId)
 
-        startListeningToGameId(userIds)
 
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
@@ -103,12 +102,24 @@ class OnlineGameActivity : AppCompatActivity() {
                 playerX = currentUserId
                 playerO = otherUserId
 
-                // ========== Create game state ==========
-                onlineGameViewModel.createOnlineGame(
-                    playerX,
-                    playerO,
-                    playerX
-                )
+                lifecycleScope.launch {
+                    // ========== Create game state ==========
+                   val result = onlineGameViewModel.createOnlineGame(
+                        playerX,
+                        playerO,
+                        playerX
+                    )
+                   result.onSuccess { newGameId ->
+                       gameId = newGameId!!
+                       startListeningToMoves()
+                       chatViewModel.createChatRoom(gameId, userIds)
+
+                       openChatFragment()
+
+                       val myUid = userViewModel.getCurrentUserId()
+                       Toast.makeText(this@OnlineGameActivity,  if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+                   }
+                }
             }
         }
 
@@ -144,26 +155,6 @@ class OnlineGameActivity : AppCompatActivity() {
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-
-    fun startListeningToGameId(userIds: MutableList<String?>){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                onlineGameViewModel.gameId.collect { newGameId ->
-                    if(newGameId != null) {
-                        gameId = newGameId
-                        startListeningToMoves()
-                        chatViewModel.createChatRoom(gameId, userIds)
-
-                        openChatFragment()
-
-                        val myUid = userViewModel.getCurrentUserId()
-                        Toast.makeText(this@OnlineGameActivity,  if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
-                    }
-
                 }
             }
         }

@@ -229,7 +229,7 @@ class OnlineGameRepository {
         playerX: String?,
         playerO: String?,
         startingPlayer: String?
-    ): String? {
+    ): Result<String?> = try {
         // =============== New unique gameId ===============
         val gameId = firestore.collection("game").document().id
 
@@ -250,8 +250,12 @@ class OnlineGameRepository {
             .set(game)
             .await()
 
-       return gameId
+       Result.success(gameId!!)
+
+    } catch (e: Exception) {
+        Result.failure(e)
     }
+
 
     suspend fun getGameResult(gameId: String): OnlineGameResult? {
         val document = firestore.collection("onlineGameResult")
