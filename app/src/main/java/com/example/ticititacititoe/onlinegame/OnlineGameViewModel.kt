@@ -16,6 +16,7 @@ class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
 
+
     private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
     val gameResult = _gameResult.asStateFlow()
     // =========== Online state ===========
@@ -59,24 +60,21 @@ class OnlineGameViewModel : ViewModel() {
         repository.updateGameResult(gameId, result)
     }
 
-    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
-        repository.deleteGame(gameId){ result ->
-            onResult(result)
-        }
+    suspend fun deleteGame(gameId: String?): Result <String> {
+       return repository.deleteGame(gameId)
     }
 
     fun userHasLeft(gameId: String?, userId: String?) {
         repository.userHasLeft(gameId, userId)
     }
 
-    fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
-        repository.addOnlineGameResult(
+    suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int
+    ): Result<String> {
+        return repository.addOnlineGameResult(
             gameId,
             onlineGameResult,
             timestamp ,
-            movesMade){ result ->
-            onResult(result)
-        }
+            movesMade)
     }
 
     // =========== Clear ===========
