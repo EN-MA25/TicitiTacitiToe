@@ -18,8 +18,12 @@
             android:id="@+id/right_chat_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_12dp"
-            android:textColor="@android:color/white"
+            android:background="@drawable/speech_rectangle_right_100"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_marginTop="2dp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/chewy"
             android:textSize="@dimen/_16sp"
             android:text="hej hej"
             />
@@ -33,6 +37,7 @@
         android:text="14:04"
         android:layout_marginTop="@dimen/_4dp"
         android:layout_marginEnd="@dimen/_12dp"
+        android:fontFamily="@font/chewy"
         app:layout_constraintTop_toBottomOf="@id/right_chat_card_view"
         app:layout_constraintEnd_toEndOf="@id/right_chat_card_view"
         android:textColor="@color/black_overlay"/>
