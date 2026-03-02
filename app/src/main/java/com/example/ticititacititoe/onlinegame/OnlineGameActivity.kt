@@ -84,7 +84,6 @@ class OnlineGameActivity : AppCompatActivity() {
         val userIds = mutableListOf(currentUserId, otherUserId)
 
         setupErrorObserver(multiplayerGameViewModel.errorEvents)
-        setupErrorObserver(chatViewModel.errorEvents)
 
 
         // ========== Delete invitaions from db ==========
