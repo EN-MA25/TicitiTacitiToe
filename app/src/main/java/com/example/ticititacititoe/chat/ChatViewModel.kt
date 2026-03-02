@@ -47,16 +47,21 @@ class ChatViewModel: ViewModel() {
 
     fun listenToChat(roomId: String) {
         viewModelScope.launch {
+            try {
+                repository.listenToChat(roomId)
+                    .distinctUntilChanged()
+                    .catch {
+                        _messages.value = emptyList()
+                    }
+                    .collect { messages ->
+                        _messages.value = messages
 
-            repository.listenToChat(roomId)
-                .distinctUntilChanged()
-                .catch {
-                    _messages.value = emptyList()
-                }
-                .collect { messages ->
-                    _messages.value = messages
+                    }
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to get chat messages!")
 
-                }
+            }
+
         }
     }
 
@@ -71,10 +76,5 @@ class ChatViewModel: ViewModel() {
             }
         }
     }
-
-
-
-
-
 
 }
