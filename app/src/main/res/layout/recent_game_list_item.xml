@@ -10,39 +10,51 @@
         android:layout_margin="@dimen/_6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/initials_text_view"
-        android:layout_width="@dimen/_40dp"
-        android:layout_height="@dimen/_40dp"
-        android:background="@drawable/circle_image"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="U"
-        android:textColor="@color/white"
 
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/star"
+            android:backgroundTint="@color/red"
+            app:layout_constraintTop_toTopOf="@id/initials_text_view"
+            app:layout_constraintBottom_toBottomOf="@+id/initials_text_view"
+            app:layout_constraintEnd_toEndOf="@+id/initials_text_view"
+            app:layout_constraintStart_toStartOf="@+id/initials_text_view" />
+
+        <TextView
+        android:id="@+id/initials_text_view"
+        style="@style/InitialsTextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="SM"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/game_time_text_view"
          />
 
-    <TextView
-        android:id="@+id/username_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginHorizontal="@dimen/_20dp"
-        app:layout_constraintStart_toEndOf="@id/initials_text_view"
-        app:layout_constraintTop_toTopOf="@id/initials_text_view"
-        android:textColor="@color/black"
-        android:text="Username + ranking"/>
+        <TextView
+            android:id="@+id/username_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/permanent_marker"
+            android:shadowColor="@color/red"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:text="Username + ranking"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sp"
+            app:layout_constraintStart_toEndOf="@id/initials_text_view"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/result_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20dp"
+            android:fontFamily="@font/comic_neue_bold_italic"
             app:layout_constraintStart_toEndOf="@id/initials_text_view"
             app:layout_constraintTop_toBottomOf="@id/username_text_view"
             android:textColor="@color/black"
@@ -52,6 +64,7 @@
             android:id="@+id/game_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/comic_neue_bold_italic"
             app:layout_constraintStart_toStartOf="@id/result_text_view"
             app:layout_constraintTop_toBottomOf="@id/result_text_view"
             android:layout_marginBottom="@dimen/_6dp"
@@ -62,6 +75,7 @@
             android:id="@+id/moves_made_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/comic_neue_bold_italic"
             android:layout_marginHorizontal="@dimen/_6dp"
             android:layout_marginBottom="@dimen/_6dp"
             app:layout_constraintStart_toEndOf="@id/game_time_text_view"
@@ -79,18 +93,38 @@
 <!--            app:layout_constraintStart_toEndOf="@id/initials_text_view"-->
 <!--            app:layout_constraintTop_toBottomOf="@id/moves_made_text_view" />-->
 
-        <Button
+
+        <androidx.appcompat.widget.AppCompatButton
             android:layout_marginTop="@dimen/_6dp"
             android:id="@+id/play_again_button"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_6dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_button_green"
+            android:fontFamily="@font/bangers"
+            android:paddingBottom="4dp"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/moves_made_text_view"
+            app:layout_constraintEnd_toStartOf="@id/friends_image_button"
+            android:text="Play"/>
 
-            android:text="Play again"/>
+        <ImageButton
+            android:id="@+id/friends_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_friend"
+            android:contentDescription="friend"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
