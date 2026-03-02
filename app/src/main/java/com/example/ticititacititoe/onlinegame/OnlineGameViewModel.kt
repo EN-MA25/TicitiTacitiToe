@@ -58,9 +58,9 @@ class OnlineGameViewModel : ViewModel() {
         }
     }
 
-//    fun updateGameResult(gameId: String, result: String) {
-//        repository.updateGameResult(gameId, result)
-//    }
+    fun updateGameResult(gameId: String, result: String) {
+        repository.updateGameResult(gameId, result)
+    }
 
     fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
         repository.deleteGame(gameId){ result ->
@@ -92,41 +92,15 @@ class OnlineGameViewModel : ViewModel() {
         repository.getRecentGames(userId, onResult)
     }
 
-    fun getWinner(state: OnlineGameState) {
-        val winnerId = gameLogic.checkWinner(state)
 
-        if (winnerId != null && state.gameResult == "Ongoing") {
-            val resultText = if (winnerId == state.playerX) "Player X won" else "Player O won"
-            repository.updateGameResult(state.gameId, resultText)
-
-            val result = OnlineGameResult(
-                playerWhoWon = winnerId,
-                playerWhoLost = if (winnerId == state.playerX) state.playerO!! else state.playerX!!
-            )
-
-            repository.addOnlineGameResult(
-                state.gameId,
-                result,
-                System.currentTimeMillis(),
-                state.moves.size
-            ) {
-
+        fun fetchGameResult(gameId: String) {
+            viewModelScope.launch {
+                try {
+                    val result = repository.getGameResult(gameId)
+                    _gameResult.value = result
+                } catch (e: Exception) {
+                    // Handle error
+                }
             }
-
-            repository.deleteGame(state.gameId) {}
-
-            _gameResult.value = result
         }
-    }
-
-//        fun fetchGameResult(gameId: String) {
-//            viewModelScope.launch {
-//                try {
-//                    val result = repository.getGameResult(gameId)
-//                    _gameResult.value = result
-//                } catch (e: Exception) {
-//                    // Handle error
-//                }
-//            }
-//        }
     }

@@ -51,7 +51,6 @@ class GameOverFragment() : DialogFragment() {
         onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
 
-//        binding.gameOverTextView.text = winner + " won"
 
 
         currentUserId = userViewModel.getCurrentUserId() ?: return
@@ -79,7 +78,6 @@ class GameOverFragment() : DialogFragment() {
                         } else {
                             "You lost"
                         }
-
                         if (currentUserId == gameResult.playerWhoWon) {
                             userViewModel.getUserDetailsById(gameResult.playerWhoLost) { user ->
                                 opponentUsername = user?.username
@@ -94,13 +92,15 @@ class GameOverFragment() : DialogFragment() {
                             }
 
                         }
+
+
                         binding.playAgainButton.setOnClickListener {
                             multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
                             dismiss()
                             requireActivity().finish()
                         }
-
                         binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"
+
                     }
                 }
             }
