@@ -23,6 +23,7 @@ class FriendViewModel: ViewModel() {
     private val _errorEvents = MutableSharedFlow<String>()
     val errorEvents = _errorEvents.asSharedFlow()
 
+
     fun addFriend(currentUserId: String, friendId: String) {
         viewModelScope.launch {
             try {

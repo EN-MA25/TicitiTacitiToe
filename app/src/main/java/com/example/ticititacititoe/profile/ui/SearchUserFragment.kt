@@ -85,7 +85,8 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         }
 
         setupErrorObserver(friendViewModel.errorEvents)
-        setupErrorObserver(multiplayerGameViewModel.errorEvents)
+
+
 
 
 

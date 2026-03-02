@@ -85,7 +85,6 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        setupErrorObserver(multiplayerGameViewModel.errorEvents)
 
 
         binding.acceptInviteButton.setOnClickListener {

@@ -83,7 +83,6 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
         invitationText.text = getString(R.string.pending_invite_to, toUsername)
 
         multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
-        setupErrorObserver(multiplayerGameViewModel.errorEvents)
 
         // ================== Observe invite state ==================
         viewLifecycleOwner.lifecycleScope.launch {

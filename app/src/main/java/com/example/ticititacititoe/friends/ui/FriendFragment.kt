@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentFriendBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
@@ -77,6 +78,9 @@ class FriendFragment : BottomSheetDialogFragment() {
             userViewModel.startFriendListener(currentUserId!!)
             userViewModel.loadFriendProfiles(currentUserId!!)
         }
+
+        setupErrorObserver(friendViewModel.errorEvents)
+
 
         recyclerView = binding.friendsRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())

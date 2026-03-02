@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 multiplayerGameViewModel.queue.map {it.isInQueue}
