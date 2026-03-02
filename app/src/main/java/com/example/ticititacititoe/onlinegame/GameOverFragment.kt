@@ -17,23 +17,18 @@ import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
 import kotlinx.coroutines.launch
 
-class GameOverFragment() : DialogFragment() {
+class GameOverFragment(playerX: String?) : DialogFragment() {
 
+    private var _playerX = playerX
     private var _binding: GameOverFragmentBinding? = null
     private val binding get() = _binding!!
     private var currentUserId: String? = ""
     private var opponentUserId: String? = ""
     private var opponentUsername: String? = ""
     private var currentUsername: String? = ""
-
-
-
-
     private lateinit var onlineGameViewModel: OnlineGameViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +46,6 @@ class GameOverFragment() : DialogFragment() {
         onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
         multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
 
-
-
         currentUserId = userViewModel.getCurrentUserId() ?: return
 
         binding.closeButton.setOnClickListener {
@@ -61,12 +54,10 @@ class GameOverFragment() : DialogFragment() {
         }
 
         binding.playAgainButton.setOnClickListener {
-            
         }
 
           userViewModel.getUserDetailsById(currentUserId) {user ->
               currentUsername = user?.username
-
           }
 
         lifecycleScope.launch {
@@ -74,25 +65,21 @@ class GameOverFragment() : DialogFragment() {
                 onlineGameViewModel.gameResult.collect { result ->
                     result?.let { gameResult ->
                         binding.gameOverTextView.text = if (gameResult.playerWhoWon == currentUserId) {
-                            "You won!"
+                            if(gameResult.playerWhoWon == _playerX) "Player X Won" else "Player O Won"
                         } else {
-                            "You lost"
+                            if(gameResult.playerWhoLost == _playerX) "Player X Lost" else "Player O Lost"
                         }
                         if (currentUserId == gameResult.playerWhoWon) {
                             userViewModel.getUserDetailsById(gameResult.playerWhoLost) { user ->
                                 opponentUsername = user?.username
                                 opponentUserId = user?.id
-
-
                             }
                         } else {
                             userViewModel.getUserDetailsById(gameResult.playerWhoWon) { user ->
                                 opponentUsername = user?.username
                                 opponentUserId = user?.id
                             }
-
                         }
-
 
                         binding.playAgainButton.setOnClickListener {
                             multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
@@ -100,15 +87,12 @@ class GameOverFragment() : DialogFragment() {
                             requireActivity().finish()
                         }
                         binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"
-
                     }
                 }
             }
         }
 
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

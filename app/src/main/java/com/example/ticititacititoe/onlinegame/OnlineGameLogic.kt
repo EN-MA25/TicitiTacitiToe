@@ -37,6 +37,7 @@ fun checkWinner(state: OnlineGameState): Boolean {
                 return true
             }
         }
+
         for (combo in winningPositions) {
             if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
                 state.gameResult = "Player O won"

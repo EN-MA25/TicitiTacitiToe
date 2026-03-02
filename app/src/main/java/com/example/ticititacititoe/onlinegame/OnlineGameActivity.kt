@@ -41,6 +41,8 @@ class OnlineGameActivity : AppCompatActivity() {
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
     private var movesMade = 0
+    private var playerX: String? = ""
+    private var playerO: String? = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,8 @@ class OnlineGameActivity : AppCompatActivity() {
 
         val userIds = mutableListOf(currentUserId, otherUserId)
 
+        startListeningToGameId(userIds)
+
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
         // ========== Get game if exist ==========
@@ -96,25 +100,15 @@ class OnlineGameActivity : AppCompatActivity() {
 
                 openChatFragment()
             } else {
+                playerX = currentUserId
+                playerO = otherUserId
+
                 // ========== Create game state ==========
                 onlineGameViewModel.createOnlineGame(
-                    currentUserId,
-                    otherUserId,
-                    currentUserId
-                ) { result ->
-                    if (result.isSuccess) {
-                        gameId = result.getOrNull()!!
-                        startListeningToMoves()
-                        chatViewModel.createChatRoom(gameId, userIds)
-
-                        openChatFragment()
-
-                        val myUid = userViewModel.getCurrentUserId()
-                        Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                    playerX,
+                    playerO,
+                    playerX
+                )
             }
         }
 
@@ -155,6 +149,26 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+    fun startListeningToGameId(userIds: MutableList<String?>){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                onlineGameViewModel.gameId.collect { newGameId ->
+                    if(newGameId != null) {
+                        gameId = newGameId
+                        startListeningToMoves()
+                        chatViewModel.createChatRoom(gameId, userIds)
+
+                        openChatFragment()
+
+                        val myUid = userViewModel.getCurrentUserId()
+                        Toast.makeText(this@OnlineGameActivity,  if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+                    }
+
+                }
+            }
+        }
+    }
+
     fun startListeningToMoves() {
         if (hasStartedListening)
             return
@@ -187,30 +201,28 @@ class OnlineGameActivity : AppCompatActivity() {
                             onlineGameViewModel.addOnlineGameResult(gameId, resultToAdd, timestamp, onlineState.moves.size) {
                                 onlineGameViewModel.deleteGame(gameId) {}
                             }
-                        } else {
-                            lifecycleScope.launch {
-                                kotlinx.coroutines.delay(1000)
-                                onlineGameViewModel.fetchGameResult(gameId)
-                            }
                         }
-
-
+                            //lifecycleScope.launch {
+                              //  kotlinx.coroutines.delay(500)
+                                onlineGameViewModel.fetchGameResult(gameId)
+                           // }
                     }
                     isGameOver(onlineState)
                 }
             }
         }
+
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED){
             onlineGameViewModel.gameResult.collect { result ->
                 result?.let {
-                    val dialog = GameOverFragment()
+                    val dialog = GameOverFragment(playerX)
                     dialog.isCancelable = false
                     dialog.show(supportFragmentManager, "game_over_dialog")
+                    }
                 }
             }
         }
-    }
     }
 
     fun playerMakeMove(gameId: String?, row: Long, col: Long) {

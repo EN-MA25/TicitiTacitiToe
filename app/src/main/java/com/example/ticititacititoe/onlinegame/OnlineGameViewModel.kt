@@ -16,6 +16,8 @@ class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
     private val gameLogic = OnlineGameLogic()
+    private val _gameId = MutableStateFlow<String?>(null)
+    val gameId = _gameId
 
     private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
     val gameResult = _gameResult.asStateFlow()
@@ -34,11 +36,15 @@ class OnlineGameViewModel : ViewModel() {
     fun createOnlineGame(
         playerX : String?,
         playerO: String?,
-        startingPlayer: String?,
-        onResult: (Result<String>) -> Unit
+        startingPlayer: String?
     ){
-        repository.createOnlineGame(playerX, playerO, startingPlayer) {
-            result -> onResult(result)
+        viewModelScope.launch {
+            try {
+             val gameId = repository.createOnlineGame(playerX, playerO, startingPlayer)
+                _gameId.value = gameId
+            } catch (e: Exception) {
+                // Handle error
+            }
         }
     }
 
