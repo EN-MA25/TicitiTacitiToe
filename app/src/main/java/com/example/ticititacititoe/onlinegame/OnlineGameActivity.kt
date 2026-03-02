@@ -31,23 +31,15 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var binding: OnlineGameActivityBinding
     private lateinit var gameId: String
-
-    private val auth = FirebaseAuth.getInstance()
     private lateinit var onlineGameViewModel: OnlineGameViewModel
-
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
     private lateinit var chatViewModel: ChatViewModel
-
     private lateinit var userViewModel: UserViewModel
-
     private var hasStartedListening = false
-
     private var me: User? = null
     private var opponent: User? = null
-
     private var currentUserId: String? = ""
     private var otherUserId: String? = ""
-
     private var movesMade = 0
 
 
@@ -57,7 +49,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
         binding = OnlineGameActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -75,17 +66,6 @@ class OnlineGameActivity : AppCompatActivity() {
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         binding.onlineNewGameButton.visibility = View.GONE
-
-        onBackPressedDispatcher.addCallback(this) {
-            chatViewModel.deleteChat(gameId)
-            onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
-
-            finish()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
 
         currentUserId = intent.getStringExtra("currentUserId")
         otherUserId = intent.getStringExtra("fromUserId")
@@ -111,6 +91,9 @@ class OnlineGameActivity : AppCompatActivity() {
                 startListeningToMoves()
                 chatViewModel.createChatRoom(gameId, userIds)
 
+                val myUid = userViewModel.getCurrentUserId()
+                Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
+
                 openChatFragment()
             } else {
                 // ========== Create game state ==========
@@ -127,15 +110,19 @@ class OnlineGameActivity : AppCompatActivity() {
                         openChatFragment()
 
                         val myUid = userViewModel.getCurrentUserId()
-
                         Toast.makeText(this, if (myUid == currentUserId) "You are Player X" else "You are Player O", Toast.LENGTH_LONG).show()
-
-
                     } else {
-                        //Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Could not create game", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            chatViewModel.deleteChat(gameId)
+            onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
+
+            finish()
         }
     }
 
@@ -181,39 +168,19 @@ class OnlineGameActivity : AppCompatActivity() {
                 onlineGameViewModel.onlineState.collect { onlineState ->
                     renderBoard(onlineState)
                     renderStatus(onlineState)
-                    if (checkWinner(onlineState)) {
-                        val currentUserId = userViewModel.getCurrentUserId()
-
-                        val winnerId = if (onlineState.gameResult.contains("X")) onlineState.playerX else onlineState.playerO
-
-                        if (currentUserId != winnerId) {
-                            lifecycleScope.launch {
-                                kotlinx.coroutines.delay(1000) // Vänta 1 sek på att vinnaren sparar
-                                onlineGameViewModel.fetchGameResult(gameId)
-
-                                val dialog = GameOverFragment()
-                                dialog.isCancelable = false
-                                dialog.show(supportFragmentManager, "game_over_dialog")
-                            }
-                        }
-//                        val winner: String
-//                        if (onlineState.gameResult.contains("X")) {
-//                            winner = "Player X"
-//                        } else {
-//                            winner = "Player O"
-//                        }
-//
-//                        val dialog = GameOverFragment()
-//                        dialog.isCancelable = false
-//                        dialog.show(supportFragmentManager, "game_over_dialog")
-
-//                        Toast.makeText(
-//                            this@OnlineGameActivity,
-//                            onlineState.gameResult,
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-                    }
+                    onlineGameViewModel.getWinner(onlineState)
                     isGameOver(onlineState)
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                onlineGameViewModel.gameResult.collect { result ->
+                    if (result != null) {
+                        val dialog = GameOverFragment()
+                        dialog.isCancelable = false
+                        dialog.show(supportFragmentManager, "game_over_dialog")
+                    }
                 }
             }
         }
@@ -256,104 +223,6 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkWinner(state: OnlineGameState): Boolean {
-
-        //Get player from state
-        val playerX = state.playerX
-
-        // Lists for hold every move
-        val playerXMoves = mutableListOf<OnlineMove>()
-        val playerOMoves = mutableListOf<OnlineMove>()
-
-        // Loop through every move in game
-        for (move in state.moves.takeLast(6)) {
-            // Add moves in playerWMoves if player is playerX
-            if (playerX == move.player) {
-                playerXMoves.add(move)
-            } else {
-                playerOMoves.add(move)
-            }
-        }
-
-        // List of winning combos
-        val winningPositions = listOf(
-            listOf(0 to 0, 0 to 1, 0 to 2),
-            listOf(1 to 0, 1 to 1, 1 to 2),
-            listOf(2 to 0, 2 to 1, 2 to 2),
-            listOf(0 to 0, 1 to 0, 2 to 0),
-            listOf(0 to 1, 1 to 1, 2 to 1),
-            listOf(0 to 2, 1 to 2, 2 to 2),
-            listOf(0 to 0, 1 to 1, 2 to 2),
-            listOf(0 to 2, 1 to 1, 2 to 0)
-        )
-        // Check if playerX has any win combo
-        for (combinations in winningPositions) {
-            if (combinations.all { (r, c) -> playerXMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
-
-                state.gameResult = "Player X won"
-                onlineGameViewModel.updateGameResult(state.gameId, "Player X won")
-
-                val gameResult =
-                    OnlineGameResult(playerWhoWon = playerX, playerWhoLost = state.playerO)
-                val currentUserId = userViewModel.getCurrentUserId()
-                if (gameResult.playerWhoWon == currentUserId) {
-                    onlineGameViewModel.addOnlineGameResult(gameId,gameResult, System.currentTimeMillis(),state.moves.size) { result ->
-                        if (result.isSuccess) {
-                            onlineGameViewModel.fetchGameResult(gameId)
-
-                            val dialog = GameOverFragment()
-                            dialog.isCancelable = false
-                            dialog.show(supportFragmentManager, "game_over_dialog")
-                            onlineGameViewModel.deleteGame(gameId) {
-                                chatViewModel.deleteChat(gameId)
-                            }
-                        }
-                    }
-                    userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
-                } else {
-                    userViewModel.updateUserAfterGame(me!!, opponent!!, false, movesMade)
-                }
-                return true
-            }
-        }
-
-        // Check if playerO has any win combo
-        for (combo in winningPositions) {
-            if (combo.all { (r, c) -> playerOMoves.any { it.row.toInt() == r && it.col.toInt() == c && state.gameResult == "Ongoing" } }) {
-
-                state.gameResult = "Player O won"
-                onlineGameViewModel.updateGameResult(state.gameId, "Player O won")
-
-                val gameResult =
-                    OnlineGameResult(playerWhoWon = state.playerO, playerWhoLost = state.playerX)
-                if (gameResult.playerWhoWon == userViewModel.getCurrentUserId()) {
-                    onlineGameViewModel.addOnlineGameResult(gameId, gameResult, System.currentTimeMillis(), state.moves.size) { result ->
-                        if (result.isSuccess) {
-                            onlineGameViewModel.fetchGameResult(gameId)
-
-                            val dialog = GameOverFragment()
-                            dialog.isCancelable = false
-                            dialog.show(supportFragmentManager, "game_over_dialog")
-
-                            onlineGameViewModel.deleteGame(gameId) {
-                                chatViewModel.deleteChat(gameId)
-                            }
-                            onlineGameViewModel.deleteGame(gameId) {
-                                chatViewModel.deleteChat(gameId)
-
-                            }
-                        }
-                    }
-                    userViewModel.updateUserAfterGame(me!!, opponent!!, true, movesMade)
-                } else {
-                    userViewModel.updateUserAfterGame(me!!, opponent!!, false, movesMade)
-                }
-                return true
-            }
-        }
-        return false
-    }
-
     private fun clearBoard() {
 
         for (r in 0..2) {
@@ -361,7 +230,6 @@ class OnlineGameActivity : AppCompatActivity() {
                 val imageButton = getButton(r, c)
                 imageButton.setImageDrawable(null)
                 imageButton.alpha = 1.0f
-
             }
         }
     }
@@ -373,7 +241,6 @@ class OnlineGameActivity : AppCompatActivity() {
 
         val playerX = state.playerX
         for ((index, move) in state.moves.takeLast(6).withIndex()) {
-
 
             // ========== Control who made the move and show right imagebutton ==========
             val imageButton = getButton(move.row.toInt(), move.col.toInt())
