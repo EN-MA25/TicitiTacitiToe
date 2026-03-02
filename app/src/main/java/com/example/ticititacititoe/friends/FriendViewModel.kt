@@ -49,14 +49,15 @@ class FriendViewModel: ViewModel() {
 
     fun loadFriendsRealtime(currentUserId: String) {
         viewModelScope.launch {
-            repository.listenToFriends(currentUserId)
-                .collect { friendList ->
-                    _friends.value = friendList
-
-                    _friendIds.value = friendList.map { it.id }.toSet()
-
-
-                }
+            try {
+                repository.listenToFriends(currentUserId)
+                    .collect { friendList ->
+                        _friends.value = friendList
+                        _friendIds.value = friendList.map { it.id }.toSet()
+                    }
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to fetch friends")
+            }
         }
     }
 
