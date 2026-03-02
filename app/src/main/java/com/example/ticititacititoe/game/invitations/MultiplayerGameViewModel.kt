@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.game.ui.QueueUiState
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,6 +28,9 @@ class MultiplayerGameViewModel: ViewModel() {
 
     private val _inviteState = MutableStateFlow<InviteState>(InviteState.Idle)
     val inviteState: StateFlow<InviteState> = _inviteState.asStateFlow()
+
+    private val _errorEvents = MutableSharedFlow<String>()
+    val errorEvents = _errorEvents.asSharedFlow()
 
     private var listenerRegistration: ListenerRegistration? = null
 
@@ -84,10 +89,17 @@ class MultiplayerGameViewModel: ViewModel() {
 
     // ========= Accept invite ===========
     fun acceptInvite(currentUserId: String, fromUserId: String) {
-        repository.acceptInvitation(currentUserId, fromUserId)
+        viewModelScope.launch {
+            try {
+                repository.acceptInvitation(currentUserId, fromUserId)
+
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to accept invite, try again!")
+            }
+        }
     }
 
-    // ========== Decline invite =======
+//     ========== Decline invite =======
     fun declineInvite(currentUserId: String, fromUserId: String) {
         repository.declineInvitation(currentUserId, fromUserId)
     }
@@ -99,7 +111,8 @@ class MultiplayerGameViewModel: ViewModel() {
             try {
                 repository.deleteInvitations(currentUserId, otherUserId, deleteBothInvitations)
             } catch (exception: Exception) {
-                Log.e("Invite", "Failed to delete invite", exception)
+                _errorEvents.emit("Failed to decline invite, try again!")
+
 
             }
         }
@@ -118,6 +131,8 @@ class MultiplayerGameViewModel: ViewModel() {
                 }
             }catch (exception: Exception) {
                 Log.e("QUEUE_ERROR", "FAILED TO ADD", exception)
+                _errorEvents.emit("Failed to add to queue, try again!")
+
 
                 _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
 
@@ -127,11 +142,17 @@ class MultiplayerGameViewModel: ViewModel() {
 
     private fun startObservingQueue() {
         viewModelScope.launch {
+            try {
+                repository.observeQueueSize().collect { size ->
 
-            repository.observeQueueSize().collect { size ->
+                    _queue.update { it.copy(queueSize = size) }
+                }
 
-                _queue.update { it.copy(queueSize = size) }
+            }catch (e: Exception) {
+                _errorEvents.emit("Failed to load queue, try again!")
+
             }
+
         }
     }
 
@@ -146,6 +167,8 @@ class MultiplayerGameViewModel: ViewModel() {
 
             } catch (exception: Exception) {
                 _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
+                _errorEvents.emit("Failed to leave queue, try again!")
+
             }
         }
     }
