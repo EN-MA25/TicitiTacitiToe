@@ -16,6 +16,7 @@ import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
@@ -51,6 +52,9 @@ class MyProfileActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
+
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

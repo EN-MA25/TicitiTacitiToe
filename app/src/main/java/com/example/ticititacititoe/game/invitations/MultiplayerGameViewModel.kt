@@ -101,7 +101,14 @@ class MultiplayerGameViewModel: ViewModel() {
 
 //     ========== Decline invite =======
     fun declineInvite(currentUserId: String, fromUserId: String) {
-        repository.declineInvitation(currentUserId, fromUserId)
+        viewModelScope.launch {
+            try {
+                repository.declineInvitation(currentUserId, fromUserId)
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to decline invite, try again!")
+
+            }
+        }
     }
 
     // ======= Delete invite ========
@@ -111,7 +118,7 @@ class MultiplayerGameViewModel: ViewModel() {
             try {
                 repository.deleteInvitations(currentUserId, otherUserId, deleteBothInvitations)
             } catch (exception: Exception) {
-                _errorEvents.emit("Failed to decline invite, try again!")
+                _errorEvents.emit("Failed to delete invitations, try again!")
 
 
             }
@@ -144,7 +151,6 @@ class MultiplayerGameViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.observeQueueSize().collect { size ->
-
                     _queue.update { it.copy(queueSize = size) }
                 }
 

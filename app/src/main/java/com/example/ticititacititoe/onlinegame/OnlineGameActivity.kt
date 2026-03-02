@@ -20,6 +20,7 @@ import com.example.ticititacititoe.R
 import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
@@ -81,6 +82,10 @@ class OnlineGameActivity : AppCompatActivity() {
         }
 
         val userIds = mutableListOf(currentUserId, otherUserId)
+
+        setupErrorObserver(multiplayerGameViewModel.errorEvents)
+        setupErrorObserver(chatViewModel.errorEvents)
+
 
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)

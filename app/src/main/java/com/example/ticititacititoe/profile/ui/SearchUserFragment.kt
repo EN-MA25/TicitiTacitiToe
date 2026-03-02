@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
@@ -82,6 +83,10 @@ class SearchUserFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+
+        setupErrorObserver(friendViewModel.errorEvents)
+        setupErrorObserver(multiplayerGameViewModel.errorEvents)
+
 
 
 

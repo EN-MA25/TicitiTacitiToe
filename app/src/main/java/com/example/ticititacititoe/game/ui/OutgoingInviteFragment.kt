@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentOutgoingInviteBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.GameInvitation
 import com.example.ticititacititoe.game.invitations.InviteState
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
@@ -82,6 +83,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
         invitationText.text = getString(R.string.pending_invite_to, toUsername)
 
         multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
+        setupErrorObserver(multiplayerGameViewModel.errorEvents)
 
         // ================== Observe invite state ==================
         viewLifecycleOwner.lifecycleScope.launch {

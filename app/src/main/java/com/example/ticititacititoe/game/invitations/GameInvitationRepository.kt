@@ -182,25 +182,27 @@ class GameInvitationRepository {
     }
 
     // ============ decline =========
-    // We dont need this one.
-    fun declineInvitation(currentUserId: String,
+
+    suspend fun declineInvitation(currentUserId: String,
                          otherUserId: String) {
-
-
+        val batch = db.batch()
 
         // ======== Update recievers document ========
-        db.collection("users")
+        val receiverRef = db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
             .document(otherUserId)
-            .update("status", "declined")
 
         // ======== Update senders document ==========
-        db.collection("users")
+        val senderRef = db.collection("users")
             .document(otherUserId)
             .collection("outgoingGameInvitation")
             .document(currentUserId)
-            .update("status", "declined")
+
+        batch.update(receiverRef, "status", "declined")
+        batch.update(senderRef, "status", "declined")
+
+        batch.commit().await()
     }
 
     // ============= delete =============

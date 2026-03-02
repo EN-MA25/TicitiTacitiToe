@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
@@ -71,6 +72,8 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
+       setupErrorObserver(multiplayerGameViewModel.errorEvents)
 
 
 
