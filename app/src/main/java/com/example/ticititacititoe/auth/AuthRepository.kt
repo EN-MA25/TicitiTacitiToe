@@ -10,6 +10,7 @@ import com.example.ticititacititoe.profile.User
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlin.Result
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -65,7 +66,7 @@ class AuthRepository {
 
                         // =========== Create user object for Firestore ============
                         val user = hashMapOf(
-                            "uid" to uid,
+                            "id" to uid,
                             "username" to username,
                             "email" to email,
                             "rating" to 1300,
@@ -74,7 +75,11 @@ class AuthRepository {
                             "wonGames" to 0,
                             "totalMovesMade" to 0,
                             "currentStreak" to 0,
-                            "maxStreak" to 0
+                            "maxStreak" to 0,
+                            "lastPlayedGame" to null,
+                            "lastWonGame" to null,
+                            "lastLostGame" to null,
+                            "achievements" to emptyMap<String, Timestamp>()
                         )
 
                         // =========== Save user in Firestore ============

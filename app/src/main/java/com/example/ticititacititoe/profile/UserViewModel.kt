@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.friends.FriendRepository
 import com.example.ticititacititoe.profile.ui.UserSearchUIModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -14,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(): ViewModel() {
     private val repository =  UserRepository()
-
 
     private val _selectedUser = MutableStateFlow<User?>(null)
     val selectedUser = _selectedUser.asStateFlow()
@@ -25,6 +26,9 @@ class UserViewModel(): ViewModel() {
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
+
+    private val _achievementEvents = MutableSharedFlow<List<String>>()
+    val achievementEvents = _achievementEvents.asSharedFlow()
 
     fun startFriendListener(currentUserId: String) {
         viewModelScope.launch {
@@ -104,7 +108,16 @@ class UserViewModel(): ViewModel() {
     }
 
     fun updateUserAfterGame(me: User, opponent: User, didWin: Boolean, movesMade: Int) {
-        repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+        viewModelScope.launch {
+            try {
+                val newAchievements = repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+                if (newAchievements.isNotEmpty()) {
+                    _achievementEvents.emit(newAchievements)
+                }
+            } catch (e: Exception) {
+                // handle error
+            }
+        }
     }
 
     fun loadFriendProfiles(currentUserId: String) {

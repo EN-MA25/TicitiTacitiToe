@@ -2,12 +2,12 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -17,13 +17,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.achievements.AchievementManager
 import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.UserViewModel
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 
@@ -123,12 +123,38 @@ class OnlineGameActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.achievementEvents.collect { achievements ->
+                    showAchievementsPopup(achievements)
+                }
+            }
+        }
+
         onBackPressedDispatcher.addCallback(this) {
             chatViewModel.deleteChat(gameId)
             onlineGameViewModel.userHasLeft(gameId, userViewModel.getCurrentUserId())
 
             finish()
         }
+    }
+
+    private fun showAchievementsPopup(ids: List<String>) {
+
+        val achievements = AchievementManager.achievements.filter { (id, title, description, condition) ->
+            ids.contains(id)
+        }
+
+        for (achievement in achievements) {
+            AlertDialog.Builder(this)
+                .setTitle(achievement.title)
+                .setMessage(achievement.description)
+                .setPositiveButton("Nice!") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+
     }
 
     fun squarePressed(view: View) {
@@ -197,7 +223,17 @@ class OnlineGameActivity : AppCompatActivity() {
                               //  kotlinx.coroutines.delay(500)
                                 onlineGameViewModel.fetchGameResult(gameId)
                            // }
+
+
+
+
+                        userViewModel.updateUserAfterGame(me!!, opponent!!, (winnerUid == me!!.id), movesMade)
+
+
                     }
+
+
+
                     isGameOver(onlineState)
                 }
             }
