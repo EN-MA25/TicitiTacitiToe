@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class UserViewModel(): ViewModel() {
     private val repository =  UserRepository()
 
-
     private val _selectedUser = MutableStateFlow<User?>(null)
     val selectedUser = _selectedUser.asStateFlow()
     private val _currentUser = MutableStateFlow<User?>(null)
@@ -25,6 +24,18 @@ class UserViewModel(): ViewModel() {
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
+    private val _viewedUser = MutableStateFlow<User?>(null)
+    val viewedUser = _viewedUser.asStateFlow()
+
+    fun fetchUserById(userId: String) {
+        viewModelScope.launch {
+            try {
+                _viewedUser.value = repository.getUserDetailsById(userId)
+            } catch (e: Exception) {
+                _viewedUser.value = null
+            }
+        }
+    }
 
     fun startFriendListener(currentUserId: String) {
         viewModelScope.launch {

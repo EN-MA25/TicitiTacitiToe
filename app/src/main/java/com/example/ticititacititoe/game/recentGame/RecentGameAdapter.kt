@@ -8,8 +8,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class RecentGameAdapter(private var recentGames: List<RecentGame>,
-    private val onPlayAgainClick: (RecentGame) -> Unit)
+class RecentGameAdapter(
+    private var recentGames: List<RecentGame>,
+    private val onPlayAgainClick: (RecentGame) -> Unit,
+    private val onUserClick: (RecentGame) -> Unit)
     : RecyclerView.Adapter<RecentGameAdapter.RecentGameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentGameViewHolder {
@@ -20,7 +22,7 @@ class RecentGameAdapter(private var recentGames: List<RecentGame>,
     }
 
     override fun onBindViewHolder(holder: RecentGameViewHolder, position: Int) {
-        holder.bind(recentGames[position], onPlayAgainClick)
+        holder.bind(recentGames[position], onPlayAgainClick, onUserClick)
     }
 
     override fun getItemCount(): Int = recentGames.size
@@ -28,8 +30,12 @@ class RecentGameAdapter(private var recentGames: List<RecentGame>,
     class RecentGameViewHolder(private val binding: RecentGameListItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(game: RecentGame, onPlayAgainClick: (RecentGame) -> Unit) {
-            binding.initialsTextView.text = game.opponentUsername.take(1).uppercase()
+        fun bind(
+            game: RecentGame,
+            onPlayAgainClick: (RecentGame) -> Unit,
+            onUserClick: (RecentGame) -> Unit
+        ){
+            binding.initialsTextView.text = game.opponentUsername.take(2).uppercase()
             binding.usernameTextView.text = game.opponentUsername
             binding.resultTextView.text = game.result
             binding.gameTimeTextView.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
@@ -37,6 +43,9 @@ class RecentGameAdapter(private var recentGames: List<RecentGame>,
             binding.movesMadeTextView.text = "${game.movesMade} moves"
             binding.playAgainButton.setOnClickListener {
                 onPlayAgainClick(game)
+            }
+            binding.initialsTextView.setOnClickListener {
+                onUserClick(game)
             }
         }
     }
