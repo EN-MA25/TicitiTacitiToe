@@ -89,8 +89,8 @@ class MultiplayerGameViewModel: ViewModel() {
                         _incomingInvites.value = emptyList()
                         _outgoingInvites.value = emptyList()
                     }
-                } catch (exception: Exception) {
-                    _errorEvents.emit("Failed to send invite:  \n {$exception}.")
+                } catch (e: Exception) {
+                    _errorEvents.emit("Failed to send invite:  \n {$e}.")
                 }
             }
         }
@@ -103,7 +103,7 @@ class MultiplayerGameViewModel: ViewModel() {
                 repository.acceptInvitation(currentUserId, fromUserId)
 
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to accept invite, try again!")
+                _errorEvents.emit("Failed to accept invite, try again!:  \n {$e}.")
             }
         }
     }
@@ -114,7 +114,7 @@ class MultiplayerGameViewModel: ViewModel() {
             try {
                 repository.declineInvitation(currentUserId, fromUserId)
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to decline invite, try again!")
+                _errorEvents.emit("Failed to decline invite, try again!:  \n {$e}")
 
             }
         }
@@ -126,8 +126,8 @@ class MultiplayerGameViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.deleteInvitations(currentUserId, otherUserId, deleteBothInvitations)
-            } catch (exception: Exception) {
-                _errorEvents.emit("Failed to delete invitations, try again!")
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to delete invitations, try again! :  \n {$e}")
 
 
             }
@@ -145,12 +145,12 @@ class MultiplayerGameViewModel: ViewModel() {
                     startObservingQueue()
                     queueListenerStarted = true
                 }
-            }catch (exception: Exception) {
-                Log.e("QUEUE_ERROR", "FAILED TO ADD", exception)
-                _errorEvents.emit("Failed to add to queue, try again!")
+            }catch (e: Exception) {
+                Log.e("QUEUE_ERROR", "FAILED TO ADD", e)
+                _errorEvents.emit("Failed to add to queue, try again! :  \n {$e}")
 
 
-                _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
+                _queue.update { it.copy(isInQueue = false, isLoading = false, error = e.message) }
 
             }
         }
@@ -164,7 +164,7 @@ class MultiplayerGameViewModel: ViewModel() {
                 }
 
             }catch (e: Exception) {
-                _errorEvents.emit("Failed to load queue, try again!")
+                _errorEvents.emit("Failed to load queue, try again! :  \n {$e}")
 
             }
 
@@ -180,9 +180,9 @@ class MultiplayerGameViewModel: ViewModel() {
                 _queue.update {current -> current.copy(isInQueue = false, isLoading = false, error = null) }
 
 
-            } catch (exception: Exception) {
-                _queue.update { it.copy(isInQueue = false, isLoading = false, error = exception.message) }
-                _errorEvents.emit("Failed to leave queue, try again!")
+            } catch (e: Exception) {
+                _queue.update { it.copy(isInQueue = false, isLoading = false, error = e.message) }
+                _errorEvents.emit("Failed to leave queue, try again! :  \n {$e}")
 
             }
         }

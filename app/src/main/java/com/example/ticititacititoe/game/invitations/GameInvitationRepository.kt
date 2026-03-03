@@ -117,7 +117,6 @@ class GameInvitationRepository {
 
     fun loadIncomingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
         callbackFlow {
-
             val listener = db.collection("users")
                 .document(currentUserId)
                 .collection("gameInvitations")
