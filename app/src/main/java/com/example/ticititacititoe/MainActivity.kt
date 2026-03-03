@@ -73,7 +73,9 @@ class MainActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
-       setupErrorObserver(multiplayerGameViewModel.errorEvents)
+        setupErrorObserver(multiplayerGameViewModel.errorEvents)
+        setupErrorObserver(userViewModel.errorEvents)
+
 
 
 

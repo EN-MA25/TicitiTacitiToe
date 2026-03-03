@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityLeaderboardBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.leaderboard.ViewPagerAdapter
@@ -49,6 +50,8 @@ class LeaderboardActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
+
 
 
         lifecycleScope.launch {

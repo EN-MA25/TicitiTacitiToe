@@ -85,6 +85,8 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         }
 
         setupErrorObserver(friendViewModel.errorEvents)
+        setupErrorObserver(userViewModel.errorEvents)
+
 
 
 
