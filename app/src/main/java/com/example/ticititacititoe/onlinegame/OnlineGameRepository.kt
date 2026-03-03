@@ -225,12 +225,11 @@ class OnlineGameRepository {
             .update("playerLeftId", userId)
     }
 
-    fun createOnlineGame(
+   suspend fun createOnlineGame(
         playerX: String?,
         playerO: String?,
-        startingPlayer: String?,
-        onResult: (Result<String>) -> Unit
-    ) {
+        startingPlayer: String?
+    ): Result<String?> = try {
         // =============== New unique gameId ===============
         val gameId = firestore.collection("game").document().id
 
@@ -249,19 +248,14 @@ class OnlineGameRepository {
         firestore.collection("game")
             .document(gameId)
             .set(game)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onResult(Result.success(gameId))
-                } else {
-                    onResult(
-                        Result.failure(
-                            task.exception
-                                ?: Exception("Game failed to start")
-                        )
-                    )
-                }
-            }
+            .await()
+
+       Result.success(gameId!!)
+
+    } catch (e: Exception) {
+        Result.failure(e)
     }
+
 
     suspend fun getGameResult(gameId: String): OnlineGameResult? {
         val document = firestore.collection("onlineGameResult")
