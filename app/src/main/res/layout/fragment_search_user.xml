@@ -43,12 +43,23 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20dp"
         android:layout_marginTop="@dimen/_18dp"
-        android:fontFamily="@font/comic_neue_bold_italic"
-        android:text="@string/users"
-        android:padding="4dp"
         android:background="@color/white"
+        android:fontFamily="@font/comic_neue_bold_italic"
+        android:padding="4dp"
+        android:text="@string/users"
         app:layout_constraintTop_toBottomOf="@id/search_user_edit_text"
         tools:layout_editor_absoluteX="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/comic_neue_bold_italic"
+        android:gravity="end"
+        android:padding="4dp"
+        android:layout_marginEnd="@dimen/_12dp"
+        android:text="@string/friends"
+        app:layout_constraintEnd_toEndOf="@id/user_text_view"
+        app:layout_constraintTop_toTopOf="@id/user_text_view"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searched_users_recycler_view"
