@@ -72,6 +72,11 @@ class FriendFragment : BottomSheetDialogFragment() {
             {user ->
                 friendViewModel.deleteFriend(currentUserId!!, user.id)
 
+            },
+            onInitialsClick = { user ->
+                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                    .newInstance(user.id, user.username ?: "")
+                    .show(parentFragmentManager, "other_user_profile")
             })
 
         if (currentUserId != null) {

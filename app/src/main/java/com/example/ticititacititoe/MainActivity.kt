@@ -99,10 +99,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-
-
-
-
             }
         }
 
@@ -187,15 +183,23 @@ class MainActivity : AppCompatActivity() {
             onlineGameViewModel.fetchRecentGames(currentUserId) { result ->
                 result.onSuccess { games ->
                     runOnUiThread {
-                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(games) { game ->
-                            val currentUsername = userViewModel.currentUser.value?.username ?: return@RecentGameAdapter
-                            multiplayerGameViewModel.sendGameInvitation(
-                                currentUserId,
-                                currentUsername,
-                                game.opponentId,
-                                game.opponentUsername
-                            )
-                        }
+                        binding.recentGamesRecyclerView.adapter = RecentGameAdapter(
+                            recentGames = games,
+                            onPlayAgainClick = { game ->
+                                val currentUsername = userViewModel.currentUser.value?.username ?: return@RecentGameAdapter
+                                multiplayerGameViewModel.sendGameInvitation(
+                                    currentUserId,
+                                    currentUsername,
+                                    game.opponentId,
+                                    game.opponentUsername
+                                )
+                            },
+                            onUserClick = { game ->
+                                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                                    .newInstance(game.opponentId, game.opponentUsername)
+                                    .show(supportFragmentManager, "other_user_profile")
+                            }
+                        )
                     }
                 }
             }

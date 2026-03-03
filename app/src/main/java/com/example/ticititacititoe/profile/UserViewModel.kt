@@ -31,6 +31,18 @@ class UserViewModel(): ViewModel() {
     private val friendRepository = FriendRepository()
     private val _errorEvents = MutableSharedFlow<String>()
     val errorEvents = _errorEvents.asSharedFlow()
+    private val _viewedUser = MutableStateFlow<User?>(null)
+    val viewedUser = _viewedUser.asStateFlow()
+
+    fun fetchUserById(userId: String) {
+        viewModelScope.launch {
+            try {
+                _viewedUser.value = repository.getUserDetailsById(userId)
+            } catch (e: Exception) {
+                _viewedUser.value = null
+            }
+        }
+    }
 
     fun startFriendListener(currentUserId: String) {
         viewModelScope.launch {
@@ -99,6 +111,14 @@ class UserViewModel(): ViewModel() {
     fun getCurrentUserId(): String? {
         return repository.getCurrentUserId()
     }
+
+//    fun loadUserById(id: String?) {
+//        if (id == null) return
+//
+//        viewModelScope.launch {
+//            _selectedUser.value = repository.getUserDetailsById(id)
+//        }
+//    }
 
     fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
         if (userId != null) {
