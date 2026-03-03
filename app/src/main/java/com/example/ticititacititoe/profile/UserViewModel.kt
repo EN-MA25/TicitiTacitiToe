@@ -22,6 +22,8 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
+    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
+    val userStats = _userStats.asStateFlow()
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
@@ -114,6 +116,15 @@ class UserViewModel(): ViewModel() {
                 _friends.value = friends
             } catch (e: Exception) {
 //                _errorEvents.emit("Could not fetch friend profiles")
+            }
+        }
+    }
+    fun fetchUserStats(userId: String) {
+        viewModelScope.launch {
+            try {
+                _userStats.value = repository.getUserStats(userId)
+            } catch (e: Exception) {
+                _userStats.value = Triple(0, 0, 0)
             }
         }
     }

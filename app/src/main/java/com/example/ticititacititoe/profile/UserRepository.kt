@@ -103,5 +103,22 @@ class UserRepository {
         }
 
     }
+    suspend fun getUserStats(userId: String): Triple<Int, Int, Int> {
+        val wonSnapshot = db.collection("onlineGameResult")
+            .whereEqualTo("playerWhoWon", userId)
+            .get()
+            .await()
+
+        val lostSnapshot = db.collection("onlineGameResult")
+            .whereEqualTo("playerWhoLost", userId)
+            .get()
+            .await()
+
+        val wonGames = wonSnapshot.size()
+        val lostGames = lostSnapshot.size()
+        val totalGames = wonGames + lostGames
+
+        return Triple(wonGames, lostGames, totalGames)
+    }
 
 }
