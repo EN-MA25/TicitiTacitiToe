@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentFriendsLeaderboardBinding
 import com.example.ticititacititoe.databinding.FragmentGlobalLeaderboardBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.leaderboard.LeaderboardAdapter
 import com.example.ticititacititoe.leaderboard.LeaderboardViewModel
 import com.example.ticititacititoe.profile.UserViewModel
@@ -49,6 +50,9 @@ class FriendsLeaderboardFragment : Fragment() {
         val currentUserId = userViewModel.getCurrentUserId() ?: return
 
         leaderboardViewModel.loadFriendLeaderboard(currentUserId)
+        setupErrorObserver(leaderboardViewModel.errorEvents)
+        setupErrorObserver(userViewModel.errorEvents)
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {

@@ -23,12 +23,13 @@ class FriendViewModel: ViewModel() {
     private val _errorEvents = MutableSharedFlow<String>()
     val errorEvents = _errorEvents.asSharedFlow()
 
+
     fun addFriend(currentUserId: String, friendId: String) {
         viewModelScope.launch {
             try {
                 repository.addFriend(currentUserId, friendId)
             } catch (e: Exception){
-                _errorEvents.emit("Failed to add friend: $friendId, try again!")
+                _errorEvents.emit("Failed to add friend: $friendId, try again!: ${e.message}")
 
             }
         }
@@ -41,7 +42,7 @@ class FriendViewModel: ViewModel() {
                 repository.deleteFriend(currentUserId, friendId)
 
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to delete friend: $friendId, try again!")
+                _errorEvents.emit("Failed to delete friend: $friendId, try again!: ${e.message}")
             }
         }
     }
@@ -49,14 +50,15 @@ class FriendViewModel: ViewModel() {
 
     fun loadFriendsRealtime(currentUserId: String) {
         viewModelScope.launch {
-            repository.listenToFriends(currentUserId)
-                .collect { friendList ->
-                    _friends.value = friendList
-
-                    _friendIds.value = friendList.map { it.id }.toSet()
-
-
-                }
+            try {
+                repository.listenToFriends(currentUserId)
+                    .collect { friendList ->
+                        _friends.value = friendList
+                        _friendIds.value = friendList.map { it.id }.toSet()
+                    }
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to fetch friends: ${e.message}")
+            }
         }
     }
 
