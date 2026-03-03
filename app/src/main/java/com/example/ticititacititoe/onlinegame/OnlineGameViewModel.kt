@@ -20,6 +20,7 @@ class OnlineGameViewModel : ViewModel() {
     val gameResult = _gameResult.asStateFlow()
     // =========== Online state ===========
     val onlineState: StateFlow<OnlineGameState> = repository.onlineState
+
     fun startListenToMove(gameId: String) {
         repository.startListenToMove(gameId)
     }
@@ -59,27 +60,23 @@ class OnlineGameViewModel : ViewModel() {
         repository.updateGameResult(gameId, result)
     }
 
-    fun deleteGame(gameId: String?, onResult: (Result<String>) -> Unit) {
-        repository.deleteGame(gameId){ result ->
-            onResult(result)
-        }
+    suspend fun deleteGame(gameId: String?): Result <String> {
+       return repository.deleteGame(gameId)
     }
 
     fun userHasLeft(gameId: String?, userId: String?) {
         repository.userHasLeft(gameId, userId)
     }
 
-    fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int, onResult: (Result<String>) -> Unit){
-        repository.addOnlineGameResult(
+    suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int
+    ): Result<String> {
+        return repository.addOnlineGameResult(
             gameId,
             onlineGameResult,
             timestamp ,
-            movesMade){ result ->
-            onResult(result)
-        }
+            movesMade)
     }
 
-    // =========== Clear ===========
     override fun onCleared() {
         super.onCleared()
         repository.removeListener()
@@ -88,7 +85,6 @@ class OnlineGameViewModel : ViewModel() {
     fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>)-> Unit){
         repository.getRecentGames(userId, onResult)
     }
-
 
         fun fetchGameResult(gameId: String) {
             viewModelScope.launch {
