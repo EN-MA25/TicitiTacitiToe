@@ -8,9 +8,12 @@ import com.example.ticititacititoe.databinding.UserListItemBinding
 import com.example.ticititacititoe.profile.User
 import com.example.ticititacititoe.profile.ui.UserSearchUIModel
 
-class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit,
+class SearchUserRecyclerAdapter(
+    val onUserClick: (User) -> Unit,
     val onAddFriendClick: (User) -> Unit,
-    val onDeleteFriendClick: (User) -> Unit): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
+    val onDeleteFriendClick: (User) -> Unit,
+    val onInitialsClick: (User) -> Unit
+    ): RecyclerView.Adapter<SearchUserRecyclerAdapter.UserViewHolder>() {
     private var users: List<UserSearchUIModel> = emptyList()
     fun submitList(userList: List<UserSearchUIModel>) {
         users = userList
@@ -61,6 +64,7 @@ class SearchUserRecyclerAdapter(val onUserClick: (User) -> Unit,
             binding.winLossTextView.text = user.rating.toString()
             binding.averageMovesTextView.text = "Streak: ${user.currentStreak}"
             binding.averageTimeTextView.text = "Won ${user.winRate}%"
+            binding.initialsTextView.setOnClickListener { onInitialsClick(user) }
             binding.friendsImageButton
             binding.root.setOnClickListener { onUserClick(user)}
 
