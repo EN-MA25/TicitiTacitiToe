@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.profile.User
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -19,14 +21,19 @@ class LeaderboardViewModel(): ViewModel() {
     private val _friendLeaderboard = MutableStateFlow<List<User>>(emptyList())
     val friendLeaderboard = _friendLeaderboard.asStateFlow()
 
+    private val _errorEvents = MutableSharedFlow<String>()
+    val errorEvents = _errorEvents.asSharedFlow()
+
 
     fun getAllUsers(){
         viewModelScope.launch {
             try {
                 val users = repository.getAllUsers()
                 _users.value = users
-            }catch (exception: Exception){
+            }catch (e: Exception){
                 _users.value = emptyList()
+                _errorEvents.emit("Failed to load allUsers:  \n {${e.message}}.")
+
             }
         }
     }
@@ -39,8 +46,10 @@ class LeaderboardViewModel(): ViewModel() {
                 val sortedUsers = users
                     .sortedByDescending { it.rating}
                 _globalLeaderboard.value = sortedUsers
-            } catch (exception: Exception) {
+            } catch (e: Exception) {
                 _globalLeaderboard.value = emptyList()
+                _errorEvents.emit("Failed to load leaderboard:  \n {${e.message}}.")
+
             }
         }
     }
@@ -51,8 +60,8 @@ class LeaderboardViewModel(): ViewModel() {
                 val friends = repository.getFriendsForLeaderboard(currentUserId)
                     .sortedByDescending { it.rating }
                 _friendLeaderboard.value = friends
-            } catch (exception: Exception) {
-                // error message
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to load leaderboard:  \n {${e.message}}.")
                 _friendLeaderboard.value = emptyList()
             }
         }
