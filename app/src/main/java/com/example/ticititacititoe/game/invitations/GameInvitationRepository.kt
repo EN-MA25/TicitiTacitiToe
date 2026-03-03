@@ -94,7 +94,7 @@ class GameInvitationRepository {
 
 
 
-    suspend fun loadOutgoingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
+    fun loadOutgoingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
         callbackFlow {
 
             val listener = db.collection("users")
@@ -115,9 +115,8 @@ class GameInvitationRepository {
 
         }
 
-    suspend fun loadIncomingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
+    fun loadIncomingGameInvitations(currentUserId: String): Flow<List<GameInvitation>> =
         callbackFlow {
-
             val listener = db.collection("users")
                 .document(currentUserId)
                 .collection("gameInvitations")
@@ -157,41 +156,52 @@ class GameInvitationRepository {
     }
 
     // ======= Accept =============
-    fun acceptInvitation(currentUserId: String,
+    suspend fun acceptInvitation(currentUserId: String,
                          otherUserId: String) {
 
+        val batch = db.batch()
         // ======== Update recievers document ========
-        db.collection("users")
+
+        val receiverRef = db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
             .document(otherUserId)
-            .update("status", "accepted")
+
 
         // ======== Update senders document ==========
-        db.collection("users")
+        val senderRef = db.collection("users")
             .document(otherUserId)
             .collection("outgoingGameInvitation")
             .document(currentUserId)
-            .update("status", "accepted")
+
+        batch.update(receiverRef, "status", "accepted")
+        batch.update(senderRef, "status", "accepted")
+
+        batch.commit().await()
     }
 
     // ============ decline =========
-    fun declineInvitation(currentUserId: String,
+
+    suspend fun declineInvitation(currentUserId: String,
                          otherUserId: String) {
+        val batch = db.batch()
 
         // ======== Update recievers document ========
-        db.collection("users")
+        val receiverRef = db.collection("users")
             .document(currentUserId)
             .collection("gameInvitations")
             .document(otherUserId)
-            .update("status", "declined")
 
         // ======== Update senders document ==========
-        db.collection("users")
+        val senderRef = db.collection("users")
             .document(otherUserId)
             .collection("outgoingGameInvitation")
             .document(currentUserId)
-            .update("status", "declined")
+
+        batch.update(receiverRef, "status", "declined")
+        batch.update(senderRef, "status", "declined")
+
+        batch.commit().await()
     }
 
     // ============= delete =============

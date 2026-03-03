@@ -13,6 +13,7 @@ fun checkWinner(state: OnlineGameState): Boolean {
         val playerOMoves = mutableListOf<OnlineMove>()
 
         for (move in state.moves.takeLast(6)) {
+
             // Add moves in playerWMoves if player is playerX
             if (playerX == move.player) {
                 playerXMoves.add(move)
