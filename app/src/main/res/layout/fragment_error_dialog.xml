@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="@dimen/_150dp"
+    android:background="@drawable/comic_text_bubble_400_350"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".error.ErrorDialogFragment"
     android:layout_margin="@dimen/_20dp"
     app:cardCornerRadius="@dimen/_20dp">
 
-   <androidx.constraintlayout.widget.ConstraintLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
 
        <TextView
            android:id="@+id/error_title_text_view"
@@ -18,6 +16,8 @@
            android:layout_height="wrap_content"
            android:textStyle="bold"
            android:textSize="@dimen/_24sp"
+           android:paddingTop="@dimen/_20dp"
+           android:layout_marginEnd="@dimen/_40dp"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintTop_toTopOf="parent"
@@ -28,22 +28,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/error_title_text_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_6dp"
+        app:layout_constraintStart_toStartOf="@id/error_title_text_view"
+        app:layout_constraintEnd_toEndOf="@id/error_title_text_view"
         android:text="Here goes error message"/>
 
-       <Button
-           android:id="@+id/ok_button"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="@string/ok"
-           android:layout_marginTop="@dimen/_20dp"
-           android:backgroundTint="@color/red"
-           app:layout_constraintTop_toBottomOf="@id/error_message_text_view"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"/>
 
-   </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        android:textAlignment="center"
+        android:background="@drawable/bg_button_red"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:textSize="22sp"
+        android:fontFamily="@font/bangers"
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/_18dp"
+        android:letterSpacing="0.1"
+        app:layout_constraintStart_toEndOf="@id/error_message_text_view"
+        app:layout_constraintTop_toBottomOf="@id/error_message_text_view"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
