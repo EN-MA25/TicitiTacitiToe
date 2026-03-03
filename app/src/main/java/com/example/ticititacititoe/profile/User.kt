@@ -1,5 +1,7 @@
 package com.example.ticititacititoe.profile
 
+import com.google.firebase.Timestamp
+
 data class User(
     val id: String = "",
     val username: String? = "",
@@ -10,7 +12,11 @@ data class User(
     val lostGames: Int = 0,
     val totalMovesMade: Int = 0,
     val maxStreak: Int = 0,
-    val currentStreak: Int = 0
+    val currentStreak: Int = 0,
+    val lastPlayedGame: Timestamp? = null,
+    val lastWonGame: Timestamp? = null,
+    val lastLostGame: Timestamp? = null,
+    val achievements: Map<String, Timestamp> = emptyMap()
 ) {
     val winRate: Int
         get() = if (totalGames > 0) {

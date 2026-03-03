@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 class UserViewModel(): ViewModel() {
     private val repository =  UserRepository()
 
-
     private val _selectedUser = MutableStateFlow<User?>(null)
     val selectedUser = _selectedUser.asStateFlow()
     private val _currentUser = MutableStateFlow<User?>(null)
@@ -43,6 +42,9 @@ class UserViewModel(): ViewModel() {
             }
         }
     }
+
+    private val _achievementEvents = MutableSharedFlow<List<String>>()
+    val achievementEvents = _achievementEvents.asSharedFlow()
 
     fun startFriendListener(currentUserId: String) {
         viewModelScope.launch {
@@ -127,7 +129,16 @@ class UserViewModel(): ViewModel() {
     }
 
     fun updateUserAfterGame(me: User, opponent: User, didWin: Boolean, movesMade: Int) {
-        repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+        viewModelScope.launch {
+            try {
+                val newAchievements = repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+                if (newAchievements.isNotEmpty()) {
+                    _achievementEvents.emit(newAchievements)
+                }
+            } catch (e: Exception) {
+                // handle error
+            }
+        }
     }
 
     fun loadFriendProfiles(currentUserId: String) {
