@@ -16,11 +16,11 @@ class OnlineGameViewModel : ViewModel() {
 
     private val repository = OnlineGameRepository()
 
-
     private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
     val gameResult = _gameResult.asStateFlow()
     // =========== Online state ===========
     val onlineState: StateFlow<OnlineGameState> = repository.onlineState
+
     fun startListenToMove(gameId: String) {
         repository.startListenToMove(gameId)
     }
@@ -77,7 +77,6 @@ class OnlineGameViewModel : ViewModel() {
             movesMade)
     }
 
-    // =========== Clear ===========
     override fun onCleared() {
         super.onCleared()
         repository.removeListener()
@@ -86,7 +85,6 @@ class OnlineGameViewModel : ViewModel() {
     fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>)-> Unit){
         repository.getRecentGames(userId, onResult)
     }
-
 
         fun fetchGameResult(gameId: String) {
             viewModelScope.launch {
