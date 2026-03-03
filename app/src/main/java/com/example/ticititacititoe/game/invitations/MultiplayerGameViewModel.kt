@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.game.ui.QueueUiState
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -80,8 +81,16 @@ class MultiplayerGameViewModel: ViewModel() {
             viewModelScope.launch {
                 try {
                     repository.sendGameInvite(fromUserId, fromUserName, toUserId, toUserName)
+
+                    delay(5000)
+                    if (inviteState.value == InviteState.Pending) {
+                        deleteInvitations(fromUserId,toUserId )
+                        _errorEvents.emit("Challenger did not respond in time.")
+                        _incomingInvites.value = emptyList()
+                        _outgoingInvites.value = emptyList()
+                    }
                 } catch (exception: Exception) {
-                    Log.e("Invite", "Failed to send invite", exception)
+                    _errorEvents.emit("Failed to send invite:  \n {$exception}.")
                 }
             }
         }
