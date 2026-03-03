@@ -32,7 +32,7 @@ class LeaderboardViewModel(): ViewModel() {
                 _users.value = users
             }catch (e: Exception){
                 _users.value = emptyList()
-                _errorEvents.emit("Failed to load allUsers:  \n {${e.message}}.")
+                _errorEvents.emit("Failed to load allUsers: ${e.message}")
 
             }
         }
@@ -48,7 +48,7 @@ class LeaderboardViewModel(): ViewModel() {
                 _globalLeaderboard.value = sortedUsers
             } catch (e: Exception) {
                 _globalLeaderboard.value = emptyList()
-                _errorEvents.emit("Failed to load leaderboard:  \n {${e.message}}.")
+                _errorEvents.emit("Failed to load leaderboard: ${e.message}")
 
             }
         }
@@ -61,7 +61,7 @@ class LeaderboardViewModel(): ViewModel() {
                     .sortedByDescending { it.rating }
                 _friendLeaderboard.value = friends
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to load leaderboard:  \n {${e.message}}.")
+                _errorEvents.emit("Failed to load leaderboard: ${e.message}")
                 _friendLeaderboard.value = emptyList()
             }
         }

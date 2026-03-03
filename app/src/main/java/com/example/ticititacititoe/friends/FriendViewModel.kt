@@ -29,7 +29,7 @@ class FriendViewModel: ViewModel() {
             try {
                 repository.addFriend(currentUserId, friendId)
             } catch (e: Exception){
-                _errorEvents.emit("Failed to add friend: $friendId, try again! :  \n {${e.message}}.")
+                _errorEvents.emit("Failed to add friend: $friendId, try again!: ${e.message}")
 
             }
         }
@@ -42,7 +42,7 @@ class FriendViewModel: ViewModel() {
                 repository.deleteFriend(currentUserId, friendId)
 
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to delete friend: $friendId, try again!:  \n {${e.message}}.")
+                _errorEvents.emit("Failed to delete friend: $friendId, try again!: ${e.message}")
             }
         }
     }
@@ -57,7 +57,7 @@ class FriendViewModel: ViewModel() {
                         _friendIds.value = friendList.map { it.id }.toSet()
                     }
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to fetch friends:  \n {${e.message}}.")
+                _errorEvents.emit("Failed to fetch friends: ${e.message}")
             }
         }
     }
