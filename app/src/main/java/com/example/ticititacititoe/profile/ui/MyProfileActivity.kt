@@ -16,6 +16,7 @@ import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.profile.UserViewModel
@@ -51,6 +52,9 @@ class MyProfileActivity : AppCompatActivity() {
             multiplayerGameViewModel.startListeningForInvites(currentUserId)
             multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
         }
+
+
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -104,21 +108,32 @@ class MyProfileActivity : AppCompatActivity() {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         userViewModel.fetchCurrentUser()
 
+        val userId = userViewModel.getCurrentUserId()
+        if (userId != null) {
+            userViewModel.fetchUserStats(userId)
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userViewModel.currentUser.collect { user ->
                     binding.usernameTextView.text = "${user?.username} ${user?.rating}"
                     binding.initialsTextView.text = user?.username?.take(2)
-                    binding.wonGamesNumberTextView.text = user?.wonGames.toString()
-                    binding.lostGamesNumberTextView.text = user?.lostGames.toString()
-                    binding.totalGamesNumberTextView.text = user?.totalGames.toString()
                     binding.currentStreakTextView.text = getString(R.string.current_streak, user?.currentStreak)
                     binding.maxStreakTextView.text = getString(R.string.max_streak, user?.maxStreak)
 
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userViewModel.userStats.collect { (won, lost, total) ->
+                    binding.wonGamesNumberTextView.text = won.toString()
+                    binding.lostGamesNumberTextView.text = lost.toString()
+                    binding.totalGamesNumberTextView.text = total.toString()
+                }
+            }
+        }
+
 
     }
 }

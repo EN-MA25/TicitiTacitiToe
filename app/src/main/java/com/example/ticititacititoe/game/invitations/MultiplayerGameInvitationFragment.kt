@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentMultiplayerGameInvitationBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.onlinegame.OnlineGameActivity
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -83,6 +84,8 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
             multiplayerGameViewModel.deleteInvitations(currentUserId, fromUserId!!)
             dismiss()
         }
+
+
 
         binding.acceptInviteButton.setOnClickListener {
             // =========== Start blitz game ==========

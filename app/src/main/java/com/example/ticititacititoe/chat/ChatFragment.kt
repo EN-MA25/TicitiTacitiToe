@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentChatBinding
+import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.profile.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.launch
@@ -98,6 +99,9 @@ class ChatFragment : Fragment() {
                 }
             }
         }
+
+        setupErrorObserver(chatViewModel.errorEvents)
+
     }
 
 //    override fun onStart() {

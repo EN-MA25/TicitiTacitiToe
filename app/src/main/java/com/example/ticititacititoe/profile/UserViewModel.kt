@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.friends.FriendRepository
 import com.example.ticititacititoe.profile.ui.UserSearchUIModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,9 +23,13 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
+    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
+    val userStats = _userStats.asStateFlow()
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
+    private val _errorEvents = MutableSharedFlow<String>()
+    val errorEvents = _errorEvents.asSharedFlow()
 
     private val _achievementEvents = MutableSharedFlow<List<String>>()
     val achievementEvents = _achievementEvents.asSharedFlow()
@@ -62,8 +66,10 @@ class UserViewModel(): ViewModel() {
             try {
                 val users = repository.searchUsers(searchTerm, currentUserId)
                 _users.value = users
-            } catch (exception: Exception) {
+            } catch (e: Exception) {
                 _users.value = emptyList()
+                _errorEvents.emit("Failed to search for user: ${e.message}")
+
             }
         }
     }
@@ -73,8 +79,10 @@ class UserViewModel(): ViewModel() {
             try {
                 val users = repository.getAllUsers()
                 _users.value = users
-            } catch (exception: Exception) {
+            } catch (e: Exception) {
                 _users.value = emptyList()
+                _errorEvents.emit("Failed to fetch all users: ${e.message}")
+
             }
         }
     }
@@ -85,6 +93,7 @@ class UserViewModel(): ViewModel() {
                 _currentUser.value = repository.getCurrentUser()
             }catch (e: Exception){
                 _currentUser.value = null
+                _errorEvents.emit("Failed to fetch current user: ${e.message}")
             }
         }
     }
@@ -92,14 +101,6 @@ class UserViewModel(): ViewModel() {
     fun getCurrentUserId(): String? {
         return repository.getCurrentUserId()
     }
-
-//    fun loadUserById(id: String?) {
-//        if (id == null) return
-//
-//        viewModelScope.launch {
-//            _selectedUser.value = repository.getUserDetailsById(id)
-//        }
-//    }
 
     fun getUserDetailsById(userId: String?, callback: (User?) -> Unit) {
         if (userId != null) {
@@ -126,7 +127,16 @@ class UserViewModel(): ViewModel() {
                 val friends = friendRepository.getFriendProfiles(currentUserId)
                 _friends.value = friends
             } catch (e: Exception) {
-//                _errorEvents.emit("Could not fetch friend profiles")
+                _errorEvents.emit("Could not fetch friend profiles: ${e.message}")
+            }
+        }
+    }
+    fun fetchUserStats(userId: String) {
+        viewModelScope.launch {
+            try {
+                _userStats.value = repository.getUserStats(userId)
+            } catch (e: Exception) {
+                _userStats.value = Triple(0, 0, 0)
             }
         }
     }
