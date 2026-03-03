@@ -28,8 +28,8 @@ class ChatViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.createChatRoom(gameId, userIds)
-            } catch (exception: Exception) {
-                _errorEvents.emit("Failed to create chat. restart game!")
+            } catch (e: Exception) {
+                _errorEvents.emit("Failed to create chat. restart game!:  \n {${e.message}}.")
             }
         }
 
@@ -39,8 +39,8 @@ class ChatViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.sendMessage(roomId, message, currentUserId)
-            } catch (exception: Exception) {
-                _errorEvents.emit("Unable to send message. Try again!")
+            } catch (e: Exception) {
+                _errorEvents.emit("Unable to send message. Try again!:  \n {${e.message}}.")
             }
         }
     }
@@ -58,7 +58,7 @@ class ChatViewModel: ViewModel() {
 
                     }
             } catch (e: Exception) {
-                _errorEvents.emit("Failed to get chat messages!")
+                _errorEvents.emit("Failed to get chat messages!:  \n {${e.message}}.")
 
             }
 
@@ -72,7 +72,7 @@ class ChatViewModel: ViewModel() {
                 repository.deleteChat(gameId)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _errorEvents.emit("Failed to delete chat: $gameId, try again!")
+                _errorEvents.emit("Failed to delete chat: $gameId, try again:  \n {${e.message}}.!")
             }
         }
     }
