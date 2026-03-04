@@ -170,8 +170,27 @@ class OnlineGameActivity : AppCompatActivity() {
 
     fun squarePressed(view: View) {
         val (row, col) = view.tag.toString().split(",").map { it.toLong() }
-        playerMakeMove(gameId, row, col)
-    }
+
+        lifecycleScope.launch {
+
+            val result = onlineGameViewModel.playerMakeMove(
+                gameId,
+                row,
+                col,
+                userViewModel.getCurrentUserId()
+            )
+
+            if (result.isSuccess) {
+                movesMade++
+            } else {
+                Toast.makeText(
+                    this@OnlineGameActivity,
+                    result.exceptionOrNull()?.message ?: "Something went wrong",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }}
+
 
     fun isGameOver(onlineGameState: OnlineGameState) {
         val currentUSerId = userViewModel.getCurrentUserId() ?: return
@@ -282,28 +301,6 @@ class OnlineGameActivity : AppCompatActivity() {
                         dialog.show(supportFragmentManager, "game_over_dialog")
                     }
                 }
-            }
-        }
-    }
-
-
-    fun playerMakeMove(gameId: String?, row: Long, col: Long) {
-
-        // ========== Call viewmodel and send gameid, row/col, uid ==========
-        onlineGameViewModel.playerMakeMove(
-            gameId,
-            row,
-            col,
-            userViewModel.getCurrentUserId()
-        ) { result ->
-            if (result.isSuccess) {
-                movesMade++
-            } else {
-                Toast.makeText(
-                    this,
-                    result.exceptionOrNull()?.message ?: "Something went wrong",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
     }

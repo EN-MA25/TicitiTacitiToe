@@ -40,20 +40,16 @@ class OnlineGameViewModel : ViewModel() {
         return repository.createOnlineGame(playerX, playerO, startingPlayer)
     }
 
-    fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?, onResult: (Result<String>) -> Unit) {
+   suspend fun playerMakeMove(gameId: String?, row: Long, col: Long, playerUid: String?): Result <String> {
 
         // =========== Create onlinemove object=============
         val onlineMove = OnlineMove(row, col, playerUid, gameId!!, System.currentTimeMillis())
 
         // =========== Send move to repository ===========
-        repository.playerMakeMove(
+       return repository.playerMakeMove(
             gameId = gameId,
             move = onlineMove,
-        ) { result ->
-            if (result.isSuccess) {
-                onResult(result)
-            }
-        }
+        )
     }
 
     fun updateGameResult(gameId: String, result: String) {

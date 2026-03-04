@@ -61,54 +61,46 @@ class OnlineGameRepository {
             .update("gameResult", result)
     }
 
-    fun playerMakeMove(
+    suspend fun playerMakeMove(
         gameId: String?,
         move: OnlineMove,
-        onResult: (Result<String>) -> Unit
-    ) {
-        if (gameId == null) {
-            onResult(Result.failure(Exception("Can't make move, GameID is missing")))
-            return
-        }
+    ): Result<String> {
+        return try {
 
-        gameCollection.document(gameId).get().addOnSuccessListener { doc ->
+            if (gameId == null) {
+                return Result.failure(Exception("Can't make move, game is missing"))
+            }
+
+            val doc = gameCollection
+                .document(gameId)
+                .get()
+                .await()
 
             // =============== Convert Firestore document to OnlineGameState object ===============
-            val game = doc.toObject(OnlineGameState::class.java)
-
+            val gameState = doc.toObject(OnlineGameState::class.java)
 
             // ============== Stop players from making more moves =======
-            if (game?.gameResult != "Ongoing") {
-                onResult(Result.failure(Exception("Game is already finished")))
-                return@addOnSuccessListener
+            if (gameState?.gameResult != "Ongoing") {
+                return Result.failure(Exception("Game is already finished"))
             }
 
             // =============== Get current player, uid for players and list of already made moves ===============
-            var currentPlayer = game.currentPlayerUid
-            var playerX = game.playerX
-            var playerO = game.playerO
-            var moves = game.moves
+            var currentPlayer = gameState.currentPlayerUid
+            var playerX = gameState.playerX
+            var playerO = gameState.playerO
+            var moves = gameState.moves
 
             // =============== Check if box is already taken ===============
-            for (madeMove in moves.takeLast(6)) {
-                if (madeMove.row == move.row && madeMove.col == move.col) {
-                    onResult(
-                        Result.failure(
-                            Exception("Already taken")
-                        )
-                    )
-                    return@addOnSuccessListener
-                }
+            if (gameState.moves.takeLast(6).any {
+                    it.row == move.row && it.col == move.col
+                }) {
+                return Result.failure(Exception("Already taken"))
             }
 
             // =============== Control if its the right player ===============
             if (move.player != currentPlayer) {
-                onResult(
-                    Result.failure(
-                        Exception("You are not the current player!")
-                    )
-                )
-            } else {
+                return Result.failure(Exception("You are not the current user"))
+            }
 
                 // =============== Change player ===============
                 if (currentPlayer == playerX) {
@@ -121,13 +113,17 @@ class OnlineGameRepository {
 
                 // =============== Add moves and updates current player ===============
                 game.update("currentPlayerUid", currentPlayer)
-                game.update("moves", FieldValue.arrayUnion(move))
+                game.update(
+                    "moves", FieldValue.arrayUnion(move)
+                ).await()
+                Result.success("success")
 
-
-                onResult(Result.success("success"))
+            } catch (e: Exception) {
+                Result.failure(e)
             }
         }
-    }
+
+
 
     suspend fun deleteGame(gameId: String?): Result<String> = try {
         Firebase.firestore.collection(FirestoreCollections.GAME)
