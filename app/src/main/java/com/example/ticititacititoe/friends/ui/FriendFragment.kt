@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.FragmentFriendBinding
 import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.friends.FriendViewModel
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import com.example.ticititacititoe.user.adapter.SearchUserRecyclerAdapter
 import com.example.ticititacititoe.user.ui.OtherUserProfileFragment
@@ -27,7 +27,7 @@ class FriendFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentFriendBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var friendViewModel: FriendViewModel
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchUserRecyclerAdapter
@@ -36,7 +36,7 @@ class FriendFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         friendViewModel = ViewModelProvider(requireActivity())[FriendViewModel::class.java]
 
@@ -65,7 +65,7 @@ class FriendFragment : BottomSheetDialogFragment() {
         }
 
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
-            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username!! )
+            invitesViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username!! )
 
         }, { user ->
             friendViewModel.addFriend(currentUserId!!, user.id) },

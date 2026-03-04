@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.databinding.GameOverFragmentBinding
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class GameOverFragment(playerX: String?) : DialogFragment() {
     private var currentUsername: String? = ""
     private lateinit var onlineGameViewModel: OnlineGameViewModel
     private lateinit var userViewModel: UserViewModel
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,7 @@ class GameOverFragment(playerX: String?) : DialogFragment() {
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
         onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
 
         currentUserId = userViewModel.getCurrentUserId() ?: return
 
@@ -80,7 +80,7 @@ class GameOverFragment(playerX: String?) : DialogFragment() {
                         }
 
                         binding.playAgainButton.setOnClickListener {
-                            multiplayerGameViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
+                            invitesViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
                             dismiss()
                             requireActivity().finish()
                         }

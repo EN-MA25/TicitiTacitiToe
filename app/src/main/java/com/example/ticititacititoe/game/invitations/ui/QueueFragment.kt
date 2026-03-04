@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentQueueBinding
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,7 +34,7 @@ class QueueFragment : BottomSheetDialogFragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var currentUserId: String
     private lateinit var binding: FragmentQueueBinding
@@ -43,7 +43,7 @@ class QueueFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
 
@@ -89,7 +89,7 @@ class QueueFragment : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                multiplayerGameViewModel.queue.collect { state ->
+                invitesViewModel.queue.collect { state ->
                     val queueSize = state.queueSize
                     binding.inQueueTextView.text = "$queueSize: in queue"
                 }
@@ -114,6 +114,6 @@ class QueueFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-        multiplayerGameViewModel.leaveQueue(currentUserId)
+        invitesViewModel.leaveQueue(currentUserId)
     }
 }

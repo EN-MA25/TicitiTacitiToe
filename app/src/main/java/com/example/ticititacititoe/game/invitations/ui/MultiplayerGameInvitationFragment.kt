@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentMultiplayerGameInvitationBinding
-import com.example.ticititacititoe.game.invitations.GameInvitation
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.model.GameInvitation
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.onlinegame.ui.OnlineGameActivity
 import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,7 +21,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
     private var fromUsername: String? = null
     private var fromUserId: String? = null
     private lateinit var currentUserId: String
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
     private lateinit var userViewModel: UserViewModel
 
     private lateinit var binding: FragmentMultiplayerGameInvitationBinding
@@ -31,7 +31,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
         fromUsername = arguments?.getString(ARG_FROM_USER)
@@ -80,8 +80,8 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         // ======== Update status and delete invitaion in db =======
         binding.declineInviteButton.setOnClickListener {
-            multiplayerGameViewModel.declineInvite(currentUserId, fromUserId!!)
-            multiplayerGameViewModel.deleteInvitations(currentUserId, fromUserId!!)
+            invitesViewModel.declineInvite(currentUserId, fromUserId!!)
+            invitesViewModel.deleteInvitations(currentUserId, fromUserId!!)
             dismiss()
         }
 
@@ -89,7 +89,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         binding.acceptInviteButton.setOnClickListener {
             // =========== Start blitz game ==========
-            multiplayerGameViewModel.acceptInvite(currentUserId, fromUserId!!)
+            invitesViewModel.acceptInvite(currentUserId, fromUserId!!)
             dismiss()
 
             // ========== Send to game ========

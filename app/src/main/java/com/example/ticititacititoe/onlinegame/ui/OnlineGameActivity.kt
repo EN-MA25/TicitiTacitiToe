@@ -21,8 +21,7 @@ import com.example.ticititacititoe.achievements.AchievementManager
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.chat.ui.ChatFragment
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.onlinegame.ui.GameOverFragment
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.onlinegame.OnlineGameLogic
 import com.example.ticititacititoe.onlinegame.model.OnlineGameResult
 import com.example.ticititacititoe.onlinegame.state.OnlineGameState
@@ -39,7 +38,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var onlineGameViewModel: OnlineGameViewModel
 
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     private lateinit var chatViewModel: ChatViewModel
 
@@ -80,7 +79,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         binding.onlineNewGameButton.visibility = View.GONE
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
-        multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(this)[InvitesViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
@@ -102,7 +101,7 @@ class OnlineGameActivity : AppCompatActivity() {
         val userIds = mutableListOf(currentUserId, otherUserId)
 
         // ========== Delete invitaions from db ==========
-        multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
+        invitesViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
         // ========== Get game if exist ==========
         lifecycleScope.launch {
        val result = onlineGameViewModel.getGameIfExist(currentUserId, otherUserId)

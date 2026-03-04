@@ -11,7 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentOtherUserProfileBinding
 import com.example.ticititacititoe.friends.FriendViewModel
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -23,7 +23,7 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentOtherUserProfileBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var friendViewModel: FriendViewModel
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     private var currentUserId: String? = null
     private var currentUsername: String = ""
@@ -50,14 +50,14 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
 
 
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         friendViewModel = ViewModelProvider(requireActivity())[FriendViewModel::class.java]
 
         currentUserId = userViewModel.getCurrentUserId()
 
         if (currentUserId != null) {
-            multiplayerGameViewModel.startListeningForInvites(currentUserId!!)
-            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId!!)
+            invitesViewModel.startListeningForInvites(currentUserId!!)
+            invitesViewModel.startListeningForOutgoingInvites(currentUserId!!)
             userViewModel.startFriendListener(currentUserId!!)
             userViewModel.fetchUserById(otherUserId)
         }
@@ -129,7 +129,7 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                multiplayerGameViewModel.incomingInvites.collect { invites ->
+                invitesViewModel.incomingInvites.collect { invites ->
                     val existing = childFragmentManager.findFragmentByTag("invite_dialog")
                     if (invites.isNotEmpty()) {
                         MultiplayerGameInvitationFragment.Companion
@@ -174,7 +174,7 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
         }
 
         binding.playButton.setOnClickListener {
-            multiplayerGameViewModel.sendGameInvitation(
+            invitesViewModel.sendGameInvitation(
                 currentUserId,
                 currentUsername,
                 otherUserId,

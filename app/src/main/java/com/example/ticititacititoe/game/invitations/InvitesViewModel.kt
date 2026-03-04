@@ -3,6 +3,7 @@ package com.example.ticititacititoe.game.invitations
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ticititacititoe.game.invitations.model.GameInvitation
 import com.example.ticititacititoe.game.invitations.state.InviteState
 import com.example.ticititacititoe.game.invitations.state.QueueUiState
 import com.google.firebase.firestore.ListenerRegistration
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MultiplayerGameViewModel: ViewModel() {
+class InvitesViewModel: ViewModel() {
     private val repository = GameInvitationRepository()
 
     private val _incomingInvites = MutableStateFlow<List<GameInvitation>>(emptyList())
