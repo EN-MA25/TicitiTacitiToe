@@ -1,5 +1,6 @@
 package com.example.ticititacititoe
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -198,6 +199,18 @@ class MainActivity : AppCompatActivity() {
                                 com.example.ticititacititoe.profile.OtherUserProfileFragment
                                     .newInstance(game.opponentId, game.opponentUsername)
                                     .show(supportFragmentManager, "other_user_profile")
+                            },
+                            onDeleteClick = { game ->
+                                AlertDialog.Builder(this@MainActivity)
+                                    .setTitle("Delete Game")
+                                    .setMessage("Do you want to delete this game?")
+                                    .setPositiveButton("Yes") { _, _ ->
+                                        onlineGameViewModel.deleteRecentGame(game.gameId, currentUserId) { _ ->
+                                            runOnUiThread { onResume() }
+                                        }
+                                    }
+                                    .setNegativeButton("No", null)
+                                    .show()
                             }
                         )
                     }
