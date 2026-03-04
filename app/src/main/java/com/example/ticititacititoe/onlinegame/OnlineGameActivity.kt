@@ -32,18 +32,31 @@ import kotlinx.coroutines.launch
 class OnlineGameActivity : AppCompatActivity() {
 
     private lateinit var binding: OnlineGameActivityBinding
+
     private lateinit var gameId: String
+
     private lateinit var onlineGameViewModel: OnlineGameViewModel
+
     private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+
     private lateinit var chatViewModel: ChatViewModel
+
     private lateinit var userViewModel: UserViewModel
+
     private var hasStartedListening = false
+
     private var me: User? = null
+
     private var opponent: User? = null
+
     private var currentUserId: String? = ""
+
     private var otherUserId: String? = ""
+
     private var movesMade = 0
+
     private var playerX: String? = ""
+
     private var playerO: String? = ""
 
 
@@ -86,11 +99,11 @@ class OnlineGameActivity : AppCompatActivity() {
 
         val userIds = mutableListOf(currentUserId, otherUserId)
 
-
         // ========== Delete invitaions from db ==========
         multiplayerGameViewModel.deleteInvitations(currentUserId!!, otherUserId!!)
         // ========== Get game if exist ==========
-        onlineGameViewModel.getGameIfExist(currentUserId, otherUserId) { result ->
+        lifecycleScope.launch {
+       val result = onlineGameViewModel.getGameIfExist(currentUserId, otherUserId)
             if (result.isSuccess) {
                 gameId = result.getOrNull()!!
                 startListeningToMoves()
@@ -98,7 +111,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
                 val myUid = userViewModel.getCurrentUserId()
                 Toast.makeText(
-                    this,
+                    this@OnlineGameActivity,
                     if (myUid == currentUserId) "You are Player X" else "You are Player O",
                     Toast.LENGTH_LONG
                 ).show()
@@ -109,6 +122,7 @@ class OnlineGameActivity : AppCompatActivity() {
                 playerO = otherUserId
 
                 lifecycleScope.launch {
+
                     // ========== Create game state ==========
                     val result = onlineGameViewModel.createOnlineGame(
                         playerX,
@@ -165,13 +179,32 @@ class OnlineGameActivity : AppCompatActivity() {
                 }
                 .show()
         }
-
     }
 
     fun squarePressed(view: View) {
         val (row, col) = view.tag.toString().split(",").map { it.toLong() }
-        playerMakeMove(gameId, row, col)
+
+        lifecycleScope.launch {
+
+            val result = onlineGameViewModel.playerMakeMove(
+                gameId,
+                row,
+                col,
+                userViewModel.getCurrentUserId()
+            )
+
+            if (result.isSuccess) {
+                movesMade++
+            } else {
+                Toast.makeText(
+                    this@OnlineGameActivity,
+                    result.exceptionOrNull()?.message ?: "Something went wrong",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
+
 
     fun isGameOver(onlineGameState: OnlineGameState) {
         val currentUSerId = userViewModel.getCurrentUserId() ?: return
@@ -250,12 +283,13 @@ class OnlineGameActivity : AppCompatActivity() {
                                 onlineState.moves.size
                             )
                             onlineGameViewModel.deleteGame(gameId)
+                                chatViewModel.deleteChat(gameId)
+
                         }
                         //lifecycleScope.launch {
                         //  kotlinx.coroutines.delay(500)
                         onlineGameViewModel.fetchGameResult(gameId)
                         // }
-
 
                         userViewModel.updateUserAfterGame(
                             me!!,
@@ -263,12 +297,7 @@ class OnlineGameActivity : AppCompatActivity() {
                             (winnerUid == me!!.id),
                             movesMade
                         )
-
-
                     }
-
-
-
                     isGameOver(onlineState)
                 }
             }
@@ -282,28 +311,6 @@ class OnlineGameActivity : AppCompatActivity() {
                         dialog.show(supportFragmentManager, "game_over_dialog")
                     }
                 }
-            }
-        }
-    }
-
-
-    fun playerMakeMove(gameId: String?, row: Long, col: Long) {
-
-        // ========== Call viewmodel and send gameid, row/col, uid ==========
-        onlineGameViewModel.playerMakeMove(
-            gameId,
-            row,
-            col,
-            userViewModel.getCurrentUserId()
-        ) { result ->
-            if (result.isSuccess) {
-                movesMade++
-            } else {
-                Toast.makeText(
-                    this,
-                    result.exceptionOrNull()?.message ?: "Something went wrong",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
     }
