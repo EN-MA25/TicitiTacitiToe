@@ -68,7 +68,7 @@ app/src/main/java/com/example/ticititacititoe/
 │   └── MultiplayerGameInvitationFragment.kt — Accept/decline bottom sheet
 │
 └── MainActivity.kt              — Main screen
-
+```
 
 
 ## Architecture
