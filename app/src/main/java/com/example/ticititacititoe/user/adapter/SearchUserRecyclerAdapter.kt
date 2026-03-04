@@ -1,12 +1,12 @@
-package com.example.ticititacititoe.profile.adapter
+package com.example.ticititacititoe.user.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.UserListItemBinding
-import com.example.ticititacititoe.profile.User
-import com.example.ticititacititoe.profile.ui.UserSearchUIModel
+import com.example.ticititacititoe.user.User
+import com.example.ticititacititoe.user.ui.UserSearchUIModel
 
 class SearchUserRecyclerAdapter(
     val onUserClick: (User) -> Unit,

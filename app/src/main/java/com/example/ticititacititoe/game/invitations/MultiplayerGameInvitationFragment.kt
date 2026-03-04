@@ -9,9 +9,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentMultiplayerGameInvitationBinding
-import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.onlinegame.OnlineGameActivity
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

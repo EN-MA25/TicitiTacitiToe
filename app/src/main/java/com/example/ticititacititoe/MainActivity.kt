@@ -12,26 +12,24 @@ import com.example.ticititacititoe.databinding.ActivityMainBinding
 import com.example.ticititacititoe.game.ui.ChallengeFragment
 import com.example.ticititacititoe.game.ui.GameActivity
 import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
-import com.example.ticititacititoe.profile.ui.MyProfileActivity
+import com.example.ticititacititoe.user.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
-import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
 import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
 import com.example.ticititacititoe.game.ui.QueueFragment
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
-import com.example.ticititacititoe.profile.TutorialFragment
+import com.example.ticititacititoe.user.TutorialFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.flow.combine
 
@@ -195,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                             },
                             onUserClick = { game ->
-                                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                                com.example.ticititacititoe.user.OtherUserProfileFragment
                                     .newInstance(game.opponentId, game.opponentUsername)
                                     .show(supportFragmentManager, "other_user_profile")
                             }

@@ -10,13 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentFriendBinding
 import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.profile.UserViewModel
-import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
+import com.example.ticititacititoe.user.UserViewModel
+import com.example.ticititacititoe.user.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -74,7 +73,7 @@ class FriendFragment : BottomSheetDialogFragment() {
 
             },
             onInitialsClick = { user ->
-                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                com.example.ticititacititoe.user.OtherUserProfileFragment
                     .newInstance(user.id, user.username ?: "")
                     .show(parentFragmentManager, "other_user_profile")
             })

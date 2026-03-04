@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicitiTacitiToe">
         <activity
-            android:name=".profile.ui.MyProfileActivity"
+            android:name=".user.ui.MyProfileActivity"
             android:exported="false" />
         <activity
             android:name=".leaderboard.ui.LeaderboardActivity"

@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.profile
+package com.example.ticititacititoe.user
 
 import com.example.ticititacititoe.Util
 import com.example.ticititacititoe.achievements.AchievementManager

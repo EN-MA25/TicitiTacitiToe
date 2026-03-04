@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.profile.ui
+package com.example.ticititacititoe.user.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,8 @@ import com.example.ticititacititoe.databinding.FragmentSearchUserBinding
 import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.profile.UserViewModel
-import com.example.ticititacititoe.profile.adapter.SearchUserRecyclerAdapter
+import com.example.ticititacititoe.user.UserViewModel
+import com.example.ticititacititoe.user.adapter.SearchUserRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -101,7 +101,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
                 friendViewModel.deleteFriend( currentUserId!!, user.id)
             },
             onInitialsClick = { user ->
-                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                com.example.ticititacititoe.user.OtherUserProfileFragment
             .newInstance(user.id, user.username ?: "")
             .show(parentFragmentManager, "other_user_profile")
             }

@@ -1,4 +1,4 @@
-package com.example.ticititacititoe.profile.ui
+package com.example.ticititacititoe.user.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,18 +10,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
-import com.example.ticititacititoe.error.setupErrorObserver
 import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
-import kotlin.toString
 
 class MyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyProfileBinding

@@ -1,15 +1,11 @@
-package com.example.ticititacititoe.profile.ui
+package com.example.ticititacititoe.user.ui
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.example.ticititacititoe.R
 import com.example.ticititacititoe.auth.AuthViewModel
-import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.FragmentSettingsBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

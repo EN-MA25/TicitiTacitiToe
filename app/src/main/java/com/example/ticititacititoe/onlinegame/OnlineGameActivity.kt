@@ -2,7 +2,6 @@ package com.example.ticititacititoe.onlinegame
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -23,9 +22,8 @@ import com.example.ticititacititoe.chat.ChatFragment
 import com.example.ticititacititoe.chat.ChatViewModel
 import com.example.ticititacititoe.databinding.OnlineGameActivityBinding
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.profile.User
-import com.example.ticititacititoe.profile.UserViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.ticititacititoe.user.User
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
 
 

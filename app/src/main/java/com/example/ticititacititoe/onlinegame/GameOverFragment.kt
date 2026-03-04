@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.example.ticititacititoe.databinding.GameOverFragmentBinding
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
 
 class GameOverFragment(playerX: String?) : DialogFragment() {

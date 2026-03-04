@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.databinding.RankingListItemBinding
-import com.example.ticititacititoe.profile.User
+import com.example.ticititacititoe.user.User
 
 class LeaderboardAdapter(
     private var users: List<User>

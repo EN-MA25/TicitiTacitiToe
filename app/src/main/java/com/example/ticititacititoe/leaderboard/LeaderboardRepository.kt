@@ -1,6 +1,6 @@
 package com.example.ticititacititoe.leaderboard
 
-import com.example.ticititacititoe.profile.User
+import com.example.ticititacititoe.user.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore

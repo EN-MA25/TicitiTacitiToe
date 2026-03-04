@@ -6,7 +6,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.NoCredentialException
-import com.example.ticititacititoe.profile.User
+import com.example.ticititacititoe.user.User
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlin.Result
 import com.google.firebase.Firebase
