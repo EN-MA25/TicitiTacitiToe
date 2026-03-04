@@ -10,13 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentFriendsLeaderboardBinding
-import com.example.ticititacititoe.databinding.FragmentGlobalLeaderboardBinding
 import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.leaderboard.LeaderboardAdapter
+import com.example.ticititacititoe.leaderboard.adapter.LeaderboardAdapter
 import com.example.ticititacititoe.leaderboard.LeaderboardViewModel
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
 
 class FriendsLeaderboardFragment : Fragment() {

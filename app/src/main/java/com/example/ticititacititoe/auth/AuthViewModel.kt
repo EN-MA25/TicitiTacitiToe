@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.auth.state.AuthUiState
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 
 import kotlinx.coroutines.launch

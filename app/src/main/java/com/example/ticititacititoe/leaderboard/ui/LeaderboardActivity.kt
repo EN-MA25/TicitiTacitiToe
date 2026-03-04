@@ -11,11 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityLeaderboardBinding
-import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
-import com.example.ticititacititoe.leaderboard.ViewPagerAdapter
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
+import com.example.ticititacititoe.leaderboard.adapter.ViewPagerAdapter
+import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
@@ -23,7 +22,7 @@ class LeaderboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLeaderboardBinding
 
     private lateinit var userViewModel: UserViewModel
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +39,15 @@ class LeaderboardActivity : AppCompatActivity() {
         }
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(this)[InvitesViewModel::class.java]
 
 
 
         val currentUserId = userViewModel.getCurrentUserId()
 
         if (currentUserId != null) {
-            multiplayerGameViewModel.startListeningForInvites(currentUserId)
-            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
+            invitesViewModel.startListeningForInvites(currentUserId)
+            invitesViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
 
@@ -57,7 +56,7 @@ class LeaderboardActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                multiplayerGameViewModel.incomingInvites.collect { invites ->
+                invitesViewModel.incomingInvites.collect { invites ->
                     val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
 
                     if (invites.isNotEmpty()) {

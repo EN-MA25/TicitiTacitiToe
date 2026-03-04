@@ -6,7 +6,7 @@
     android:background="@drawable/bg_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile.ui.MyProfileActivity">
+    tools:context=".user.ui.MyProfileActivity">
 
 
     <ImageButton

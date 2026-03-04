@@ -1,5 +1,7 @@
 package com.example.ticititacititoe.game.invitations
 
+import com.example.ticititacititoe.game.invitations.model.GameInvitation
+import com.example.ticititacititoe.game.invitations.state.InviteState
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration

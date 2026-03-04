@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicitiTacitiToe">
         <activity
-            android:name=".profile.ui.MyProfileActivity"
+            android:name=".user.ui.MyProfileActivity"
             android:exported="false" />
         <activity
             android:name=".leaderboard.ui.LeaderboardActivity"
@@ -24,7 +24,7 @@
             android:name=".game.ui.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".onlinegame.OnlineGameActivity"
+            android:name=".onlinegame.ui.OnlineGameActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
