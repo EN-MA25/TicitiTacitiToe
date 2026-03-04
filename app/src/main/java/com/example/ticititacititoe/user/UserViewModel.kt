@@ -55,9 +55,8 @@ class UserViewModel(): ViewModel() {
         }
     }
     val searchUIList: StateFlow<List<UserSearchUIModel>> = combine(_users, _friendIds) { users, friendIds ->
-        users.map { user ->
-            val myId = getCurrentUserId()
-            users.filter { user -> user.id != myId }
+        val myId = getCurrentUserId()
+        users.filter { it.id != myId }.map { user ->
             UserSearchUIModel(
                 user = user,
                 isFriend = friendIds.contains(user.id)
