@@ -1,5 +1,7 @@
 package com.example.ticititacititoe.onlinegame
 
+import com.example.ticititacititoe.onlinegame.model.OnlineMove
+import com.example.ticititacititoe.onlinegame.state.OnlineGameState
 import kotlin.text.toInt
 
 class OnlineGameLogic {

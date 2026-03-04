@@ -1,6 +1,10 @@
 package com.example.ticititacititoe.game
 
 import androidx.lifecycle.ViewModel
+import com.example.ticititacititoe.game.model.GameResult
+import com.example.ticititacititoe.game.model.Move
+import com.example.ticititacititoe.game.model.Player
+import com.example.ticititacititoe.game.state.GameState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

@@ -3,7 +3,8 @@ package com.example.ticititacititoe.game.invitations
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ticititacititoe.game.ui.QueueUiState
+import com.example.ticititacititoe.game.invitations.state.InviteState
+import com.example.ticititacititoe.game.invitations.state.QueueUiState
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -13,8 +13,8 @@ import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentChallengeBinding
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.friends.ui.FriendFragment
-import com.example.ticititacititoe.profile.UserViewModel
-import com.example.ticititacititoe.profile.ui.SearchUserFragment
+import com.example.ticititacititoe.user.UserViewModel
+import com.example.ticititacititoe.user.ui.SearchUserFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

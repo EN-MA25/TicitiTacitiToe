@@ -14,10 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityGameBinding
-import com.example.ticititacititoe.game.GameResult
-import com.example.ticititacititoe.game.GameState
+import com.example.ticititacititoe.game.model.GameResult
+import com.example.ticititacititoe.game.state.GameState
 import com.example.ticititacititoe.game.GameViewModel
-import com.example.ticititacititoe.game.Player
+import com.example.ticititacititoe.game.model.Player
 import kotlinx.coroutines.launch
 
 class GameActivity : AppCompatActivity() {

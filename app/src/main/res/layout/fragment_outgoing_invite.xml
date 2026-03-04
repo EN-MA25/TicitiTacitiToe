@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_red_orange_w_yellow_lines"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".game.ui.OutgoingInviteFragment">
+    tools:context=".game.invitations.ui.OutgoingInviteFragment">
 
     <TextView
         android:id="@+id/invitation_text_view"

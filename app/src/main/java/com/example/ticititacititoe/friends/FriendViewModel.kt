@@ -1,10 +1,8 @@
 package com.example.ticititacititoe.friends
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ticititacititoe.profile.User
+import com.example.ticititacititoe.user.model.User
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,6 +16,7 @@ class FriendViewModel: ViewModel() {
     val friends = _friends.asStateFlow()
 
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
+    val friendId = _friendIds.asStateFlow()
 
 
     private val _errorEvents = MutableSharedFlow<String>()
@@ -28,8 +27,10 @@ class FriendViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.addFriend(currentUserId, friendId)
+                _friendIds.value += friendId
             } catch (e: Exception){
                 _errorEvents.emit("Failed to add friend: $friendId, try again!: ${e.message}")
+
 
             }
         }
@@ -40,7 +41,7 @@ class FriendViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.deleteFriend(currentUserId, friendId)
-
+                _friendIds.value -= friendId
             } catch (e: Exception) {
                 _errorEvents.emit("Failed to delete friend: $friendId, try again!: ${e.message}")
             }
