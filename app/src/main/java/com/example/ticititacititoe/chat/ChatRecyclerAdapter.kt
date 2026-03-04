@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ticititacititoe.Util
+import com.example.ticititacititoe.util.Util
+import com.example.ticititacititoe.chat.model.Message
 import com.example.ticititacititoe.databinding.MessageRecievedItemBinding
 import com.example.ticititacititoe.databinding.MessageSentItemBinding
 

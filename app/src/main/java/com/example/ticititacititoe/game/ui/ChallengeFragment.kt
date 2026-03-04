@@ -11,10 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentChallengeBinding
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.friends.ui.FriendFragment
-import com.example.ticititacititoe.profile.UserViewModel
-import com.example.ticititacititoe.profile.ui.SearchUserFragment
+import com.example.ticititacititoe.user.UserViewModel
+import com.example.ticititacititoe.user.ui.SearchUserFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 class ChallengeFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentChallengeBinding
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var currentUsername: String
     private lateinit var currentUserId: String
@@ -43,7 +43,7 @@ class ChallengeFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
         currentUserId = userViewModel.getCurrentUserId() ?: return
@@ -72,7 +72,7 @@ class ChallengeFragment : BottomSheetDialogFragment() {
         }
 
         binding.playARandomDudeButton.setOnClickListener {
-            multiplayerGameViewModel.enterQueue(currentUserId, currentUsername)
+            invitesViewModel.enterQueue(currentUserId, currentUsername)
         }
 
         binding.backButton.setOnClickListener {

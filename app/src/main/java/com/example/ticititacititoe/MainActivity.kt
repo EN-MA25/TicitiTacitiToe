@@ -12,26 +12,25 @@ import com.example.ticititacititoe.databinding.ActivityMainBinding
 import com.example.ticititacititoe.game.ui.ChallengeFragment
 import com.example.ticititacititoe.game.ui.GameActivity
 import com.example.ticititacititoe.leaderboard.ui.LeaderboardActivity
-import com.example.ticititacititoe.profile.ui.MyProfileActivity
+import com.example.ticititacititoe.user.ui.MyProfileActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ticititacititoe.auth.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
-import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
-import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
-import com.example.ticititacititoe.game.ui.QueueFragment
-import com.example.ticititacititoe.profile.UserViewModel
+import com.example.ticititacititoe.game.invitations.ui.OutgoingInviteFragment
+import com.example.ticititacititoe.game.invitations.ui.QueueFragment
+import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
-import com.example.ticititacititoe.profile.TutorialFragment
+import com.example.ticititacititoe.tutorial.TutorialFragment
+import com.example.ticititacititoe.user.ui.OtherUserProfileFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.flow.combine
 
@@ -39,7 +38,7 @@ import kotlinx.coroutines.flow.combine
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     private lateinit var authViewModel: AuthViewModel
     private lateinit var userViewModel: UserViewModel
@@ -64,16 +63,16 @@ class MainActivity : AppCompatActivity() {
         onlineGameViewModel = ViewModelProvider(this)[OnlineGameViewModel::class.java]
 
 
-        multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(this)[InvitesViewModel::class.java]
 
         val currentUserId = userViewModel.getCurrentUserId()
 
         if (currentUserId != null) {
-            multiplayerGameViewModel.startListeningForInvites(currentUserId)
-            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
+            invitesViewModel.startListeningForInvites(currentUserId)
+            invitesViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
-        setupErrorObserver(multiplayerGameViewModel.errorEvents)
+        setupErrorObserver(invitesViewModel.errorEvents)
         setupErrorObserver(userViewModel.errorEvents)
 
 
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                multiplayerGameViewModel.queue.map {it.isInQueue}
+                invitesViewModel.queue.map {it.isInQueue}
                     .distinctUntilChanged()
                     .collect { isInQueue ->
                         val existing = supportFragmentManager.findFragmentByTag("queue_dialog")
@@ -105,8 +104,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 combine(
-                    multiplayerGameViewModel.incomingInvites,
-                    multiplayerGameViewModel.outgoingInvites
+                    invitesViewModel.incomingInvites,
+                    invitesViewModel.outgoingInvites
                 ) { incoming, outgoing ->
                     Pair(incoming, outgoing)
                 }.collect { (incoming, outgoing) ->
@@ -187,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                             recentGames = games,
                             onPlayAgainClick = { game ->
                                 val currentUsername = userViewModel.currentUser.value?.username ?: return@RecentGameAdapter
-                                multiplayerGameViewModel.sendGameInvitation(
+                                invitesViewModel.sendGameInvitation(
                                     currentUserId,
                                     currentUsername,
                                     game.opponentId,
@@ -195,7 +194,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                             },
                             onUserClick = { game ->
-                                com.example.ticititacititoe.profile.OtherUserProfileFragment
+                                OtherUserProfileFragment
                                     .newInstance(game.opponentId, game.opponentUsername)
                                     .show(supportFragmentManager, "other_user_profile")
                             }
@@ -217,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         val userId = userViewModel.getCurrentUserId()
         if (userId != null) {
-            multiplayerGameViewModel.leaveQueue(userId)
+            invitesViewModel.leaveQueue(userId)
         }
     }
 

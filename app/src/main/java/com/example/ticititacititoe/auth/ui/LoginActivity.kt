@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.Lifecycle
@@ -12,15 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
-import com.example.ticititacititoe.R
-import com.example.ticititacititoe.auth.AuthUiState
+import com.example.ticititacititoe.auth.state.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivityLoginBinding
 import com.example.ticititacititoe.game.ui.GameActivity
-import com.example.ticititacititoe.game.ui.QueueFragment
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 

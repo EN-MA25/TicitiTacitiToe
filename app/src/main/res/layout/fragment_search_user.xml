@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_gradient_red_orange"
-    tools:context=".profile.ui.SearchUserFragment">
+    tools:context=".user.ui.SearchUserFragment">
 
     <EditText
         android:id="@+id/search_user_edit_text"
