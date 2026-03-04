@@ -268,25 +268,22 @@ class OnlineGameActivity : AppCompatActivity() {
 
                         val currentUserId = userViewModel.getCurrentUserId()
 
+                        val resultToAdd = OnlineGameResult(
+                            playerWhoWon = winnerUid,
+                            playerWhoLost = loserUid,
+                            movesMade = onlineState.moves.size
+                        )
+                        val timestamp = System.currentTimeMillis()
+
+                        onlineGameViewModel.addOnlineGameResult(
+                            gameId, resultToAdd, timestamp, onlineState.moves.size
+                        )
+
                         if (currentUserId == winnerUid) {
-
-                            val resultToAdd = OnlineGameResult(
-                                playerWhoWon = winnerUid,
-                                playerWhoLost = loserUid,
-                                movesMade = onlineState.moves.size
-                            )
-                            val timestamp = System.currentTimeMillis()
-
-                            onlineGameViewModel.addOnlineGameResult(
-                                gameId,
-                                resultToAdd,
-                                timestamp,
-                                onlineState.moves.size
-                            )
                             onlineGameViewModel.deleteGame(gameId)
-                                chatViewModel.deleteChat(gameId)
-
+                            chatViewModel.deleteChat(gameId)
                         }
+
                         //lifecycleScope.launch {
                         //  kotlinx.coroutines.delay(500)
                         onlineGameViewModel.fetchGameResult(gameId)

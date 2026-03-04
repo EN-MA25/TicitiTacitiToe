@@ -11,7 +11,9 @@ import java.util.Locale
 class RecentGameAdapter(
     private var recentGames: List<RecentGame>,
     private val onPlayAgainClick: (RecentGame) -> Unit,
-    private val onUserClick: (RecentGame) -> Unit)
+    private val onUserClick: (RecentGame) -> Unit,
+    private val onDeleteClick: (RecentGame) -> Unit)
+
     : RecyclerView.Adapter<RecentGameAdapter.RecentGameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentGameViewHolder {
@@ -22,7 +24,7 @@ class RecentGameAdapter(
     }
 
     override fun onBindViewHolder(holder: RecentGameViewHolder, position: Int) {
-        holder.bind(recentGames[position], onPlayAgainClick, onUserClick)
+        holder.bind(recentGames[position], onPlayAgainClick, onUserClick, onDeleteClick)
     }
 
     override fun getItemCount(): Int = recentGames.size
@@ -33,9 +35,13 @@ class RecentGameAdapter(
         fun bind(
             game: RecentGame,
             onPlayAgainClick: (RecentGame) -> Unit,
-            onUserClick: (RecentGame) -> Unit
+            onUserClick: (RecentGame) -> Unit,
+            onDeleteClick: (RecentGame) -> Unit
         ){
             binding.initialsTextView.text = game.opponentUsername.take(2).uppercase()
+            binding.deleteButton.setOnClickListener {
+                onDeleteClick(game)
+            }
             binding.usernameTextView.text = game.opponentUsername
             binding.resultTextView.text = game.result
             binding.gameTimeTextView.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())

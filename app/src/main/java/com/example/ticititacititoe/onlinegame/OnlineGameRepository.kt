@@ -245,6 +245,13 @@ class OnlineGameRepository {
         return document.toObject(OnlineGameResult::class.java)
     }
 
+    suspend fun deleteRecentGame(gameId: String, userId: String) {
+        firestore.collection("onlineGameResult")
+            .document(gameId)
+            .update("deletedBy", FieldValue.arrayUnion(userId))
+            .await()
+    }
+
     fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
         Log.d("RecentGames", "FUNCTION CALLED with userId: $userId")
 
@@ -261,6 +268,10 @@ class OnlineGameRepository {
 
                 val allDocs = (wonDocs.documents + lostDocs.documents)
                     .sortedByDescending { it.getLong("timestamp") ?: 0L }
+                    .filter { doc ->
+                      val deletedBy = doc.get("deletedBy") as? List<*> ?: emptyList<String>()
+                        !deletedBy.contains(userId)
+                    }
                     .take(5)
 
                 if (allDocs.isEmpty()) {

@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.onlinegame
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.game.recentGame.RecentGame
@@ -61,6 +62,20 @@ class OnlineGameViewModel : ViewModel() {
     fun userHasLeft(gameId: String?, userId: String?) {
         repository.userHasLeft(gameId, userId)
     }
+
+    fun deleteRecentGame(gameId: String, userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+        viewModelScope.launch {
+            try {
+                repository.deleteRecentGame(gameId, userId)
+                repository.getRecentGames(userId, onResult)
+            } catch (e: Exception) {
+                Log.e("OnlineGameVM", "Failed to delete: ${e.message}")
+            }
+        }
+    }
+
+
+
 
     suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult, timestamp: Long, movesMade: Int
     ): Result<String> {
