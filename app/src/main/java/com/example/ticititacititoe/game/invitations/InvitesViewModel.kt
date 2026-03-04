@@ -84,13 +84,13 @@ class InvitesViewModel: ViewModel() {
                 try {
                     repository.sendGameInvite(fromUserId, fromUserName, toUserId, toUserName)
 
-                    delay(5000)
-                    if (inviteState.value == InviteState.Pending) {
-                        deleteInvitations(fromUserId,toUserId )
-                        _errorEvents.emit("Challenger did not respond in time.")
-                        _incomingInvites.value = emptyList()
-                        _outgoingInvites.value = emptyList()
-                    }
+//                    delay(5000)
+//                    if (inviteState.value == InviteState.Pending) {
+//                        deleteInvitations(fromUserId,toUserId )
+//                        _errorEvents.emit("Challenger did not respond in time.")
+//                        _incomingInvites.value = emptyList()
+//                        _outgoingInvites.value = emptyList()
+//                    }
                 } catch (e: Exception) {
                     _errorEvents.emit("Failed to send invite: ${e.message}")
                 }
