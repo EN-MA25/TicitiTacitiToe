@@ -13,8 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentOutgoingInviteBinding
-import com.example.ticititacititoe.game.invitations.GameInvitation
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.model.GameInvitation
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.game.invitations.state.InviteState
 import com.example.ticititacititoe.onlinegame.ui.OnlineGameActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -31,12 +31,12 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
     private var toUserId: String? = null
     private var fromUserId: String? = null
 
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
     private lateinit var binding: FragmentOutgoingInviteBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        multiplayerGameViewModel = ViewModelProvider(requireActivity())[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
         toUsername = arguments?.getString(ARG_TO_USER_NAME)
         toUserId = arguments?.getString(ARG_TO_USER_ID)
         fromUserId = arguments?.getString(ARG_FROM_USER_ID)
@@ -81,12 +81,12 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
         val invitationText = binding.invitationTextView
         invitationText.text = getString(R.string.pending_invite_to, toUsername)
 
-        multiplayerGameViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
+        invitesViewModel.startListeningToSentInvite(toUserId!!, fromUserId!!)
 
         // ================== Observe invite state ==================
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                multiplayerGameViewModel.inviteState.collect { state ->
+                invitesViewModel.inviteState.collect { state ->
 
                     // ================== Handling different conditions for invite ==================
                     when (state) {
@@ -100,7 +100,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
                             dismiss()
                         }
                         is InviteState.Declined -> {
-                            multiplayerGameViewModel.deleteInvitations(toUserId!!, fromUserId!!)
+                            invitesViewModel.deleteInvitations(toUserId!!, fromUserId!!)
                             //Toast.makeText(requireContext(), "The opponent declined your invation", Toast.LENGTH_SHORT).show()
                             dismiss()
                         }
@@ -138,7 +138,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
 
         // =========== Call viewmodel to delete in db for both (when sender cut off invation  ===========
         if (fromUserId != null && toUserId != null) {
-            multiplayerGameViewModel.deleteInvitations(
+            invitesViewModel.deleteInvitations(
                 toUserId!!,
                 fromUserId!!,
                 true

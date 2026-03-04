@@ -16,7 +16,7 @@ import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
 import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
-import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
+import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class MyProfileActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var authViewModel: AuthViewModel
 
-    private lateinit var multiplayerGameViewModel: MultiplayerGameViewModel
+    private lateinit var invitesViewModel: InvitesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +39,15 @@ class MyProfileActivity : AppCompatActivity() {
         }
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        multiplayerGameViewModel = ViewModelProvider(this)[MultiplayerGameViewModel::class.java]
+        invitesViewModel = ViewModelProvider(this)[InvitesViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
 
         val currentUserId = userViewModel.getCurrentUserId()
 
         if (currentUserId != null) {
-            multiplayerGameViewModel.startListeningForInvites(currentUserId)
-            multiplayerGameViewModel.startListeningForOutgoingInvites(currentUserId)
+            invitesViewModel.startListeningForInvites(currentUserId)
+            invitesViewModel.startListeningForOutgoingInvites(currentUserId)
         }
 
 
@@ -70,7 +70,7 @@ class MyProfileActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                multiplayerGameViewModel.incomingInvites.collect { invites ->
+                invitesViewModel.incomingInvites.collect { invites ->
                     val existing = supportFragmentManager.findFragmentByTag("invite_dialog")
 
                     if (invites.isNotEmpty()) {
