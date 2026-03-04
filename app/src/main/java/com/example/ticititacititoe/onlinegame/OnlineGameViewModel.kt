@@ -17,18 +17,17 @@ class OnlineGameViewModel : ViewModel() {
     private val repository = OnlineGameRepository()
 
     private val _gameResult = MutableStateFlow<OnlineGameResult?>(null)
+
     val gameResult = _gameResult.asStateFlow()
-    // =========== Online state ===========
+
     val onlineState: StateFlow<OnlineGameState> = repository.onlineState
 
     fun startListenToMove(gameId: String) {
         repository.startListenToMove(gameId)
     }
 
-    fun getGameIfExist(currentUserId: String?, otherUserId: String?, onResult: (Result<String?>) -> Unit) {
-        repository.getGameIfExist(currentUserId, otherUserId){ result ->
-            onResult(result)
-        }
+    suspend fun getGameIfExist(currentUserId: String?, otherUserId: String?): Result <String?> {
+       return repository.getGameIfExist(currentUserId, otherUserId)
     }
 
     suspend fun createOnlineGame(
