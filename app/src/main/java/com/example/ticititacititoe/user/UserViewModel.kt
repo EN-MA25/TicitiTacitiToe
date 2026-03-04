@@ -3,6 +3,7 @@ package com.example.ticititacititoe.user
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.friends.FriendRepository
+import com.example.ticititacititoe.user.model.User
 import com.example.ticititacititoe.user.ui.UserSearchUIModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

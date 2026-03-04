@@ -1,6 +1,6 @@
 package com.example.ticititacititoe.achievements
 
-import com.example.ticititacititoe.user.User
+import com.example.ticititacititoe.user.model.User
 
 object AchievementManager {
 

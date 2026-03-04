@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.MainActivity
 import com.example.ticititacititoe.R
-import com.example.ticititacititoe.auth.AuthUiState
+import com.example.ticititacititoe.auth.state.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.databinding.ActivitySplashBinding
 import kotlinx.coroutines.launch

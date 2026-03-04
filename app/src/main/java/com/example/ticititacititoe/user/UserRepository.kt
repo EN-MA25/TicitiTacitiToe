@@ -1,7 +1,8 @@
 package com.example.ticititacititoe.user
 
-import com.example.ticititacititoe.Util
+import com.example.ticititacititoe.util.Util
 import com.example.ticititacititoe.achievements.AchievementManager
+import com.example.ticititacititoe.user.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.FirebaseAuth

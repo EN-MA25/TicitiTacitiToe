@@ -16,6 +16,7 @@ import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import com.example.ticititacititoe.user.adapter.SearchUserRecyclerAdapter
+import com.example.ticititacititoe.user.ui.OtherUserProfileFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -73,7 +74,7 @@ class FriendFragment : BottomSheetDialogFragment() {
 
             },
             onInitialsClick = { user ->
-                com.example.ticititacititoe.user.OtherUserProfileFragment
+                OtherUserProfileFragment
                     .newInstance(user.id, user.username ?: "")
                     .show(parentFragmentManager, "other_user_profile")
             })

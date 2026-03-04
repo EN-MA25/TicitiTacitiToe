@@ -19,17 +19,18 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.game.invitations.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
 import com.example.ticititacititoe.game.invitations.MultiplayerGameViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
-import com.example.ticititacititoe.game.ui.OutgoingInviteFragment
-import com.example.ticititacititoe.game.ui.QueueFragment
+import com.example.ticititacititoe.game.invitations.ui.OutgoingInviteFragment
+import com.example.ticititacititoe.game.invitations.ui.QueueFragment
 import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
-import com.example.ticititacititoe.user.TutorialFragment
+import com.example.ticititacititoe.tutorial.TutorialFragment
+import com.example.ticititacititoe.user.ui.OtherUserProfileFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.flow.combine
 
@@ -193,7 +194,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                             },
                             onUserClick = { game ->
-                                com.example.ticititacititoe.user.OtherUserProfileFragment
+                                OtherUserProfileFragment
                                     .newInstance(game.opponentId, game.opponentUsername)
                                     .show(supportFragmentManager, "other_user_profile")
                             }

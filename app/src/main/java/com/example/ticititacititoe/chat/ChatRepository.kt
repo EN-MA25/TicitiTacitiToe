@@ -1,5 +1,7 @@
 package com.example.ticititacititoe.chat
 
+import com.example.ticititacititoe.chat.model.ChatRoom
+import com.example.ticititacititoe.chat.model.Message
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.databinding.FragmentGlobalLeaderboardBinding
 import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.leaderboard.LeaderboardAdapter
+import com.example.ticititacititoe.leaderboard.adapter.LeaderboardAdapter
 import com.example.ticititacititoe.leaderboard.LeaderboardViewModel
 
 

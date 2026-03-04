@@ -1,12 +1,14 @@
 package com.example.ticititacititoe.onlinegame
 
 import android.util.Log
-import com.example.ticititacititoe.game.GameResult
 import com.example.ticititacititoe.game.recentGame.RecentGame
+import com.example.ticititacititoe.onlinegame.constant.FirestoreCollections
+import com.example.ticititacititoe.onlinegame.model.OnlineGameResult
+import com.example.ticititacititoe.onlinegame.model.OnlineMove
+import com.example.ticititacititoe.onlinegame.state.OnlineGameState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow

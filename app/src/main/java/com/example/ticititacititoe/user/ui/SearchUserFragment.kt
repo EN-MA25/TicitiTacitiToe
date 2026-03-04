@@ -101,7 +101,7 @@ class SearchUserFragment : BottomSheetDialogFragment() {
                 friendViewModel.deleteFriend( currentUserId!!, user.id)
             },
             onInitialsClick = { user ->
-                com.example.ticititacititoe.user.OtherUserProfileFragment
+                OtherUserProfileFragment
             .newInstance(user.id, user.username ?: "")
             .show(parentFragmentManager, "other_user_profile")
             }

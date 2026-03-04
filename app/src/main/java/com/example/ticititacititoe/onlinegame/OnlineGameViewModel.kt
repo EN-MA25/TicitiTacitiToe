@@ -2,14 +2,13 @@ package com.example.ticititacititoe.onlinegame
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ticititacititoe.game.GameResult
-import com.example.ticititacititoe.game.Move
-import com.example.ticititacititoe.game.Player
 import com.example.ticititacititoe.game.recentGame.RecentGame
+import com.example.ticititacititoe.onlinegame.model.OnlineGameResult
+import com.example.ticititacititoe.onlinegame.model.OnlineMove
+import com.example.ticititacititoe.onlinegame.state.OnlineGameState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OnlineGameViewModel : ViewModel() {
@@ -63,7 +62,7 @@ class OnlineGameViewModel : ViewModel() {
         repository.userHasLeft(gameId, userId)
     }
 
-    suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult,timestamp: Long, movesMade: Int
+    suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult, timestamp: Long, movesMade: Int
     ): Result<String> {
         return repository.addOnlineGameResult(
             gameId,

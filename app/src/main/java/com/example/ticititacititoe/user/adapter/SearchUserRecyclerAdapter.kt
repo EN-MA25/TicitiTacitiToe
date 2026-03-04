@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.UserListItemBinding
-import com.example.ticititacititoe.user.User
+import com.example.ticititacititoe.user.model.User
 import com.example.ticititacititoe.user.ui.UserSearchUIModel
 
 class SearchUserRecyclerAdapter(

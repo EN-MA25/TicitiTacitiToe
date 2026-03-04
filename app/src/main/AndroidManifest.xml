@@ -24,7 +24,7 @@
             android:name=".game.ui.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".onlinegame.OnlineGameActivity"
+            android:name=".onlinegame.ui.OnlineGameActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
