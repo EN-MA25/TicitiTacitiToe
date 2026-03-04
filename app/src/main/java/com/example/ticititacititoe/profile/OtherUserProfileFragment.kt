@@ -65,6 +65,34 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
             userViewModel.fetchUserById(otherUserId)
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                friendViewModel.friendId.collect { friendIds ->
+                    if (friendIds.contains(otherUserId)) {
+                        binding.friendsImageButton.setImageResource(R.drawable.delete_friend)
+                        if (currentUserId != null) {
+                            binding.friendsImageButton.setOnClickListener {
+                                friendViewModel.deleteFriend(currentUserId!!, otherUserId)
+
+                            }
+                        }
+                    } else {
+                        binding.friendsImageButton.setImageResource(R.drawable.add_friend)
+                        if (currentUserId != null) {
+                            binding.friendsImageButton.setOnClickListener {
+                                friendViewModel.addFriend(currentUserId!!, otherUserId)
+
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+
+
     }
 
     override fun onCreateView(
@@ -155,21 +183,6 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
                 otherUserId,
                 otherUsername
             )
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                userViewModel.searchUIList.collect { list ->
-                    val isFriend = list.find { it.user.id == otherUserId }?.isFriend ?: false
-                    binding.friendsImageButton.setOnClickListener {
-                        if (isFriend) {
-                            friendViewModel.deleteFriend(currentUserId!!, otherUserId)
-                        } else {
-                            friendViewModel.addFriend(currentUserId!!, otherUserId)
-                        }
-                    }
-                }
-            }
         }
     }
 }
