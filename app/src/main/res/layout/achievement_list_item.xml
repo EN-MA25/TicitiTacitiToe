@@ -26,7 +26,8 @@
             android:shadowRadius="8"
             android:text="Title"
             android:textColor="@color/black"
-            android:textSize="@dimen/_18sp" />
+            android:textSize="@dimen/_18sp"
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/achievement_unlocked_text_view"
             android:layout_width="wrap_content"
@@ -34,7 +35,8 @@
             android:layout_marginHorizontal="@dimen/_20dp"
             android:fontFamily="@font/comic_neue_bold_italic"
             android:textColor="@color/black"
-            android:text="Unlocked"/>
+            android:text="Unlocked"
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/achievement_description_text_view"
             android:layout_width="wrap_content"
@@ -42,7 +44,9 @@
             android:layout_marginHorizontal="@dimen/_20dp"
             android:fontFamily="@font/comic_neue_bold_italic"
             android:textColor="@color/black"
-            android:text="Description"/>
+            android:text="Description"
+            android:layout_marginBottom="@dimen/_8dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

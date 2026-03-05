@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".user.ui.AchievementsFragment">
+    tools:context=".user.ui.AchievementsFragment"
+    android:background="@color/green">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_margin="@dimen/_20dp"

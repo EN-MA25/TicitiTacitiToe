@@ -3,6 +3,15 @@
     android:id="@+id/headerTitleTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/bangers"
+    android:letterSpacing="0.05"
+    android:shadowColor="@color/black"
+    android:shadowDx="4"
+    android:shadowDy="4"
+    android:shadowRadius="8"
+    android:text="achievements"
+    android:textColor="@color/red"
+    android:textSize="@dimen/_30sp"
     android:padding="16dp"
-    android:textSize="18sp"
-    android:textStyle="bold" />
+    android:textStyle="bold"
+    android:background="@color/green"/>
