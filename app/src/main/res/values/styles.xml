@@ -33,7 +33,7 @@
     <style name="InitialsTextView">
         <item name="android:layout_width">@dimen/_40dp</item>
         <item name="android:layout_height">@dimen/_40dp</item>
-        <item name="android:background">@drawable/bg_profile_100_75</item>
+        <item name="android:background">@drawable/bg_profile_icon_100_75</item>
         <item name="android:backgroundTint">@color/yellow</item>
         <item name="android:fontFamily">@font/permanent_marker</item>
         <item name="android:gravity">center</item>
