@@ -150,8 +150,11 @@ class OnlineGameActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                userViewModel.achievementEvents.collect { achievements ->
-                    showAchievementsPopup(achievements)
+                userViewModel.gameResultEvents.collect { gameResult ->
+                    //showAchievementsPopup(achievements)
+                    val dialog = GameOverFragment(gameResult)
+                    dialog.isCancelable = false
+                    dialog.show(supportFragmentManager, "game_over_dialog")
                 }
             }
         }
@@ -300,17 +303,17 @@ class OnlineGameActivity : AppCompatActivity() {
                 }
             }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                onlineGameViewModel.gameResult.collect { result ->
-                    result?.let {
-                        val dialog = GameOverFragment(playerX)
-                        dialog.isCancelable = false
-                        dialog.show(supportFragmentManager, "game_over_dialog")
-                    }
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                onlineGameViewModel.gameResult.collect { result ->
+//                    result?.let {
+//                        val dialog = GameOverFragment(playerX)
+//                        dialog.isCancelable = false
+//                        dialog.show(supportFragmentManager, "game_over_dialog")
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun renderStatus(state: OnlineGameState) {

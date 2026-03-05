@@ -2,11 +2,12 @@ package com.example.ticititacititoe.user
 
 import com.example.ticititacititoe.util.Util
 import com.example.ticititacititoe.achievements.AchievementManager
+import com.example.ticititacititoe.onlinegame.model.GameResultEvent
 import com.example.ticititacititoe.user.model.User
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
@@ -85,7 +86,7 @@ class UserRepository {
         opponent: User,
         didWin: Boolean,
         movesMade: Int
-    ): List<String> {
+    ): GameResultEvent {
 
         val newRating = Util.newRating(
             me.rating,
@@ -97,6 +98,7 @@ class UserRepository {
         val newCurrentStreak = if (didWin) me.currentStreak + 1 else 0
         val newMaxStreak = maxOf(newCurrentStreak, me.maxStreak)
         val newTotalMovesMade = me.totalMovesMade + movesMade
+        val now = Timestamp.now()
 
         val updatedUser = me.copy(
             totalGames = me.totalGames + 1,
@@ -105,7 +107,10 @@ class UserRepository {
             rating = newRating,
             currentStreak = newCurrentStreak,
             maxStreak = newMaxStreak,
-            totalMovesMade = newTotalMovesMade
+            totalMovesMade = newTotalMovesMade,
+            lastPlayedGame = now,
+            lastWonGame = if (didWin) now else me.lastWonGame,
+            lastLostGame = if (didWin) me.lastLostGame else now
         )
 
         val newAchievements =
@@ -113,10 +118,10 @@ class UserRepository {
 
         val ref = db.collection("users").document(me.id)
 
-        val now = FieldValue.serverTimestamp()
+
         db.runTransaction { transaction ->
 
-            val updates = mutableMapOf<String, Any>(
+            val updates = mutableMapOf<String, Any?>(
                 "totalGames" to updatedUser.totalGames,
                 "wonGames" to updatedUser.wonGames,
                 "lostGames" to updatedUser.lostGames,
@@ -124,25 +129,21 @@ class UserRepository {
                 "currentStreak" to updatedUser.currentStreak,
                 "maxStreak" to updatedUser.maxStreak,
                 "totalMovesMade" to updatedUser.totalMovesMade,
-                "lastPlayedGame" to now
-            )
+                "lastPlayedGame" to updatedUser.lastPlayedGame,
+                "lastWonGame" to updatedUser.lastWonGame,
+                "lastLostGame" to updatedUser.lastLostGame
+                )
 
-            if (didWin) {
-                updates["lastWonGame"] = now
-            } else {
-                updates["lastLostGame"] = now
-            }
 
             for (id in newAchievements) {
-                updates["achievements.$id"] =
-                    now
+                updates["achievements.$id"] = now
             }
 
             transaction.update(ref, updates)
 
         }.await()
 
-        return newAchievements
+        return GameResultEvent(newAchievements, updatedUser, opponent.username!!, opponent.id, didWin)
     }
     suspend fun getUserStats(userId: String): Triple<Int, Int, Int> {
         val wonSnapshot = db.collection("onlineGameResult")

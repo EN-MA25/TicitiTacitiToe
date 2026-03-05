@@ -3,6 +3,7 @@ package com.example.ticititacititoe.user
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ticititacititoe.friends.FriendRepository
+import com.example.ticititacititoe.onlinegame.model.GameResultEvent
 import com.example.ticititacititoe.user.model.User
 import com.example.ticititacititoe.user.ui.UserSearchUIModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,8 +25,8 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
-    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
-    val userStats = _userStats.asStateFlow()
+//    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
+//    val userStats = _userStats.asStateFlow()
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
@@ -33,6 +34,9 @@ class UserViewModel(): ViewModel() {
     val errorEvents = _errorEvents.asSharedFlow()
     private val _viewedUser = MutableStateFlow<User?>(null)
     val viewedUser = _viewedUser.asStateFlow()
+
+    private val _gameResultEvents = MutableSharedFlow<GameResultEvent>()
+    val gameResultEvents = _gameResultEvents.asSharedFlow()
 
     fun fetchUserById(userId: String) {
         viewModelScope.launch {
@@ -44,8 +48,7 @@ class UserViewModel(): ViewModel() {
         }
     }
 
-    private val _achievementEvents = MutableSharedFlow<List<String>>()
-    val achievementEvents = _achievementEvents.asSharedFlow()
+
 
     fun startFriendListener(currentUserId: String) {
         viewModelScope.launch {
@@ -131,10 +134,8 @@ class UserViewModel(): ViewModel() {
     fun updateUserAfterGame(me: User, opponent: User, didWin: Boolean, movesMade: Int) {
         viewModelScope.launch {
             try {
-                val newAchievements = repository.updateUserAfterGame(me, opponent, didWin, movesMade)
-                if (newAchievements.isNotEmpty()) {
-                    _achievementEvents.emit(newAchievements)
-                }
+                val gameResult = repository.updateUserAfterGame(me, opponent, didWin, movesMade)
+                _gameResultEvents.emit(gameResult)
             } catch (e: Exception) {
                 // handle error
             }
@@ -151,15 +152,15 @@ class UserViewModel(): ViewModel() {
             }
         }
     }
-    fun fetchUserStats(userId: String) {
-        viewModelScope.launch {
-            try {
-                _userStats.value = repository.getUserStats(userId)
-            } catch (e: Exception) {
-                _userStats.value = Triple(0, 0, 0)
-            }
-        }
-    }
+//    fun fetchUserStats(userId: String) {
+//        viewModelScope.launch {
+//            try {
+//                _userStats.value = repository.getUserStats(userId)
+//            } catch (e: Exception) {
+//                _userStats.value = Triple(0, 0, 0)
+//            }
+//        }
+//    }
 
 
     val friendUIList: StateFlow<List<UserSearchUIModel>> = combine(

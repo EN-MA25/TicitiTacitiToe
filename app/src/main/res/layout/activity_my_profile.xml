@@ -89,6 +89,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username_text_view">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/achievements_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20dp"
+            android:background="@drawable/bg_button_green"
+            android:fontFamily="@font/bangers"
+            android:paddingBottom="4dp"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:text="Achievements"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
         <!-- Streaks -->
         <LinearLayout
             android:id="@+id/streak_container"
@@ -242,6 +258,8 @@
                 android:textColor="@color/black"/>
 
         </LinearLayout>
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
