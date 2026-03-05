@@ -2,7 +2,6 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/_6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,61 +15,63 @@
             android:layout_height="60dp"
             android:background="@drawable/star"
             android:backgroundTint="@color/red"
-            app:layout_constraintTop_toTopOf="@id/initials_text_view"
             app:layout_constraintBottom_toBottomOf="@+id/initials_text_view"
             app:layout_constraintEnd_toEndOf="@+id/initials_text_view"
-            app:layout_constraintStart_toStartOf="@+id/initials_text_view" />
+            app:layout_constraintHorizontal_bias="0.45"
+            app:layout_constraintStart_toStartOf="@+id/initials_text_view"
+            app:layout_constraintTop_toTopOf="@id/initials_text_view"
+            app:layout_constraintVertical_bias="0.312" />
 
         <ImageButton
             android:id="@+id/delete_button"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="delete"
             app:tint="@color/black"
             android:scaleType="center"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/initials_text_view"
-            app:layout_constraintStart_toStartOf="@id/initials_text_view"
-            app:layout_constraintEnd_toEndOf="@id/initials_text_view"
+            android:layout_marginEnd="@dimen/_8dp"
+            app:layout_constraintEnd_toStartOf="@id/play_again_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
 
         <TextView
-        android:id="@+id/initials_text_view"
-        style="@style/InitialsTextView"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="SM"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/game_time_text_view"
-         />
+            android:id="@+id/initials_text_view"
+            style="@style/InitialsTextView"
+            android:layout_marginStart="8dp"
+            android:text="SM"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/username_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20dp"
-            android:layout_marginTop="8dp"
             android:fontFamily="@font/permanent_marker"
             android:shadowColor="@color/red"
             android:shadowDx="4"
             android:shadowDy="4"
             android:shadowRadius="8"
-            android:text="Username + ranking"
+            android:text="Username"
             android:textColor="@color/black"
             android:textSize="@dimen/_18sp"
             app:layout_constraintStart_toEndOf="@id/initials_text_view"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/result_text_view"
+/>
 
         <TextView
             android:id="@+id/result_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20dp"
+            android:layout_marginTop="@dimen/_8dp"
             android:fontFamily="@font/comic_neue_bold_italic"
             app:layout_constraintStart_toEndOf="@id/initials_text_view"
-            app:layout_constraintTop_toBottomOf="@id/username_text_view"
+            app:layout_constraintTop_toTopOf="parent"
             android:textColor="@color/black"
             android:text="Result"/>
 
@@ -79,22 +80,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comic_neue_bold_italic"
-            app:layout_constraintStart_toStartOf="@id/result_text_view"
-            app:layout_constraintTop_toBottomOf="@id/result_text_view"
-            android:layout_marginBottom="@dimen/_6dp"
+            android:layout_marginBottom="@dimen/_8dp"
             android:textColor="@color/black"
-            android:text="Game time"/>
+            android:text="Game time"
+            app:layout_constraintStart_toStartOf="@id/moves_made_text_view"
+            app:layout_constraintTop_toBottomOf="@id/moves_made_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
         <TextView
             android:id="@+id/moves_made_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comic_neue_bold_italic"
-            android:layout_marginHorizontal="@dimen/_6dp"
-            android:layout_marginBottom="@dimen/_6dp"
-            app:layout_constraintStart_toEndOf="@id/game_time_text_view"
-            app:layout_constraintTop_toBottomOf="@id/result_text_view"
-
+            app:layout_constraintStart_toStartOf="@id/username_text_view"
+            app:layout_constraintTop_toBottomOf="@id/username_text_view"
             android:textColor="@color/black"
             android:text="Moves made"/>
 

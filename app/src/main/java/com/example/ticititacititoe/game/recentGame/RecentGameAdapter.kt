@@ -43,10 +43,10 @@ class RecentGameAdapter(
                 onDeleteClick(game)
             }
             binding.usernameTextView.text = game.opponentUsername
-            binding.resultTextView.text = game.result
+            binding.resultTextView.text = "You ${game.result} against: "
             binding.gameTimeTextView.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 .format(Date(game.timestamp))
-            binding.movesMadeTextView.text = "${game.movesMade} moves"
+            binding.movesMadeTextView.text = "in ${game.movesMade} moves"
             binding.playAgainButton.setOnClickListener {
                 onPlayAgainClick(game)
             }
