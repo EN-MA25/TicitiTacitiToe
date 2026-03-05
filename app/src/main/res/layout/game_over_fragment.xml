@@ -2,46 +2,48 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="200dp"
-    android:background="@drawable/comic_text_bubble_400_350"
-    android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:background="@drawable/explosion_bg"
+    android:backgroundTint="@color/orange"
+    >
 
     <TextView
         android:id="@+id/game_over_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20dp"
+        android:layout_marginEnd="@dimen/_20dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/permanent_marker"
         android:gravity="center"
         android:text="Player X won"
         android:textAlignment="center"
-        android:layout_marginEnd="@dimen/_20dp"
-        android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/moves_text_view"
+        android:textSize="@dimen/_30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/moves_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/permanent_marker"
         android:gravity="center"
         android:text="In 3 moves"
         android:textAlignment="center"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/game_over_text_view"
-        app:layout_constraintStart_toStartOf="@id/game_over_text_view"
-        app:layout_constraintEnd_toEndOf="@id/game_over_text_view"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/play_again_button"
-         />
+        app:layout_constraintEnd_toEndOf="@id/game_over_text_view"
+        app:layout_constraintStart_toStartOf="@id/game_over_text_view" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/new_achievements_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_button_green"
         android:fontFamily="@font/bangers"
         android:letterSpacing="0.1"
@@ -55,59 +57,57 @@
         android:text="New achievements"
         android:textColor="@color/white"
         android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/game_over_text_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/play_again_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play again"
-        android:shadowColor="@color/black"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/bg_button_green"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:paddingHorizontal="@dimen/_18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp"
+        android:shadowColor="@color/black"
         android:shadowDx="4"
         android:shadowDy="4"
         android:shadowRadius="8"
-        android:textSize="22sp"
-        android:fontFamily="@font/bangers"
+        android:text="Play again"
         android:textColor="@color/white"
-        android:paddingTop="6dp"
-        android:paddingBottom="12dp"
-        android:paddingHorizontal="@dimen/_18dp"
-        android:letterSpacing="0.1"
-        app:layout_constraintEnd_toStartOf="@id/close_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/moves_text_view"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/close_button"
 
 
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Close"
+        android:layout_margin="@dimen/_20dp"
         android:background="@drawable/bg_button_red"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:paddingHorizontal="@dimen/_18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp"
         android:shadowColor="@color/black"
         android:shadowDx="4"
         android:shadowDy="4"
         android:shadowRadius="8"
-        android:textSize="22sp"
-        android:fontFamily="@font/bangers"
+        android:text="Close"
         android:textColor="@color/white"
-        android:paddingTop="6dp"
-        android:paddingBottom="12dp"
-        android:paddingHorizontal="@dimen/_18dp"
-        android:letterSpacing="0.1"
-        android:layout_margin="@dimen/_20dp"
-        app:layout_constraintStart_toEndOf="@id/play_again_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/moves_text_view"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/play_again_button"
+        app:layout_constraintTop_toTopOf="@+id/play_again_button" />
 
 
 
