@@ -24,8 +24,8 @@ class UserViewModel(): ViewModel() {
     val currentUser = _currentUser.asStateFlow()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
-    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
-    val userStats = _userStats.asStateFlow()
+//    private val _userStats = MutableStateFlow(Triple(0, 0, 0))
+//    val userStats = _userStats.asStateFlow()
     private val _friends = MutableStateFlow<List<User>>(emptyList())
     private val _friendIds = MutableStateFlow<Set<String>>(emptySet())
     private val friendRepository = FriendRepository()
@@ -151,15 +151,15 @@ class UserViewModel(): ViewModel() {
             }
         }
     }
-    fun fetchUserStats(userId: String) {
-        viewModelScope.launch {
-            try {
-                _userStats.value = repository.getUserStats(userId)
-            } catch (e: Exception) {
-                _userStats.value = Triple(0, 0, 0)
-            }
-        }
-    }
+//    fun fetchUserStats(userId: String) {
+//        viewModelScope.launch {
+//            try {
+//                _userStats.value = repository.getUserStats(userId)
+//            } catch (e: Exception) {
+//                _userStats.value = Triple(0, 0, 0)
+//            }
+//        }
+//    }
 
 
     val friendUIList: StateFlow<List<UserSearchUIModel>> = combine(

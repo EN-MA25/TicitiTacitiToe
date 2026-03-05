@@ -12,6 +12,11 @@ object Util {
         return sdf.format(timestamp.toDate())
     }
 
+    fun formatDate(timestamp: Timestamp, format: String): String {
+        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        return sdf.format(timestamp.toDate())
+    }
+
     fun newRating(myRating: Int, opponentRating: Int, gamesPlayed: Int, score: Double): Int {
         val kValue = when {
             gamesPlayed <= 10 -> 60

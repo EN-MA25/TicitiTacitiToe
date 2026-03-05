@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    android:layout_marginVertical="@dimen/_6dp"
+    android:backgroundTint="@color/light_yellow"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_6dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/achievement_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/permanent_marker"
+            android:shadowColor="@color/red"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:text="Title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sp" />
+        <TextView
+            android:id="@+id/achievement_unlocked_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20dp"
+            android:fontFamily="@font/comic_neue_bold_italic"
+            android:textColor="@color/black"
+            android:text="Unlocked"/>
+        <TextView
+            android:id="@+id/achievement_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20dp"
+            android:fontFamily="@font/comic_neue_bold_italic"
+            android:textColor="@color/black"
+            android:text="Description"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

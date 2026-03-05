@@ -34,10 +34,20 @@ object AchievementManager {
             }
     }
 
-    fun userAchievements(user: User): List<Achievement> {
-        return achievements
-            .filter { achievement ->
-                user.achievements.containsKey(achievement.id)
+    fun userAchievements(user: User): List<UserAchievement> {
+        return achievements.mapNotNull { achievement ->
+            val unlockedAt = user.achievements[achievement.id]
+            if (unlockedAt != null) {
+                UserAchievement(achievement, unlockedAt)
+            } else {
+                null
             }
+        }.sortedBy { it.unlockedAt }.reversed()
+    }
+
+    fun lockedAchievements(user: User): List<Achievement> {
+        return achievements.filter { achievement ->
+            !user.achievements.containsKey(achievement.id)
+        }
     }
 }

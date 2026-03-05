@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
+import com.example.ticititacititoe.achievements.AchievementManager
 import com.example.ticititacititoe.auth.state.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
@@ -85,13 +86,8 @@ class MyProfileActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-
             }
-
-
         }
-
 
         binding.backButton.setOnClickListener {
             finish()
@@ -105,32 +101,36 @@ class MyProfileActivity : AppCompatActivity() {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         userViewModel.fetchCurrentUser()
 
-        val userId = userViewModel.getCurrentUserId()
-        if (userId != null) {
-            userViewModel.fetchUserStats(userId)
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userViewModel.currentUser.collect { user ->
-                    binding.usernameTextView.text = "${user?.username} ${user?.rating}"
-                    binding.initialsTextView.text = user?.username?.take(2)
-                    binding.currentStreakTextView.text = getString(R.string.current_streak, user?.currentStreak)
-                    binding.maxStreakTextView.text = getString(R.string.max_streak, user?.maxStreak)
+                    user?.let {
+                        binding.usernameTextView.text = "${user.username} ${user.rating}"
+                        binding.initialsTextView.text = user.username?.take(2)
+                        binding.currentStreakTextView.text =
+                            getString(R.string.current_streak, user.currentStreak)
+                        binding.maxStreakTextView.text =
+                            getString(R.string.max_streak, user.maxStreak)
+                        binding.wonGamesNumberTextView.text = user.wonGames.toString()
+                        binding.lostGamesNumberTextView.text = user.lostGames.toString()
+                        binding.totalGamesNumberTextView.text = user.totalGames.toString()
+
+                        binding.achievementsButton.text = "Achievements ${user.achievements.size}/${AchievementManager.achievements.size}"
+
+                        binding.achievementsButton.setOnClickListener {
+                            val fragment = AchievementsFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString(USER_ID, user.id)
+                                }
+                            }
+                            fragment.show(supportFragmentManager, "achievement_fragment_dialog")
+                        }
+
+                    }
 
                 }
             }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                userViewModel.userStats.collect { (won, lost, total) ->
-                    binding.wonGamesNumberTextView.text = won.toString()
-                    binding.lostGamesNumberTextView.text = lost.toString()
-                    binding.totalGamesNumberTextView.text = total.toString()
-                }
-            }
-        }
-
-
     }
 }
