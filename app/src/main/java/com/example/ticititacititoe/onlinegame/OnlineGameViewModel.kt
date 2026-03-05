@@ -51,10 +51,6 @@ class OnlineGameViewModel : ViewModel() {
         )
     }
 
-    fun updateGameResult(gameId: String, result: String) {
-        repository.updateGameResult(gameId, result)
-    }
-
     suspend fun deleteGame(gameId: String?): Result <String> {
        return repository.deleteGame(gameId)
     }
@@ -73,9 +69,6 @@ class OnlineGameViewModel : ViewModel() {
             }
         }
     }
-
-
-
 
     suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult, timestamp: Long, movesMade: Int
     ): Result<String> {

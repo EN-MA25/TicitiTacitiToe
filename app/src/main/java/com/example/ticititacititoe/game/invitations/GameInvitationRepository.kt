@@ -183,7 +183,6 @@ class GameInvitationRepository {
     }
 
     // ============ decline =========
-
     suspend fun declineInvitation(currentUserId: String,
                          otherUserId: String) {
         val batch = db.batch()
