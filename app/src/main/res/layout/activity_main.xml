@@ -7,9 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_red_orange_w_yellow_lines">
 
-
-
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/highscore_button"
         android:layout_width="80dp"
@@ -104,17 +101,23 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/tutorialButton"
-        android:layout_width="@dimen/_40dp"
-        android:layout_height="@dimen/_40dp"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:text="?"
+        android:text="@string/questionmark"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/_16sp"
+        android:textSize="@dimen/_24sp"
         app:backgroundTint="@color/green"
         app:cornerRadius="60dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="4dp"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:shadowColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

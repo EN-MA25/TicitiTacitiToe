@@ -81,6 +81,7 @@
     <string name="ok">OK</string>
     <string name="error">ERROR!</string>
     <string name="back_button">Back button</string>
+    <string name="questionmark">\?</string>
 
 
 </resources>
