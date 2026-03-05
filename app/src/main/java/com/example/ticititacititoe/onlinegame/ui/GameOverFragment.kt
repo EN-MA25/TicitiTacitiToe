@@ -12,20 +12,24 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.databinding.GameOverFragmentBinding
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.onlinegame.OnlineGameViewModel
+import com.example.ticititacititoe.onlinegame.model.GameResultEvent
 import com.example.ticititacititoe.user.UserViewModel
+import com.example.ticititacititoe.user.ui.AchievementsFragment
+import com.example.ticititacititoe.user.ui.USER_ID
 import kotlinx.coroutines.launch
 
-class GameOverFragment(playerX: String?) : DialogFragment() {
+class GameOverFragment(gameResult: GameResultEvent) : DialogFragment() {
 
-    private var _playerX = playerX
+    //private var _playerX = playerX
+    private var _gameResult = gameResult
     private var _binding: GameOverFragmentBinding? = null
     private val binding get() = _binding!!
-    private var currentUserId: String? = ""
-    private var opponentUserId: String? = ""
-    private var opponentUsername: String? = ""
-    private var currentUsername: String? = ""
-    private lateinit var onlineGameViewModel: OnlineGameViewModel
-    private lateinit var userViewModel: UserViewModel
+    //private var currentUserId: String? = ""
+    //private var opponentUserId: String? = ""
+    //private var opponentUsername: String? = ""
+    //private var currentUsername: String? = ""
+    //private lateinit var onlineGameViewModel: OnlineGameViewModel
+    //private lateinit var userViewModel: UserViewModel
     private lateinit var invitesViewModel: InvitesViewModel
 
     override fun onCreateView(
@@ -39,56 +43,82 @@ class GameOverFragment(playerX: String?) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        //userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
 
-        onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
+        //onlineGameViewModel = ViewModelProvider(requireActivity())[OnlineGameViewModel::class.java]
         invitesViewModel = ViewModelProvider(requireActivity())[InvitesViewModel::class.java]
 
-        currentUserId = userViewModel.getCurrentUserId() ?: return
+        //currentUserId = userViewModel.getCurrentUserId() ?: return
 
         binding.closeButton.setOnClickListener {
             dismiss()
             requireActivity().finish()
         }
 
-        binding.playAgainButton.setOnClickListener {
-        }
+        // Just some examples how to show it
+        binding.gameOverTextView.text = if (_gameResult.didWin) "Congratulation! You Won!" else "Sorry. You Lost!"
+        binding.movesTextView.text = "Your new rating is ${_gameResult.user.rating}"
 
-          userViewModel.getUserDetailsById(currentUserId) {user ->
-              currentUsername = user?.username
-          }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                onlineGameViewModel.gameResult.collect { result ->
-                    result?.let { gameResult ->
-                        binding.gameOverTextView.text = if (gameResult.playerWhoWon == currentUserId) {
-                            if(gameResult.playerWhoWon == _playerX) "Player X Won" else "Player O Won"
-                        } else {
-                            if(gameResult.playerWhoLost == _playerX) "Player X Lost" else "Player O Lost"
-                        }
-                        if (currentUserId == gameResult.playerWhoWon) {
-                            userViewModel.getUserDetailsById(gameResult.playerWhoLost) { user ->
-                                opponentUsername = user?.username
-                                opponentUserId = user?.id
-                            }
-                        } else {
-                            userViewModel.getUserDetailsById(gameResult.playerWhoWon) { user ->
-                                opponentUsername = user?.username
-                                opponentUserId = user?.id
-                            }
-                        }
-
-                        binding.playAgainButton.setOnClickListener {
-                            invitesViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
-                            dismiss()
-                            requireActivity().finish()
-                        }
-                        binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"
+        if (_gameResult.newAchievements.isNotEmpty()) {
+            // Show button that you got new achievements
+            binding.newAchievementsButton.visibility = View.VISIBLE
+            binding.newAchievementsButton.text = "You got ${_gameResult.newAchievements.size} new achievements"
+            binding.newAchievementsButton.setOnClickListener {
+                val fragment = AchievementsFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(USER_ID, _gameResult.user.id)
                     }
                 }
+                fragment.show(parentFragmentManager, "achievement_fragment_dialog")
             }
+
+        } else {
+            binding.newAchievementsButton.visibility = View.GONE
+            // Hide button
+
         }
+
+        binding.playAgainButton.setOnClickListener {
+            invitesViewModel.sendGameInvitation(_gameResult.user.id, _gameResult.user.username!!, _gameResult.opponentUserId, _gameResult.opponentUsername)
+            dismiss()
+            requireActivity().finish()
+        }
+
+//          userViewModel.getUserDetailsById(currentUserId) {user ->
+//              currentUsername = user?.username
+//          }
+
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                onlineGameViewModel.gameResult.collect { result ->
+//                    result?.let { gameResult ->
+//                        binding.gameOverTextView.text = if (gameResult.playerWhoWon == currentUserId) {
+//                            if(gameResult.playerWhoWon == _playerX) "Player X Won" else "Player O Won"
+//                        } else {
+//                            if(gameResult.playerWhoLost == _playerX) "Player X Lost" else "Player O Lost"
+//                        }
+//                        if (currentUserId == gameResult.playerWhoWon) {
+//                            userViewModel.getUserDetailsById(gameResult.playerWhoLost) { user ->
+//                                opponentUsername = user?.username
+//                                opponentUserId = user?.id
+//                            }
+//                        } else {
+//                            userViewModel.getUserDetailsById(gameResult.playerWhoWon) { user ->
+//                                opponentUsername = user?.username
+//                                opponentUserId = user?.id
+//                            }
+//                        }
+//
+//                        binding.playAgainButton.setOnClickListener {
+//                            invitesViewModel.sendGameInvitation(currentUserId, currentUsername!!, opponentUserId!!, opponentUsername!!)
+//                            dismiss()
+//                            requireActivity().finish()
+//                        }
+//                        binding.movesTextView.text = "${gameResult.movesMade} \n total moves made"
+//                    }
+//                }
+//            }
+//        }
 
     }
 

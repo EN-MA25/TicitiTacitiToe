@@ -38,7 +38,26 @@
         app:layout_constraintBottom_toTopOf="@id/play_again_button"
          />
 
-
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/new_achievements_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_button_green"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:paddingHorizontal="@dimen/_18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:text="New achievements"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/play_again_button"

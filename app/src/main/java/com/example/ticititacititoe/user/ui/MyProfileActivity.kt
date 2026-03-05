@@ -119,6 +119,7 @@ class MyProfileActivity : AppCompatActivity() {
                         binding.achievementsButton.text = "Achievements ${user.achievements.size}/${AchievementManager.achievements.size}"
 
                         binding.achievementsButton.setOnClickListener {
+
                             val fragment = AchievementsFragment().apply {
                                 arguments = Bundle().apply {
                                     putString(USER_ID, user.id)

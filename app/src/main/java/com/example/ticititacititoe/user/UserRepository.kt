@@ -2,6 +2,7 @@ package com.example.ticititacititoe.user
 
 import com.example.ticititacititoe.util.Util
 import com.example.ticititacititoe.achievements.AchievementManager
+import com.example.ticititacititoe.onlinegame.model.GameResultEvent
 import com.example.ticititacititoe.user.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -85,7 +86,7 @@ class UserRepository {
         opponent: User,
         didWin: Boolean,
         movesMade: Int
-    ): List<String> {
+    ): GameResultEvent {
 
         val newRating = Util.newRating(
             me.rating,
@@ -142,7 +143,7 @@ class UserRepository {
 
         }.await()
 
-        return newAchievements
+        return GameResultEvent(newAchievements, updatedUser, opponent.username!!, opponent.id, didWin)
     }
     suspend fun getUserStats(userId: String): Triple<Int, Int, Int> {
         val wonSnapshot = db.collection("onlineGameResult")
