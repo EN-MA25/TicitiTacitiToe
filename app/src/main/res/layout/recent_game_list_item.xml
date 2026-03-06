@@ -34,8 +34,7 @@
             android:layout_marginEnd="@dimen/_8dp"
             app:layout_constraintEnd_toStartOf="@id/play_again_button"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:id="@+id/initials_text_view"
@@ -60,8 +59,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_18sp"
             app:layout_constraintStart_toEndOf="@id/initials_text_view"
-            app:layout_constraintTop_toBottomOf="@id/result_text_view"
-/>
+            app:layout_constraintTop_toBottomOf="@id/result_text_view" />
 
         <TextView
             android:id="@+id/result_text_view"
@@ -85,8 +83,7 @@
             android:text="Game time"
             app:layout_constraintStart_toStartOf="@id/moves_made_text_view"
             app:layout_constraintTop_toBottomOf="@id/moves_made_text_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:id="@+id/moves_made_text_view"
@@ -97,16 +94,6 @@
             app:layout_constraintTop_toBottomOf="@id/username_text_view"
             android:textColor="@color/black"
             android:text="Moves made"/>
-
-<!--        <Button-->
-<!--            android:id="@+id/chat_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="@dimen/_6dp"-->
-<!--            android:text="Chat"-->
-<!--            app:layout_constraintStart_toEndOf="@id/initials_text_view"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/moves_made_text_view" />-->
-
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/play_again_button"
@@ -127,18 +114,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/friends_image_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/add_friend"-->
-<!--            android:contentDescription="friend"-->
-<!--            android:layout_marginEnd="@dimen/_8dp"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/play_again_button"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

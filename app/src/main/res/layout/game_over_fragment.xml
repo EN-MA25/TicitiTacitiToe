@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
     android:background="@drawable/explosion_bg"
-    android:backgroundTint="@color/orange"
-    >
+    android:backgroundTint="@color/orange">
 
     <TextView
         android:id="@+id/game_over_text_view"
@@ -76,15 +74,12 @@
         android:shadowDx="4"
         android:shadowDy="4"
         android:shadowRadius="8"
-        android:text="Play again"
+        android:text="@string/play_again"
         android:textColor="@color/white"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/close_button"
-
-
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/close_button"
@@ -101,14 +96,12 @@
         android:shadowDx="4"
         android:shadowDy="4"
         android:shadowRadius="8"
-        android:text="Close"
+        android:text="@string/close"
         android:textColor="@color/white"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/play_again_button"
         app:layout_constraintTop_toTopOf="@+id/play_again_button" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

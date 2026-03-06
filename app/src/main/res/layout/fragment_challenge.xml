@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".game.ui.ChallengeFragment">
 
+    <!-- Background Boxes -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,6 +37,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/rectangle_gray" />
 
+        <!-- More boxes -->
 <!--        <ImageView-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="0dp"-->
@@ -72,7 +74,7 @@
         android:background="@drawable/speech_bubble_round_dots_200"
         android:fontFamily="@font/permanent_marker"
         android:textColor="@color/black"
-        android:textSize="@dimen/_18dp"
+        android:textSize="@dimen/_18sp"
         android:paddingBottom="@dimen/_18dp"
         android:text="@string/play_on_this_phone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,14 +90,13 @@
         android:background="@drawable/speech_rectangle_300_200"
         android:fontFamily="@font/permanent_marker"
         android:text="@string/play_a_random_dude"
-        android:textSize="@dimen/_18dp"
+        android:textSize="@dimen/_18sp"
         android:paddingBottom="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.84"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/play_on_phone_button"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/search_player_button"
@@ -107,13 +108,12 @@
         android:paddingBottom="@dimen/_18dp"
         android:text="@string/search_player"
         android:textColor="@color/black"
-        android:textSize="@dimen/_18dp"
+        android:textSize="@dimen/_18sp"
         app:layout_constraintBottom_toTopOf="@id/play_with_friend_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/play_on_phone_button" />
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/play_with_friend_button"
@@ -124,7 +124,7 @@
         android:background="@drawable/speech_bubble_round_300_220"
         android:fontFamily="@font/permanent_marker"
         android:text="@string/play_with_a_friend"
-        android:textSize="@dimen/_18dp"
+        android:textSize="@dimen/_18sp"
         android:paddingBottom="@dimen/_18dp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +132,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_player_button"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

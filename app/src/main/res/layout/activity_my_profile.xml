@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".user.ui.MyProfileActivity">
 
-
     <ImageButton
         android:id="@+id/back_button"
         android:layout_width="@dimen/_40dp"
@@ -258,8 +257,6 @@
                 android:textColor="@color/black"/>
 
         </LinearLayout>
-
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

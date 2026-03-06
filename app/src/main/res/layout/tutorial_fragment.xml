@@ -10,7 +10,7 @@
         android:id="@+id/tutorial_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="How to Play"
+        android:text="@string/how_to_play"
         android:textSize="@dimen/_24sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"

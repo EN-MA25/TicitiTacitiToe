@@ -17,7 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="@dimen/_8dp" />
 
-
     <EditText
         android:id="@+id/message_edit_text"
         android:layout_width="0dp"
@@ -27,7 +26,7 @@
         android:letterSpacing="0.07"
         android:padding="16dp"
         android:textColor="@color/black"
-        android:hint="Write a message"
+        android:hint="@string/chat_hint_write_a_message"
         android:layout_marginHorizontal="@dimen/_20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/send_button"
@@ -45,11 +44,6 @@
         app:layout_constraintTop_toTopOf="@id/message_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/message_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/_20dp"
-
-        />
-
-
-
+        android:layout_marginBottom="@dimen/_20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

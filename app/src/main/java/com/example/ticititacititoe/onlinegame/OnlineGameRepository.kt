@@ -98,7 +98,7 @@ class OnlineGameRepository {
 
             // =============== Control if it's the right player ===============
             if (move.player != currentPlayer) {
-                return Result.failure(Exception("You are not the current user"))
+                return Result.failure(Exception("It is NOT your turn!!!°"))
             }
 
                 // =============== Change player ===============
