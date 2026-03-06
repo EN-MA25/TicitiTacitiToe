@@ -88,15 +88,15 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
 
         binding.acceptInviteButton.setOnClickListener {
-            // =========== Start blitz game ==========
-            invitesViewModel.acceptInvite(currentUserId, fromUserId!!)
-            dismiss()
-
             // ========== Send to game ========
             val intent = Intent(requireContext(), OnlineGameActivity::class.java)
             intent.putExtra("currentUserId", currentUserId)
             intent.putExtra("fromUserId", fromUserId)
             startActivity(intent)
+
+            // =========== Start blitz game ==========
+            invitesViewModel.acceptInvite(currentUserId, fromUserId!!)
+            dismiss()
         }
     }
 
