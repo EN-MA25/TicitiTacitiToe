@@ -19,9 +19,9 @@ class LeaderboardAdapter(
 
             binding.initialsTextView.text = user.username?.take(2)?.uppercase()
             binding.usernameTextView.text = "${user.username} ${user.rating}"
-            binding.winLossTextView.text = "${String.format("%.0f", user.winRate.toDouble())}%"
-            binding.averageTimeTextView.text = "Avg: ${user.winRate}"
-            binding.averageMovesTextView.text = "Moves: ${user.totalMovesMade}"
+            binding.winLossTextView.text = "Played Games: ${user.totalGames}"
+            binding.averageTimeTextView.text = "Won: ${user.winRate}%"
+            binding.averageMovesTextView.text = "Streak: ${user.currentStreak}"
             binding.rankingTextView.text = "#${bindingAdapterPosition+1}"
 
             // Set colors for top 3 ranks
