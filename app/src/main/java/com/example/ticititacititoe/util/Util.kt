@@ -1,5 +1,6 @@
 package com.example.ticititacititoe.util
 
+import android.util.Log
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -23,9 +24,11 @@ object Util {
             gamesPlayed <= 30 -> 40
             else -> 24
         }
-        val expectedScore = 1.0 / (1.0 + 10.0.pow((myRating - opponentRating) / 400.0))
+        val expectedScore = 1.0 / (1.0 + 10.0.pow((opponentRating - myRating) / 400.0))
         val change = (kValue * (score - expectedScore)).toInt()
         val newRating = myRating + change;
+
+        Log.d("!!!", "myRating-${myRating}, opponentRating-${opponentRating}, gamesPlayed-${gamesPlayed}, score-${score}, K-${kValue}, expectedScore-${expectedScore}, change-${change}, newRating-${newRating}")
         return newRating
     }
 
