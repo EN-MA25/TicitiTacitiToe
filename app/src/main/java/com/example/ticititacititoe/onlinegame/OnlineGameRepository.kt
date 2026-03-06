@@ -39,14 +39,17 @@ class OnlineGameRepository {
                 // =============== Convert document to OnlineGameState ===============
                 val game = snapshot.toObject(OnlineGameState::class.java)
 
+                // =============== If playerLeftId field is not empty, return ===============
                 if (game?.playerLeftId != "") {
                     _onlineState.value = game!!
                     return@addSnapshotListener
                 }
 
+                // =============== If moves hasn't changed, return ===============
                 if (moveCount == game!!.moves.count())
                     return@addSnapshotListener
 
+                // =============== If moves has changed, update ===============
                 moveCount = game.moves.count()
 
                 // =============== Update stateflow ===============
@@ -56,12 +59,6 @@ class OnlineGameRepository {
 
     fun removeListener() {
         listenerRegistration?.remove()
-    }
-
-    // ============== Update gameresult =========
-    fun updateGameResult(gameId: String, result: String) {
-        gameCollection.document(gameId)
-            .update("gameResult", result)
     }
 
     suspend fun playerMakeMove(
@@ -91,7 +88,6 @@ class OnlineGameRepository {
             var currentPlayer = gameState.currentPlayerUid
             var playerX = gameState.playerX
             var playerO = gameState.playerO
-           // var moves = gameState.moves
 
             // =============== Check if box is already taken ===============
             if (gameState.moves.takeLast(6).any {
@@ -100,7 +96,7 @@ class OnlineGameRepository {
                 return Result.failure(Exception("Already taken"))
             }
 
-            // =============== Control if its the right player ===============
+            // =============== Control if it's the right player ===============
             if (move.player != currentPlayer) {
                 return Result.failure(Exception("You are not the current user"))
             }
@@ -143,7 +139,7 @@ class OnlineGameRepository {
     ): Result<String?> {
         return try {
 
-            // =============== Check id for players to see if theyre in a game & limit result to max 1 document  ===============
+            // =============== Check id for players to see if they're in a game & limit result to max 1 document  ===============
             val gameSearch1 = firestore.collection(FirestoreCollections.GAME)
                 .whereEqualTo("playerX", currentUserId)
                 .whereEqualTo("playerO", otherUserId)
@@ -198,7 +194,6 @@ class OnlineGameRepository {
         } catch (e: Exception) {
             Result.failure(e)
         }
-
 
     fun userHasLeft(gameId: String?, userId: String?) {
         gameCollection.document(gameId!!)
