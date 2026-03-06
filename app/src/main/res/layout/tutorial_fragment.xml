@@ -6,50 +6,61 @@
     android:padding="16dp"
     android:background="@color/green">
 
-
     <TextView
-        android:id="@+id/tutorialTitleTextView"
+        android:id="@+id/tutorial_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="How to Play"
-        android:textSize="20sp"
+        android:textSize="@dimen/_24sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="8dp" />
-
+        android:paddingBottom="8dp"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.05"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:padding="16dp" />
 
     <ScrollView
         android:layout_width="180dp"
         android:layout_height="230dp"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:layout_gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/tutorialDescriptionTextView"
+            android:id="@+id/tutorial_description_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
+            android:fontFamily="@font/chewy"
+            android:textSize="@dimen/_18sp"
             android:lineSpacingExtra="2dp"
-            android:text="Tic Tac Toe is played on a 3x3 grid.
-
-Player X goes first.
-Players take turns placing their symbol.
-
-The first player to get three in a row wins:
-Horizontal, Vertical, Diagonal
-" />
+            android:text="@string/tutorial_text" />
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/closeButton"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Close"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/red"
-        />
+        android:layout_margin="@dimen/_20dp"
+        android:background="@drawable/bg_button_red"
+        android:fontFamily="@font/bangers"
+        android:letterSpacing="0.1"
+        android:paddingHorizontal="@dimen/_18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp"
+        android:shadowColor="@color/black"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="8"
+        android:text="@string/close"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>
 
 
