@@ -12,8 +12,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/red"
         android:layout_marginHorizontal="6dp"
-        app:cardCornerRadius="@dimen/_20dp"
-        >
+        app:cardCornerRadius="@dimen/_20dp">
+
         <TextView
             android:id="@+id/right_chat_text_view"
             android:layout_width="wrap_content"
@@ -25,8 +25,7 @@
             android:textColor="@android:color/black"
             android:fontFamily="@font/chewy"
             android:textSize="@dimen/_16sp"
-            android:text="hej hej"
-            />
+            android:text="hej hej" />
 
     </androidx.cardview.widget.CardView>
 

@@ -6,10 +6,10 @@
     <color name="yellow">#FFD700</color>
     <color name="green">#237841</color>
     <color name="orange">#FFA500</color>
-
-    <!-- Secondary Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <!-- Secondary Colors -->
     <color name="bright_yellow">#FFFF00</color>
     <color name="light_orange">#FFB84D</color>
     <color name="light_yellow">#FFFEF5</color>
@@ -18,7 +18,6 @@
 
 
     <!-- Cell Colors -->
-
     <color name="player_x_bg">#99FF4757</color>
     <color name="player_o_bg">#991E90FF</color>
     <color name="player_x">#FF4757</color>

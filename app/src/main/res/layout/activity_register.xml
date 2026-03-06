@@ -29,7 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <!-- Register Form Container -->
     <androidx.cardview.widget.CardView
         android:id="@+id/register_form_text_view"
@@ -59,7 +58,7 @@
                 android:fontFamily="@font/bangers"
                 android:letterSpacing="0.08"/>
 
-            <!-- Email Input -->
+            <!-- Username Input -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,7 +179,6 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 
-    <!-- Go to login -->
     <LinearLayout
         android:id="@+id/already_user_text_view"
         android:layout_width="wrap_content"

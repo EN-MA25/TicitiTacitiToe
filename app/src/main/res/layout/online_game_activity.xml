@@ -8,7 +8,6 @@
     tools:context=".onlinegame.ui.OnlineGameActivity"
     android:background="@drawable/comic_style_bg_red_blue">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/boardContainer"
         android:layout_width="0dp"
@@ -188,9 +187,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="invisible"
-        />
-
+        tools:visibility="invisible" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/chat_container"
@@ -199,6 +196,5 @@
         app:layout_constraintVertical_weight="1.5"
         app:layout_constraintTop_toBottomOf="@id/boardContainer"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
