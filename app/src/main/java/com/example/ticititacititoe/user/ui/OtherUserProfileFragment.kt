@@ -62,31 +62,8 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
             userViewModel.fetchUserById(otherUserId)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                friendViewModel.friendId.collect { friendIds ->
-                    if (friendIds.contains(otherUserId)) {
-                        binding.friendsImageButton.setImageResource(R.drawable.delete_friend)
-                        if (currentUserId != null) {
-                            binding.friendsImageButton.setOnClickListener {
-                                friendViewModel.deleteFriend(currentUserId!!, otherUserId)
+        friendViewModel.loadFriendsRealtime(currentUserId!!)
 
-                            }
-                        }
-                    } else {
-                        binding.friendsImageButton.setImageResource(R.drawable.add_friend)
-                        if (currentUserId != null) {
-                            binding.friendsImageButton.setOnClickListener {
-                                friendViewModel.addFriend(currentUserId!!, otherUserId)
-
-                            }
-                        }
-
-                    }
-
-                }
-            }
-        }
 
 
 
@@ -140,6 +117,35 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
                             existing.dismissAllowingStateLoss()
                         }
                     }
+                }
+            }
+        }
+
+
+
+            viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                friendViewModel.friendId.collect { friendIds ->
+
+                    if (friendIds.contains(otherUserId)) {
+                        binding.friendsImageButton.setImageResource(R.drawable.delete_friend)
+                        if (currentUserId != null) {
+                            binding.friendsImageButton.setOnClickListener {
+                                friendViewModel.deleteFriend(currentUserId!!, otherUserId)
+
+                            }
+                        }
+                    } else {
+                        binding.friendsImageButton.setImageResource(R.drawable.add_friend)
+                        if (currentUserId != null) {
+                            binding.friendsImageButton.setOnClickListener {
+                                friendViewModel.addFriend(currentUserId!!, otherUserId)
+
+                            }
+                        }
+
+                    }
+
                 }
             }
         }
