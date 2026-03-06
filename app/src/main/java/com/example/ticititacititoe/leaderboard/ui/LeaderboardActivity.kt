@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.ActivityLeaderboardBinding
-import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.ui.IncomingInviteFragment
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.leaderboard.adapter.ViewPagerAdapter
 import com.example.ticititacititoe.user.UserViewModel
@@ -62,11 +62,11 @@ class LeaderboardActivity : AppCompatActivity() {
                     if (invites.isNotEmpty()) {
                         val invite = invites.first()
 
-                        MultiplayerGameInvitationFragment
+                        IncomingInviteFragment
                             .newInstance(invite)
                             .show(supportFragmentManager, "invite_dialog")
                     } else {
-                        if (existing is MultiplayerGameInvitationFragment) {
+                        if (existing is IncomingInviteFragment) {
                             existing.dismissAllowingStateLoss()
                         }
                     }

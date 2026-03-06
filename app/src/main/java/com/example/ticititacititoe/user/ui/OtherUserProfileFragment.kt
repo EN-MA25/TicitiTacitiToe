@@ -12,7 +12,7 @@ import com.example.ticititacititoe.R
 import com.example.ticititacititoe.databinding.FragmentOtherUserProfileBinding
 import com.example.ticititacititoe.friends.FriendViewModel
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
-import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.ui.IncomingInviteFragment
 import com.example.ticititacititoe.user.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -109,11 +109,11 @@ class OtherUserProfileFragment : BottomSheetDialogFragment() {
                 invitesViewModel.incomingInvites.collect { invites ->
                     val existing = childFragmentManager.findFragmentByTag("invite_dialog")
                     if (invites.isNotEmpty()) {
-                        MultiplayerGameInvitationFragment.Companion
+                        IncomingInviteFragment.Companion
                             .newInstance(invites.first())
                             .show(childFragmentManager, "invite_dialog")
                     } else {
-                        if (existing is MultiplayerGameInvitationFragment) {
+                        if (existing is IncomingInviteFragment) {
                             existing.dismissAllowingStateLoss()
                         }
                     }

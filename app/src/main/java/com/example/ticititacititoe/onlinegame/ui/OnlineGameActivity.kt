@@ -189,7 +189,6 @@ class OnlineGameActivity : AppCompatActivity() {
         val (row, col) = view.tag.toString().split(",").map { it.toLong() }
 
         lifecycleScope.launch {
-
             val result = onlineGameViewModel.playerMakeMove(
                 gameId,
                 row,
@@ -286,11 +285,8 @@ class OnlineGameActivity : AppCompatActivity() {
                             onlineGameViewModel.deleteGame(gameId)
                             chatViewModel.deleteChat(gameId)
                         }
-
-                        //lifecycleScope.launch {
-                        //  kotlinx.coroutines.delay(500)
                         onlineGameViewModel.fetchGameResult(gameId)
-                        // }
+
 
                         userViewModel.updateUserAfterGame(
                             me!!,
@@ -303,17 +299,6 @@ class OnlineGameActivity : AppCompatActivity() {
                 }
             }
         }
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                onlineGameViewModel.gameResult.collect { result ->
-//                    result?.let {
-//                        val dialog = GameOverFragment(playerX)
-//                        dialog.isCancelable = false
-//                        dialog.show(supportFragmentManager, "game_over_dialog")
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun renderStatus(state: OnlineGameState) {

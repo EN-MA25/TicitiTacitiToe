@@ -55,13 +55,10 @@ class ChatViewModel: ViewModel() {
                     }
                     .collect { messages ->
                         _messages.value = messages
-
                     }
             } catch (e: Exception) {
                 _errorEvents.emit("Failed to get chat messages!: ${e.message}")
-
             }
-
         }
     }
 

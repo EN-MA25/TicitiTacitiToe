@@ -18,9 +18,6 @@ class ChatRecyclerAdapter(private val currentUserId: String,
         private const val RECEIVED = 2
     }
 
-
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

@@ -36,7 +36,6 @@ class SettingsFragment : BottomSheetDialogFragment() {
 
         val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) ?: return
 
-        val displayMetrics = resources.displayMetrics
         bottomSheet.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         val behavior = BottomSheetBehavior.from(bottomSheet)
@@ -52,8 +51,5 @@ class SettingsFragment : BottomSheetDialogFragment() {
             authViewModel.logout()
             dismiss()
         }
-
     }
-
-
 }

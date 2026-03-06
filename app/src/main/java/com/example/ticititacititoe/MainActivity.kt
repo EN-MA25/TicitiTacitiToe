@@ -20,7 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.error.setupErrorObserver
-import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.ui.IncomingInviteFragment
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.game.recentGame.RecentGameAdapter
 import com.example.ticititacititoe.game.invitations.ui.OutgoingInviteFragment
@@ -76,10 +76,6 @@ class MainActivity : AppCompatActivity() {
         setupErrorObserver(invitesViewModel.errorEvents)
         setupErrorObserver(userViewModel.errorEvents)
 
-
-
-
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 invitesViewModel.queue.map {it.isInQueue}
@@ -98,7 +94,6 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-
             }
         }
 
@@ -121,14 +116,14 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             if (incomingDialog == null) {
-                                MultiplayerGameInvitationFragment
+                                IncomingInviteFragment
                                     .newInstance(incoming.first())
                                     .show(supportFragmentManager, "invite_dialog")
                             }
                         }
 
                         outgoing.isNotEmpty() -> {
-                            if (incomingDialog is MultiplayerGameInvitationFragment) {
+                            if (incomingDialog is IncomingInviteFragment) {
                                 incomingDialog.dismissAllowingStateLoss()
                             }
 
