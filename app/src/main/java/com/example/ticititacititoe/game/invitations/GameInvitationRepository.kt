@@ -19,9 +19,6 @@ class GameInvitationRepository {
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
-
-    // Speaking to Firebase to fetch game info
-
     fun observeQueueSize(): Flow<Int> = callbackFlow {
 
         val listener = db.collection("gameQueue")
@@ -31,14 +28,12 @@ class GameInvitationRepository {
                     trySend(0)
                     return@addSnapshotListener
                 }
-
                 trySend(snapshot.size())
             }
 
         awaitClose { listener.remove() }
     }
     suspend fun addToQueue(userId: String, username: String) {
-
         val data = mapOf(
             "userId" to userId,
             "status" to "pending",
@@ -162,7 +157,7 @@ class GameInvitationRepository {
                          otherUserId: String) {
 
         val batch = db.batch()
-        // ======== Update recievers document ========
+        // ======== Update receivers document ========
 
         val receiverRef = db.collection("users")
             .document(currentUserId)

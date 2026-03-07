@@ -160,21 +160,9 @@ class AuthRepository {
                 // Update error
             }
             is NoCredentialException -> {
-//                AlertDialog.Builder(context)
-//                    .setTitle("Add Google Account")
-//                    .setMessage("Please add a Google Account in Settings")
-//                    .setPositiveButton("Yes go to settings") { dialog, _ ->
-//                        val intent = Intent(Settings.ACTION_SETTINGS)
-//                        startActivity(context, intent)
-//                        dialog.dismiss()
-//                    }
-//                    .setNegativeButton(getString(R.string.cancel_alert_btn_text)) { dialog, _ ->
-//                        dialog.dismiss()
-//                    }
-//                    .show()
+                Toast.makeText(context, "Please add a Google Account in Phone Settings!", Toast.LENGTH_LONG).show()
             }
             else -> {
-                //
                 Toast.makeText( context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
 
             }
@@ -188,12 +176,10 @@ class AuthRepository {
                 username = firebaseUser.displayName,
                 rating = 1300,
             )
-
             Firebase.firestore.collection("users")
                 .document(firebaseUser.uid)
                 .set(userMap, SetOptions.merge())
                 .await()
-
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -207,6 +193,5 @@ class AuthRepository {
       auth.sendPasswordResetEmail(email)
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener {onFailure(it)}
-
     }
 }

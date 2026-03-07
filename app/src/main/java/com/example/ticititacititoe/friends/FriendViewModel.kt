@@ -30,8 +30,6 @@ class FriendViewModel: ViewModel() {
                 _friendIds.value += friendId
             } catch (e: Exception){
                 _errorEvents.emit("Failed to add friend: $friendId, try again!: ${e.message}")
-
-
             }
         }
     }

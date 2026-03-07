@@ -23,9 +23,6 @@ import kotlinx.coroutines.launch
 class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
     private lateinit var userViewModel: UserViewModel
-
-    private lateinit var behavior: BottomSheetBehavior<View>
-
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatRecyclerAdapter
@@ -44,7 +41,6 @@ class ChatFragment : Fragment() {
         gameId = arguments?.getString("gameId")
         opponentId = arguments?.getString("opponentId")
         opponentUsername = arguments?.getString("opponentUsername")
-
 
     }
 
@@ -104,25 +100,6 @@ class ChatFragment : Fragment() {
         setupErrorObserver(chatViewModel.errorEvents)
 
     }
-
-//    override fun onStart() {
-//        super.onStart()
-//
-//        val dialog = dialog as? BottomSheetDialog ?: return
-//        val bottomSheet = dialog.findViewById<View>(
-//            com.google.android.material.R.id.design_bottom_sheet
-//        ) ?: return
-//
-//        val behavior = BottomSheetBehavior.from(bottomSheet)
-//
-//        val screenHeight = resources.displayMetrics.heightPixels
-//        val desiredHeight = (screenHeight * 0.35).toInt()
-//
-//        behavior.peekHeight = desiredHeight
-//        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//        behavior.skipCollapsed = false
-//        behavior.isDraggable = true
-//    }
 
     private fun clearFields() {
         binding.messageEditText.text.clear()

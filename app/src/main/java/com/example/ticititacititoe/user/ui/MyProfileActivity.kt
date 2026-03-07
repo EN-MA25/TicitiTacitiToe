@@ -16,7 +16,7 @@ import com.example.ticititacititoe.auth.state.AuthUiState
 import com.example.ticititacititoe.auth.AuthViewModel
 import com.example.ticititacititoe.auth.ui.LoginActivity
 import com.example.ticititacititoe.databinding.ActivityMyProfileBinding
-import com.example.ticititacititoe.game.invitations.ui.MultiplayerGameInvitationFragment
+import com.example.ticititacititoe.game.invitations.ui.IncomingInviteFragment
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.user.UserViewModel
 import kotlinx.coroutines.launch
@@ -77,11 +77,11 @@ class MyProfileActivity : AppCompatActivity() {
                     if (invites.isNotEmpty()) {
                         val invite = invites.first()
 
-                        MultiplayerGameInvitationFragment
+                        IncomingInviteFragment
                             .newInstance(invite)
                             .show(supportFragmentManager, "invite_dialog")
                     } else {
-                        if (existing is MultiplayerGameInvitationFragment) {
+                        if (existing is IncomingInviteFragment) {
                             existing.dismissAllowingStateLoss()
                         }
                     }
