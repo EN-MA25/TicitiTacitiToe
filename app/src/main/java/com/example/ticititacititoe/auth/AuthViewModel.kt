@@ -51,15 +51,18 @@ class AuthViewModel: ViewModel() {
 
     fun login(email: String, password: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         _authUiState.value = AuthUiState.Loading
-        repository.login(email, password, onSuccess = {
-            _authUiState.value = AuthUiState.LoggedIn
-
-        }, onFailure = {
-            _authUiState.value = AuthUiState.LoggedOut
-
-        })
-
+        viewModelScope.launch {
+            val result = repository.login(email, password)
+            if (result.isSuccess) {
+                _authUiState.value = AuthUiState.LoggedIn
+                onSuccess()
+            } else {
+                _authUiState.value = AuthUiState.LoggedOut
+                onFailure(result.exceptionOrNull() as? Exception ?: Exception("Login failed"))
+            }
+        }
     }
+
 
     fun logout(){
         repository.logout()
@@ -67,9 +70,17 @@ class AuthViewModel: ViewModel() {
 
     }
 
-    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
-    repository.resetPassword(email,onSuccess, onFailure)
+    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        viewModelScope.launch {
+            val result = repository.resetPassword(email)
+            if (result.isSuccess) {
+                onSuccess()
+            } else {
+                onFailure(result.exceptionOrNull() as? Exception ?: Exception("Reset failed"))
+            }
+        }
     }
+
 
     fun loginWithGoogle(context: Context, credentialManager: CredentialManager) {
         viewModelScope.launch {

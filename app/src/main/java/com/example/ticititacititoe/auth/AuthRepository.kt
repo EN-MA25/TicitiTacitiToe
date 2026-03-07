@@ -107,16 +107,16 @@ class AuthRepository {
     }
 
     fun isLoggedIn(): Boolean = auth.currentUser != null
-    fun login(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener { onSuccess()}
-            .addOnFailureListener { onFailure(it)}
+
+    suspend fun login(email: String, password: String): Result<Unit> {
+        return try {
+            auth.signInWithEmailAndPassword(email, password).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
 
     fun logout(){
         auth.signOut()
@@ -189,9 +189,13 @@ class AuthRepository {
 
 
 
-    fun resetPassword(email: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit){
-      auth.sendPasswordResetEmail(email)
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener {onFailure(it)}
+    suspend fun resetPassword(email: String): Result<Unit> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
 }
