@@ -63,12 +63,14 @@ class OnlineGameViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 repository.deleteRecentGame(gameId, userId)
-                repository.getRecentGames(userId, onResult)
+                val result = repository.getRecentGames(userId)
+                onResult(result)
             } catch (e: Exception) {
                 Log.e("OnlineGameVM", "Failed to delete: ${e.message}")
             }
         }
     }
+
 
     suspend fun addOnlineGameResult(gameId: String, onlineGameResult: OnlineGameResult, timestamp: Long, movesMade: Int
     ): Result<String> {
@@ -84,11 +86,15 @@ class OnlineGameViewModel : ViewModel() {
         repository.removeListener()
     }
 
-    fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>)-> Unit){
-        repository.getRecentGames(userId, onResult)
+    fun fetchRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
+        viewModelScope.launch {
+            val result = repository.getRecentGames(userId)
+            onResult(result)
+        }
     }
 
-        fun fetchGameResult(gameId: String) {
+
+    fun fetchGameResult(gameId: String) {
             viewModelScope.launch {
                 try {
                     val result = repository.getGameResult(gameId)

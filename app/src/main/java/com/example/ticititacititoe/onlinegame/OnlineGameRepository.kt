@@ -247,73 +247,57 @@ class OnlineGameRepository {
             .await()
     }
 
-    fun getRecentGames(userId: String, onResult: (Result<List<RecentGame>>) -> Unit) {
-        Log.d("RecentGames", "FUNCTION CALLED with userId: $userId")
+    suspend fun getRecentGames(userId: String): Result<List<RecentGame>> {
+        return try {
+            val wonDocs = firestore.collection(FirestoreCollections.ONLINE_GAME_RESULT)
+                .whereEqualTo("playerWhoWon", userId)
+                .get()
+                .await()
 
-        val wonQuery = firestore.collection(FirestoreCollections.ONLINE_GAME_RESULT)
-            .whereEqualTo("playerWhoWon", userId)
+            val lostDocs = firestore.collection(FirestoreCollections.ONLINE_GAME_RESULT)
+                .whereEqualTo("playerWhoLost", userId)
+                .get()
+                .await()
 
-        val lostQuery = firestore.collection(FirestoreCollections.ONLINE_GAME_RESULT)
-            .whereEqualTo("playerWhoLost", userId)
-
-        wonQuery.get().addOnSuccessListener { wonDocs ->
-            Log.d("RecentGames", "wonDocs count: ${wonDocs.size()}")
-            lostQuery.get().addOnSuccessListener { lostDocs ->
-                Log.d("RecentGames", "lostDocs count: ${lostDocs.size()}")
-
-                val allDocs = (wonDocs.documents + lostDocs.documents)
-                    .sortedByDescending { it.getLong("timestamp") ?: 0L }
-                    .filter { doc ->
-                      val deletedBy = doc.get("deletedBy") as? List<*> ?: emptyList<String>()
-                        !deletedBy.contains(userId)
-                    }
-                    .take(5)
-
-                if (allDocs.isEmpty()) {
-                    onResult(Result.success(emptyList()))
-                    return@addOnSuccessListener
+            val allDocs = (wonDocs.documents + lostDocs.documents)
+                .sortedByDescending { it.getLong("timestamp") ?: 0L }
+                .filter { doc ->
+                    val deletedBy = doc.get("deletedBy") as? List<*> ?: emptyList<String>()
+                    !deletedBy.contains(userId)
                 }
+                .take(5)
 
-                val recentGames = mutableListOf<RecentGame>()
-                var completedCount = 0
-
-                for (doc in allDocs) {
-                    val playerWhoWon = doc.getString("playerWhoWon") ?: ""
-                    val playerWhoLost = doc.getString("playerWhoLost") ?: ""
-                    val timestamp = doc.getLong("timestamp") ?: 0L
-                    val movesMade = doc.getLong("movesMade")?.toInt() ?: 0
-                    val opponentId = if (playerWhoWon == userId) playerWhoLost else playerWhoWon
-                    val result = if (playerWhoWon == userId) "Won" else "Lost"
-
-                    firestore.collection(FirestoreCollections.USERS)
-                        .document(opponentId)
-                        .get()
-                        .addOnSuccessListener { userDoc ->
-                            val username = userDoc.getString("username") ?: "Unknown"
-                            recentGames.add(
-                                RecentGame(doc.id, opponentId, username, result, timestamp, movesMade)
-                            )
-                            completedCount++
-                            if (completedCount == allDocs.size) {
-                                onResult(Result.success(recentGames))
-                            }
-                        }
-                        .addOnFailureListener {
-                            completedCount++
-                            if (completedCount == allDocs.size) {
-                                onResult(Result.success(recentGames))
-                            }
-                        }
-                }
-            }.addOnFailureListener { exception ->
-                Log.e("RecentGames", "lostQuery failed: ${exception.message}")
-                onResult(Result.failure(exception))
+            if (allDocs.isEmpty()) {
+                return Result.success(emptyList())
             }
-        }.addOnFailureListener { exception ->
-            Log.e("RecentGames", "wonQuery failed: ${exception.message}")
-            onResult(Result.failure(exception))
+
+            val recentGames = mutableListOf<RecentGame>()
+
+            for (doc in allDocs) {
+                val playerWhoWon = doc.getString("playerWhoWon") ?: ""
+                val playerWhoLost = doc.getString("playerWhoLost") ?: ""
+                val timestamp = doc.getLong("timestamp") ?: 0L
+                val movesMade = doc.getLong("movesMade")?.toInt() ?: 0
+                val opponentId = if (playerWhoWon == userId) playerWhoLost else playerWhoWon
+                val result = if (playerWhoWon == userId) "Won" else "Lost"
+
+                val userDoc = firestore.collection(FirestoreCollections.USERS)
+                    .document(opponentId)
+                    .get()
+                    .await()
+
+                val username = userDoc.getString("username") ?: "Unknown"
+                recentGames.add(
+                    RecentGame(doc.id, opponentId, username, result, timestamp, movesMade)
+                )
+            }
+
+            Result.success(recentGames)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
+
 }
 
 
