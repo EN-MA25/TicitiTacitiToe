@@ -30,7 +30,6 @@ class ChatRepository {
                 val messages = snapshot?.documents?.mapNotNull { doc ->
                     doc.toObject(Message::class.java)?.copy(id = doc.id)
                 } ?: emptyList()
-
                 trySend(messages)
             }
         awaitClose { listener.remove() }
@@ -38,9 +37,7 @@ class ChatRepository {
 
     suspend fun createChatRoom(
         gameId: String,
-        userIds: MutableList<String?>,
-                       ) {
-
+        userIds: MutableList<String?>,){
        val chatRoomRef = db.collection("chatRooms")
            .document(gameId)
 
@@ -54,7 +51,6 @@ class ChatRepository {
                 userIds = userIds,
                 timestamp = Timestamp.now(),
             )
-
             chatRoomRef.set(chatRoomData).await()
         }
     }

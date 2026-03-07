@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticititacititoe.R
-import com.example.ticititacititoe.databinding.FragmentMultiplayerGameInvitationBinding
+import com.example.ticititacititoe.databinding.FragmentIncomingInviteBinding
 import com.example.ticititacititoe.game.invitations.model.GameInvitation
 import com.example.ticititacititoe.game.invitations.InvitesViewModel
 import com.example.ticititacititoe.onlinegame.ui.OnlineGameActivity
@@ -17,14 +17,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
+class IncomingInviteFragment : BottomSheetDialogFragment() {
     private var fromUsername: String? = null
     private var fromUserId: String? = null
     private lateinit var currentUserId: String
     private lateinit var invitesViewModel: InvitesViewModel
     private lateinit var userViewModel: UserViewModel
 
-    private lateinit var binding: FragmentMultiplayerGameInvitationBinding
+    private lateinit var binding: FragmentIncomingInviteBinding
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -42,7 +42,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMultiplayerGameInvitationBinding.inflate(inflater, container, false)
+        binding = FragmentIncomingInviteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -54,8 +54,8 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(invite: GameInvitation): MultiplayerGameInvitationFragment {
-            val fragment = MultiplayerGameInvitationFragment()
+        fun newInstance(invite: GameInvitation): IncomingInviteFragment {
+            val fragment = IncomingInviteFragment()
 
             val args = Bundle().apply {
                 putString(ARG_INVITE_ID, invite.id)
@@ -78,7 +78,7 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
 
         invitationText.text = getString(R.string.has_challenged_you_in_a_blitz_game, fromUsername)
 
-        // ======== Update status and delete invitaion in db =======
+        // ======== Update status and delete invitation in db =======
         binding.declineInviteButton.setOnClickListener {
             invitesViewModel.declineInvite(currentUserId, fromUserId!!)
             invitesViewModel.deleteInvitations(currentUserId, fromUserId!!)
@@ -113,16 +113,4 @@ class MultiplayerGameInvitationFragment : BottomSheetDialogFragment() {
         behavior.skipCollapsed = true
         behavior.isDraggable = true
     }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-//        fromUserId?.let { multiplayerGameViewModel.deleteInvitations(currentUserId, it) }
-
-    }
-
-
-
-
-
-
 }

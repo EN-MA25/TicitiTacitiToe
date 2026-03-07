@@ -21,8 +21,6 @@ class AuthViewModel: ViewModel() {
     private val _authUiState = MutableStateFlow<AuthUiState>(AuthUiState.Loading)
     val authUiState: StateFlow<AuthUiState> = _authUiState.asStateFlow()
 
-
-
     private val repository = AuthRepository()
     fun isLoggedIn(): Boolean = repository.isLoggedIn()
 
@@ -97,8 +95,6 @@ class AuthViewModel: ViewModel() {
                     _authUiState.value = AuthUiState.LoggedOut
 
                 }
-
-
 
             } catch (exception: GetCredentialException) {
                 repository.handleFailure(exception, context)

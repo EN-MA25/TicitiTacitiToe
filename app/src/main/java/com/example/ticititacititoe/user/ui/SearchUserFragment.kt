@@ -87,12 +87,6 @@ class SearchUserFragment : BottomSheetDialogFragment() {
         setupErrorObserver(friendViewModel.errorEvents)
         setupErrorObserver(userViewModel.errorEvents)
 
-
-
-
-
-
-
         adapter = SearchUserRecyclerAdapter(onUserClick = {user ->
             invitesViewModel.sendGameInvitation(currentUserId, currentUsername, user.id, user.username!!)
         }, {user ->
@@ -133,14 +127,6 @@ class SearchUserFragment : BottomSheetDialogFragment() {
             }
         }
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                userViewModel.users.collect { list ->
-//                    adapter.submitList(list)
-//                }
-//            }
-//        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userViewModel.searchUIList.collect { uiList ->
@@ -148,7 +134,5 @@ class SearchUserFragment : BottomSheetDialogFragment() {
                 }
             }
         }
-
-
     }
 }

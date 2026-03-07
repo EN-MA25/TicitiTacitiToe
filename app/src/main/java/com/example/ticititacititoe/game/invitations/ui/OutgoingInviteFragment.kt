@@ -25,8 +25,6 @@ import kotlinx.coroutines.launch
 
 
 class OutgoingInviteFragment : BottomSheetDialogFragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
     private var toUsername: String? = null
     private var toUserId: String? = null
     private var fromUserId: String? = null
@@ -51,7 +49,6 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-
         private const val ARG_INVITE_ID = "invite_id"
         private const val ARG_TO_USER_NAME = "to_username"
         private const val ARG_TO_USER_ID = "to_user_id"
@@ -114,9 +111,6 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
 
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
 
     override fun onStart() {
         super.onStart()
@@ -136,7 +130,7 @@ class OutgoingInviteFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-        // =========== Call viewmodel to delete in db for both (when sender cut off invation  ===========
+        // =========== Call viewmodel to delete in db for both (when sender cut off invitation  ===========
         if (fromUserId != null && toUserId != null) {
             invitesViewModel.deleteInvitations(
                 toUserId!!,

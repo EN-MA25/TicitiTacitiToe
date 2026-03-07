@@ -100,7 +100,6 @@ class OnlineGameViewModel : ViewModel() {
                     val result = repository.getGameResult(gameId)
                     _gameResult.value = result
                 } catch (e: Exception) {
-                    // Handle error
                 }
             }
         }
